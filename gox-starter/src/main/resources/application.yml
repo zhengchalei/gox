@@ -6,7 +6,7 @@ spring:
     name: gox
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/gox?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/gox
     username: root
     password: root
 
@@ -16,6 +16,7 @@ jimmer:
   show-sql: true
   pretty-sql: true
   database-validation-mode: ERROR
+  language: kotlin
 
 logging:
   level:
