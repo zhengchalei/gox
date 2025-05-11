@@ -1,0 +1,29 @@
+export com.zhengchalei.gox.modules.system.entity.User
+    -> package com.zhengchalei.gox.modules.system.entity.dto
+
+UserListDTO {
+    id
+    username
+    enabled
+    createdTime
+    updatedTime
+}
+
+
+input UserCreateDTO {
+    username
+}
+
+input UserUpdateDTO {
+    id
+    username
+}
+
+specification UserSpecification {
+    username
+    enabled
+    // 创建查询的起始时间
+    gt(createdTime) as startTime
+    // 创建查询的结束时间
+    lt(createdTime) as endTime
+}

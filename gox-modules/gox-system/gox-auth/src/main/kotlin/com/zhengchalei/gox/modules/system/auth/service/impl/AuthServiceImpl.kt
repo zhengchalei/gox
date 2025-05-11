@@ -3,19 +3,41 @@ package com.zhengchalei.gox.modules.system.auth.service.impl
 import com.zhengchalei.gox.modules.system.auth.dto.LoginRequest
 import com.zhengchalei.gox.modules.system.auth.dto.LoginResponse
 import com.zhengchalei.gox.modules.system.auth.service.AuthService
+import com.zhengchalei.gox.modules.system.entity.User
+import com.zhengchalei.gox.modules.system.entity.username
+import com.zhengchalei.gox.util.PasswordUtil
+import org.babyfish.jimmer.sql.kt.KSqlClient
+import org.babyfish.jimmer.sql.kt.ast.expression.eq
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
-class AuthServiceImpl : AuthService {
+class AuthServiceImpl(
+    private val sqlClient: KSqlClient
+) : AuthService {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
     override fun login(request: LoginRequest): LoginResponse {
-        // 实际项目中需要验证用户名和密码
-        // 仅用于演示
+
+        val user: User = this.sqlClient.createQuery(User::class) {
+            where(table.username eq request.username)
+            select(table)
+        }.fetchOneOrNull() ?: throw IllegalArgumentException("用户不存在")
+
+        if (!PasswordUtil.matches(request.password, user.username)) {
+            logger.warn("密码错误: {}", user.username)
+            throw IllegalArgumentException("密码错误")
+        }
+
+        if (!user.enabled) {
+            logger.warn("用户被禁用: {}", user.username)
+            throw IllegalArgumentException("用户被禁用")
+        }
+
         return LoginResponse(
-            token = "demo.token.${request.username}",
+            token = UUID.randomUUID().toString(),
             username = request.username
         )
     }
