@@ -25,5 +25,5 @@ dependencies {
     implementation(project(":gox-framework"))
     implementation(project(":gox-util"))
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    ksp("org.babyfish.jimmer:jimmer-ksp:0.9.81")
+    ksp("org.babyfish.jimmer:jimmer-ksp:${rootProject.extra["jimmerVersion"]}")
 }

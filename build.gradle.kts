@@ -6,6 +6,9 @@ plugins {
     id("com.google.devtools.ksp") version "2.1.20-2.0.1" apply false
 }
 
+// 全局依赖版本定义
+extra["jimmerVersion"] = "0.9.81"
+
 allprojects {
     group = "com.zhengchalei"
     version = "0.0.1-SNAPSHOT"
@@ -13,7 +16,6 @@ allprojects {
     repositories {
         mavenCentral()
     }
-
 }
 
 subprojects {
