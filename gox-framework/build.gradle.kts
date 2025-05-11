@@ -22,6 +22,8 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-web")
     api("org.springframework.boot:spring-boot-starter-data-jdbc")
     api("org.babyfish.jimmer:jimmer-spring-boot-starter:0.9.81")
+    api("org.flywaydb:flyway-core")
+    api("org.flywaydb:flyway-mysql")
     api("org.springframework.boot:spring-boot-starter-validation")
     api("org.springframework.boot:spring-boot-starter-actuator")
     api("com.fasterxml.jackson.module:jackson-module-kotlin")
