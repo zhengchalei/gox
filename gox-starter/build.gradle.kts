@@ -35,8 +35,3 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
-
-tasks.bootJar {
-    enabled = true
-    mainClass.set("com.zhengchalei.gox.starter.GoxApplicationKt")
-} 
