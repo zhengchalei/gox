@@ -23,11 +23,11 @@ dependencies {
     implementation(project(":gox-util"))
     implementation(project(":gox-modules:gox-system"))
     implementation(project(":gox-modules:gox-system:gox-auth"))
-    
+
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    
+
     runtimeOnly("com.mysql:mysql-connector-j")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
