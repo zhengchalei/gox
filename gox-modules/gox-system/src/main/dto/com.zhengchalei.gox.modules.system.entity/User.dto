@@ -16,7 +16,7 @@ input UserCreateDTO {
 
 input UserUpdateDTO {
     id
-    username
+    enabled
 }
 
 specification UserSpecification {
