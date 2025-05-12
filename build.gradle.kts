@@ -8,6 +8,7 @@ plugins {
 
 // 全局依赖版本定义
 extra["jimmerVersion"] = "0.9.81"
+extra["springdocVersion"] = "2.8.8"
 
 allprojects {
     group = "com.zhengchalei"
@@ -15,6 +16,9 @@ allprojects {
 
     repositories {
         mavenCentral()
+        maven {
+            url = uri("https://maven.aliyun.com/repository/central")
+        }
     }
 }
 

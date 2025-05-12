@@ -27,6 +27,7 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-validation")
     api("org.springframework.boot:spring-boot-starter-actuator")
     api("com.fasterxml.jackson.module:jackson-module-kotlin")
+    api("org.springdoc:springdoc-openapi-starter-webmvc-ui:${rootProject.extra["springdocVersion"]}")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     // 可按需添加更多第三方依赖
 } 
