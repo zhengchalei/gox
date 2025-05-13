@@ -9,6 +9,13 @@ UserListDTO {
     updatedTime
 }
 
+UserDetailDTO {
+    id
+    username
+    enabled
+    createdTime
+    updatedTime
+}
 
 input UserCreateDTO {
     username
@@ -16,6 +23,7 @@ input UserCreateDTO {
 
 input UserUpdateDTO {
     id
+    username
     enabled
 }
 
