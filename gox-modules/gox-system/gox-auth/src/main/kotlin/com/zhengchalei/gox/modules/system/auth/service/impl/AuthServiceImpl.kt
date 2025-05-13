@@ -17,6 +17,11 @@ class AuthServiceImpl(
     private val sqlClient: KSqlClient
 ) : AuthService {
 
+    companion object {
+        // Token Map
+        val tokenMap = mutableMapOf<String, User>()
+    }
+
     private val logger = LoggerFactory.getLogger(javaClass)
 
     override fun login(request: LoginRequest): LoginResponse {
@@ -36,9 +41,11 @@ class AuthServiceImpl(
             throw IllegalArgumentException("用户被禁用")
         }
 
-        return LoginResponse(
+        val loginResponse = LoginResponse(
             token = UUID.randomUUID().toString(),
             username = request.username
         )
+        tokenMap[loginResponse.token] = user
+        return loginResponse
     }
 } 
