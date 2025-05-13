@@ -1,0 +1,63 @@
+export com.zhengchalei.gox.modules.system.entity.Role
+    -> package com.zhengchalei.gox.modules.system.entity.dto
+
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
+
+RoleListDTO {
+    id
+    name
+    code
+    enabled
+    description
+    createdTime
+    updatedTime
+    permissionIds
+}
+
+RoleDetailDTO {
+    id
+    name
+    code
+    enabled
+    description
+    createdTime
+    updatedTime
+    permissionIds
+    permissions {
+        #allScalars
+    }
+}
+
+input RoleCreateDTO {
+    @NotBlank(message = "名称不能为空")
+    name
+    @NotBlank(message = "编码不能为空")
+    code
+    description
+    @NotNull(message = "权限不能为空")
+    permissionIds
+}
+
+input RoleUpdateDTO {
+    @NotNull(message = "ID不能为空")
+    id
+    @NotBlank(message = "名称不能为空")
+    name
+    @NotBlank(message = "编码不能为空")
+    code
+    description
+    @NotNull(message = "权限不能为空")
+    permissionIds
+}
+
+specification RoleSpecification {
+    id
+    name
+    code
+    enabled
+    description
+    createdTime
+    updatedTime
+    associatedIdIn(permissions) as permissionIds
+}

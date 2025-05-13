@@ -1,6 +1,9 @@
 export com.zhengchalei.gox.modules.system.entity.User
     -> package com.zhengchalei.gox.modules.system.entity.dto
 
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
+
 UserListDTO {
     id
     username
@@ -15,15 +18,27 @@ UserDetailDTO {
     enabled
     createdTime
     updatedTime
+    roleIds
+    roles {
+        #allScalars
+        permissionIds
+        permissions {
+            #allScalars
+        }
+    }
 }
 
 input UserCreateDTO {
+    @NotBlank(message = "用户名不能为空")
     username
 }
 
 input UserUpdateDTO {
+    @NotNull(message = "用户ID不能为空")
     id
+    @NotBlank(message = "用户名不能为空")
     username
+    @NotNull(message = "用户状态不能为空")
     enabled
 }
 

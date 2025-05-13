@@ -4,31 +4,29 @@ import org.babyfish.jimmer.sql.*
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "sys_user")
-interface User {
+@Table(name = "sys_permission")
+interface Permission {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long
 
+    val name: String
+
     @Key
-    val username: String
+    val code: String
 
-    val password: String
-
-    val enabled: Boolean
+    val description: String?
 
     val createdTime: LocalDateTime
 
     val updatedTime: LocalDateTime
 
-    @ManyToMany
-    @JoinTable(
-        name = "sys_user_role",
-        joinColumnName = "user_id",
-        inverseJoinColumnName = "role_id"
-    )
+    @ManyToMany(mappedBy = "permissions")
     val roles: List<Role>
 
     @IdView("roles")
     val roleIds: List<Long>
+
+
 }
