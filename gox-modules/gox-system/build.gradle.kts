@@ -27,10 +27,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     ksp("org.babyfish.jimmer:jimmer-ksp:${rootProject.extra["jimmerVersion"]}")
 
-    // groovy test + spock
-    testImplementation("org.spockframework:spock-core:2.4-M6-groovy-4.0")
-    testImplementation("org.spockframework:spock-spring:2.4-M6-groovy-4.0")
-
     testImplementation(project(":gox-starter"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
