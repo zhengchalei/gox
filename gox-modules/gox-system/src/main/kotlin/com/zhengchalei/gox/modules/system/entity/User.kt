@@ -10,6 +10,7 @@ interface User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long
 
+    @Key
     val username: String
 
     val password: String

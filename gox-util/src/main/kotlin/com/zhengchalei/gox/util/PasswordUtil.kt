@@ -10,4 +10,8 @@ object PasswordUtil {
         return password == encodedPassword
     }
 
+    fun defaultPassword(): String {
+        return encode("123456")
+    }
+
 }

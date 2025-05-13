@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `sys_user`
 (
-    `id`           BIGINT PRIMARY KEY COMMENT '用户ID',
+    `id` BIGINT PRIMARY KEY auto_increment COMMENT '用户ID',
     `username`     VARCHAR(64) UNIQUE                                              NOT NULL COMMENT '用户名',
     `enabled`      BOOLEAN   DEFAULT TRUE                                          NOT NULL COMMENT '是否启用',
     `password`     VARCHAR(255)                                                    NOT NULL COMMENT '密码(建议存储加密后的值)',

@@ -1,0 +1,83 @@
+package com.zhengchalei.gox.modules.system.controller
+
+import com.zhengchalei.gox.framework.config.oneIndex
+import com.zhengchalei.gox.modules.system.entity.dto.*
+import com.zhengchalei.gox.modules.system.service.UserService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+
+@Tag(name = "用户管理", description = "用户相关操作")
+@RestController
+@RequestMapping("/api/v1/sys/user")
+class UserController(private val userService: UserService) {
+
+    @Operation(summary = "根据用户名查询用户", description = "通过用户名获取用户详细信息")
+    @GetMapping("/username/{username}")
+    fun findByUsername(
+        @Parameter(description = "用户名", required = true)
+        @PathVariable username: String
+    ): ResponseEntity<UserDetailDTO> {
+        val user = userService.findByUsername(username)
+        return ResponseEntity.ok(user)
+    }
+
+    @Operation(summary = "根据ID查询用户", description = "通过用户ID获取用户详细信息")
+    @GetMapping("/{id}")
+    fun findById(
+        @Parameter(description = "用户ID", required = true)
+        @PathVariable id: Long
+    ): ResponseEntity<UserDetailDTO> {
+        val user = userService.findById(id)
+        return ResponseEntity.ok(user)
+    }
+
+    @Operation(summary = "删除用户", description = "根据用户ID删除用户")
+    @DeleteMapping("/{id}")
+    fun deleteById(
+        @Parameter(description = "用户ID", required = true)
+        @PathVariable id: Long
+    ): ResponseEntity<Void> {
+        userService.deleteById(id)
+        return ResponseEntity.ok().build()
+    }
+
+    @Operation(summary = "创建用户", description = "创建新用户")
+    @PostMapping
+    fun create(
+        @Parameter(description = "用户信息", required = true)
+        @Valid @RequestBody userCreateDTO: UserCreateDTO
+    ): ResponseEntity<Void> {
+        userService.create(userCreateDTO)
+        return ResponseEntity.ok().build()
+    }
+
+    @Operation(summary = "更新用户", description = "更新用户信息")
+    @PutMapping
+    fun update(
+        @Parameter(description = "用户信息", required = true)
+        @Valid @RequestBody userUpdateDTO: UserUpdateDTO
+    ): ResponseEntity<Void> {
+        userService.update(userUpdateDTO)
+        return ResponseEntity.ok().build()
+    }
+
+    @Operation(summary = "分页查询用户", description = "分页查询用户列表")
+    @GetMapping("/page")
+    fun findPage(
+        @Parameter(description = "页码", required = false)
+        @RequestParam(defaultValue = "1") page: Int,
+        @Parameter(description = "每页数量", required = false)
+        @RequestParam(defaultValue = "10") size: Int,
+        userSpecification: UserSpecification,
+    ): ResponseEntity<Page<UserListDTO>> {
+        val pageRequest: PageRequest = PageRequest.of(page, size).oneIndex()
+        val pageResult = userService.findPage(pageRequest, userSpecification)
+        return ResponseEntity.ok(pageResult)
+    }
+}

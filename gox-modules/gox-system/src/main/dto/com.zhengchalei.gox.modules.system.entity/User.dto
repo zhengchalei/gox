@@ -30,8 +30,4 @@ input UserUpdateDTO {
 specification UserSpecification {
     username
     enabled
-    // 创建查询的起始时间
-    gt(createdTime) as startTime
-    // 创建查询的结束时间
-    lt(createdTime) as endTime
 }

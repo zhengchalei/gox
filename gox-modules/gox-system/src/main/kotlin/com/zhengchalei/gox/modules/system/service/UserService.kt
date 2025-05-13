@@ -13,45 +13,62 @@ class UserService(
     private val userRepository: UserRepository
 ) {
 
+    private val logger = org.slf4j.LoggerFactory.getLogger(UserService::class.java)
+
     /**
      * 根据用户名查询用户
      */
     fun findByUsername(username: String): UserDetailDTO {
-        return userRepository.findByUsername(username)
+        logger.info("查询用户，用户名: {}", username)
+        return userRepository.findByUsername(username).also {
+            logger.info("查询用户成功，用户名: {}", username)
+        }
     }
 
     /**
      * 根据 id 查询用户
      */
     fun findById(id: Long): UserDetailDTO {
-        return userRepository.findById(id)
+        logger.info("查询用户，ID: {}", id)
+        return userRepository.findById(id).also {
+            logger.info("查询用户成功，ID: {}", id)
+        }
     }
 
     /**
      * 根据 id 删除用户
      */
     fun deleteById(id: Long) {
+        logger.info("删除用户，ID: {}", id)
         userRepository.deleteById(id)
+        logger.info("删除用户成功，ID: {}", id)
     }
 
     /**
      * 创建用户
      */
     fun create(userCreateDTO: UserCreateDTO) {
+        logger.info("创建用户，用户名: {}", userCreateDTO.username)
         userRepository.save(userCreateDTO)
+        logger.info("创建用户成功，用户名: {}", userCreateDTO.username)
     }
 
     /**
      * 更新用户
      */
     fun update(userUpdateDTO: UserUpdateDTO) {
+        logger.info("更新用户，用户名: {}", userUpdateDTO.username)
         userRepository.updateById(userUpdateDTO)
+        logger.info("更新用户成功，用户名: {}", userUpdateDTO.username)
     }
 
     /**
      * 分页查询用户
      */
     fun findPage(pageRequest: PageRequest, userSpecification: UserSpecification): Page<UserListDTO> {
-        return userRepository.findPage(pageRequest, userSpecification)
+        logger.info("分页查询用户，页码: {}, 每页数量: {}", pageRequest.pageNumber, pageRequest.pageSize)
+        return userRepository.findPage(pageRequest, userSpecification).also {
+            logger.info("分页查询用户成功，总记录数: {}", it.totalElements)
+        }
     }
 }

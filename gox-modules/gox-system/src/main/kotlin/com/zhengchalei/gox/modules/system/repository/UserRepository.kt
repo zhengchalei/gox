@@ -5,6 +5,7 @@ import com.zhengchalei.gox.modules.system.entity.dto.*
 import com.zhengchalei.gox.modules.system.entity.enabled
 import com.zhengchalei.gox.modules.system.entity.id
 import com.zhengchalei.gox.modules.system.entity.username
+import com.zhengchalei.gox.util.PasswordUtil
 import org.babyfish.jimmer.spring.repository.fetchSpringPage
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.asc
@@ -67,7 +68,9 @@ class UserRepository(private val sqlClient: KSqlClient) {
             throw IllegalArgumentException("用户名已存在")
         }
 
-        val saveResult = this.sqlClient.save(userCreateDTO)
+        val saveResult = this.sqlClient.save(userCreateDTO.toEntity {
+            password = PasswordUtil.defaultPassword()
+        })
         if (!saveResult.isModified) {
             log.error("创建失败: {}", userCreateDTO)
             throw IllegalArgumentException("创建失败")
