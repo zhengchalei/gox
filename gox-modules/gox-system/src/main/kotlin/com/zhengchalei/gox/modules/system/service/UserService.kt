@@ -1,6 +1,5 @@
 package com.zhengchalei.gox.modules.system.service
 
-import com.zhengchalei.gox.modules.system.entity.User
 import com.zhengchalei.gox.modules.system.entity.dto.*
 import com.zhengchalei.gox.modules.system.repository.UserRepository
 import org.springframework.data.domain.Page
@@ -17,7 +16,7 @@ class UserService(
     /**
      * 根据用户名查询用户
      */
-    fun findByUsername(username: String): User {
+    fun findByUsername(username: String): UserDetailDTO {
         return userRepository.findByUsername(username)
     }
 

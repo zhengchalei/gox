@@ -33,16 +33,14 @@ class UserRepository(private val sqlClient: KSqlClient) {
         return query.fetchSpringPage(pageRequest.pageNumber, pageRequest.pageSize)
     }
 
-    fun findByUsername(username: String): User {
-        val user: User =
-            this.sqlClient
+    fun findByUsername(username: String): UserDetailDTO {
+        return this.sqlClient
                 .createQuery(User::class) {
                     where(table.username eq username)
-                    select(table)
+                    select(table.fetch(UserDetailDTO::class))
                 }
                 .fetchOneOrNull()
                 ?: throw IllegalArgumentException("用户不存在")
-        return user
     }
 
     fun findById(id: Long): UserDetailDTO {
