@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `sys_role_permission`
 
 -- 初始化管理员用户
 INSERT INTO `sys_user` (`username`, `enabled`, `password`)
-VALUES ('admin', TRUE, 'encrypted_password_here');
+VALUES ('admin', TRUE, '$2a$10$aewa/XxpIRpidDfHxb9OsOfXpJRBYKDsHrQr8aMTtMO7r5ETWP3q.');
 
 -- 初始化角色数据
 INSERT INTO `sys_role` (`name`, `code`, `description`, `enabled`)

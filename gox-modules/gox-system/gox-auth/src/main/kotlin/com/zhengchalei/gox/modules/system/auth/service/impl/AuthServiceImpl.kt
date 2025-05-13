@@ -26,7 +26,7 @@ class AuthServiceImpl(
             select(table)
         }.fetchOneOrNull() ?: throw IllegalArgumentException("用户不存在")
 
-        if (!PasswordUtil.matches(request.password, user.username)) {
+        if (!PasswordUtil.matches(request.password, user.password)) {
             logger.warn("密码错误: {}", user.username)
             throw IllegalArgumentException("密码错误")
         }

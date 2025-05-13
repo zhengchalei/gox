@@ -1,13 +1,15 @@
 package com.zhengchalei.gox.util
 
+import org.mindrot.jbcrypt.BCrypt
+
 object PasswordUtil {
 
     fun encode(password: String): String {
-        return password
+        return BCrypt.hashpw(password, BCrypt.gensalt())
     }
 
-    fun matches(password: String, encodedPassword: String): Boolean {
-        return password == encodedPassword
+    fun matches(password: String, hashedPassword: String): Boolean {
+        return BCrypt.checkpw(password, hashedPassword)
     }
 
     fun defaultPassword(): String {
