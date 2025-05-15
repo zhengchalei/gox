@@ -28,5 +28,6 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-actuator")
     api("com.fasterxml.jackson.module:jackson-module-kotlin")
     api("org.springdoc:springdoc-openapi-starter-webmvc-ui:${rootProject.extra["springdocVersion"]}")
+    api("cn.dev33:sa-token-spring-boot-starter:1.42.0")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 }
