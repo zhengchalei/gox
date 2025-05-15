@@ -21,6 +21,12 @@ jimmer:
   database-validation-mode: ERROR
   language: kotlin
 
+sa-token:
+  is-print: true
+  token-name: token
+  timeout: -1
+  is-concurrent: false
+
 logging:
   level:
-    com.zhengchalei.gox: debug 
+    com.zhengchalei.gox: debug
