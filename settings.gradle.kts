@@ -6,5 +6,6 @@ include(
     "gox-framework",
     "gox-util",
     "gox-modules:gox-system",
+    "gox-modules:gox-generator",
     "gox-modules:gox-system:gox-auth"
 )
