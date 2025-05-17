@@ -1,6 +1,6 @@
 package ${packageName}.repository
 
-import ${packageName}.entity.${entityName}
+import ${packageName}.entity.*
 import ${packageName}.entity.dto.*
 import org.babyfish.jimmer.spring.repository.fetchSpringPage
 import org.babyfish.jimmer.sql.kt.KSqlClient
