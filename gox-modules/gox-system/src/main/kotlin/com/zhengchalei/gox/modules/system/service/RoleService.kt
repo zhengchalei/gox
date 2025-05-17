@@ -1,7 +1,9 @@
 package com.zhengchalei.gox.modules.system.service
 
+import com.zhengchalei.gox.framework.event.RoleRoutePermissionCacheInvalidateEvent
 import com.zhengchalei.gox.modules.system.entity.dto.*
 import com.zhengchalei.gox.modules.system.repository.RoleRepository
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -10,7 +12,8 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional(rollbackFor = [Exception::class])
 class RoleService(
-    private val roleRepository: RoleRepository
+    private val roleRepository: RoleRepository,
+    private val eventPublisher: ApplicationEventPublisher
 ) {
 
     private val logger = org.slf4j.LoggerFactory.getLogger(RoleService::class.java)
@@ -31,7 +34,9 @@ class RoleService(
     fun deleteById(id: Long) {
         logger.info("删除角色，ID: {}", id)
         roleRepository.deleteById(id)
-        logger.info("删除角色成功，ID: {}", id)
+        // 发布角色缓存失效事件
+        eventPublisher.publishEvent(RoleRoutePermissionCacheInvalidateEvent(this, id))
+        logger.info("删除角色成功，ID: {}, 角色路由权限缓存失效事件已发布", id)
     }
 
     /**
@@ -39,7 +44,8 @@ class RoleService(
      */
     fun create(roleCreateDTO: RoleCreateDTO) {
         logger.info("创建角色，名称: {}", roleCreateDTO.name)
-        roleRepository.save(roleCreateDTO)
+        val role = roleRepository.save(roleCreateDTO)
+        // 对于新角色，不需要失效缓存，因为还没有关联的权限
         logger.info("创建角色成功，名称: {}", roleCreateDTO.name)
     }
 
@@ -49,7 +55,9 @@ class RoleService(
     fun update(roleUpdateDTO: RoleUpdateDTO) {
         logger.info("更新角色，名称: {}", roleUpdateDTO.name)
         roleRepository.updateById(roleUpdateDTO)
-        logger.info("更新角色成功，名称: {}", roleUpdateDTO.name)
+        // 发布角色缓存失效事件
+        eventPublisher.publishEvent(RoleRoutePermissionCacheInvalidateEvent(this, roleUpdateDTO.id!!))
+        logger.info("更新角色成功，名称: {}, 角色路由权限缓存失效事件已发布", roleUpdateDTO.name)
     }
 
     /**

@@ -1,7 +1,9 @@
 package com.zhengchalei.gox.modules.system.service
 
+import com.zhengchalei.gox.framework.event.AllRoutePermissionCacheInvalidateEvent
 import com.zhengchalei.gox.modules.system.entity.dto.*
 import com.zhengchalei.gox.modules.system.repository.RoutePermissionRepository
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -10,7 +12,8 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional(rollbackFor = [Exception::class])
 class RoutePermissionService(
-    private val routePermissionRepository: RoutePermissionRepository
+    private val routePermissionRepository: RoutePermissionRepository,
+    private val eventPublisher: ApplicationEventPublisher
 ) {
 
     private val logger = org.slf4j.LoggerFactory.getLogger(RoutePermissionService::class.java)
@@ -51,7 +54,9 @@ class RoutePermissionService(
     fun deleteById(id: Long) {
         logger.info("删除路由权限，ID: {}", id)
         routePermissionRepository.deleteById(id)
-        logger.info("删除路由权限成功，ID: {}", id)
+        // 发布缓存失效事件
+        eventPublisher.publishEvent(AllRoutePermissionCacheInvalidateEvent(this))
+        logger.info("删除路由权限成功，ID: {}, 路由权限缓存失效事件已发布", id)
     }
 
     /**
@@ -60,7 +65,9 @@ class RoutePermissionService(
     fun create(routePermissionCreateDTO: RoutePermissionCreateDTO) {
         logger.info("创建路由权限，路径: {}", routePermissionCreateDTO.path)
         routePermissionRepository.save(routePermissionCreateDTO)
-        logger.info("创建路由权限成功，路径: {}", routePermissionCreateDTO.path)
+        // 发布缓存失效事件
+        eventPublisher.publishEvent(AllRoutePermissionCacheInvalidateEvent(this))
+        logger.info("创建路由权限成功，路径: {}, 路由权限缓存失效事件已发布", routePermissionCreateDTO.path)
     }
 
     /**
@@ -69,7 +76,9 @@ class RoutePermissionService(
     fun update(routePermissionUpdateDTO: RoutePermissionUpdateDTO) {
         logger.info("更新路由权限，ID: {}", routePermissionUpdateDTO.id)
         routePermissionRepository.updateById(routePermissionUpdateDTO)
-        logger.info("更新路由权限成功，ID: {}", routePermissionUpdateDTO.id)
+        // 发布缓存失效事件
+        eventPublisher.publishEvent(AllRoutePermissionCacheInvalidateEvent(this))
+        logger.info("更新路由权限成功，ID: {}, 路由权限缓存失效事件已发布", routePermissionUpdateDTO.id)
     }
     
     /**

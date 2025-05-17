@@ -42,7 +42,6 @@ input RoleCreateDTO {
     description
     @NotNull(message = "权限不能为空")
     permissionIds
-    routePermissionIds
 }
 
 input RoleUpdateDTO {
@@ -55,7 +54,6 @@ input RoleUpdateDTO {
     description
     @NotNull(message = "权限不能为空")
     permissionIds
-    routePermissionIds
 }
 
 specification RoleSpecification {

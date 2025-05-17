@@ -2,6 +2,8 @@ package com.zhengchalei.gox.modules.system.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.zhengchalei.gox.modules.system.entity.dto.RoleCreateDTO
+import com.zhengchalei.gox.modules.system.entity.dto.RoleDetailDTO
+import com.zhengchalei.gox.modules.system.entity.dto.RoleListDTO
 import com.zhengchalei.gox.modules.system.entity.dto.RoleUpdateDTO
 import com.zhengchalei.gox.modules.system.service.RoleService
 import com.zhengchalei.gox.starter.GoxApplication
@@ -10,12 +12,15 @@ import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.LocalDateTime
 
 @AutoConfigureMockMvc
 @SpringBootTest(classes = [GoxApplication::class])
@@ -34,16 +39,18 @@ class RoleControllerTest {
     fun `should find role by id`() {
         val roleId = 1L
         Mockito.`when`(roleService.findById(roleId)).thenReturn(
-            com.zhengchalei.gox.modules.system.entity.dto.RoleDetailDTO(
+            RoleDetailDTO(
                 id = roleId,
                 name = "Test Role",
                 code = "TEST_ROLE",
                 enabled = true,
                 description = "Test Description",
-                createdTime = java.time.LocalDateTime.now(),
-                updatedTime = java.time.LocalDateTime.now(),
+                createdTime = LocalDateTime.now(),
+                updatedTime = LocalDateTime.now(),
                 permissionIds = listOf(),
-                permissions = listOf()
+                permissions = listOf(),
+                routePermissions = listOf(),
+                routePermissionIds = listOf()
             )
         )
 
@@ -68,7 +75,7 @@ class RoleControllerTest {
             name = "New Role",
             code = "NEW_ROLE",
             description = "New Role Description",
-            permissionIds = listOf()
+            permissionIds = listOf(),
         )
         Mockito.doNothing().`when`(roleService).create(roleCreateDTO)
 
@@ -103,20 +110,21 @@ class RoleControllerTest {
     fun `should find role page`() {
         val page = 1
         val size = 10
-        val pageable = org.springframework.data.domain.PageRequest.of(page, size)
+        val pageable = PageRequest.of(page, size)
         val roleList = listOf(
-            com.zhengchalei.gox.modules.system.entity.dto.RoleListDTO(
+            RoleListDTO(
                 id = 1L,
                 name = "Test Role",
                 code = "TEST_ROLE",
                 enabled = true,
                 description = "Test Description",
-                createdTime = java.time.LocalDateTime.now(),
-                updatedTime = java.time.LocalDateTime.now(),
-                permissionIds = listOf()
+                createdTime = LocalDateTime.now(),
+                updatedTime = LocalDateTime.now(),
+                permissionIds = listOf(),
+                routePermissionIds = listOf()
             )
         )
-        val pageResult = org.springframework.data.domain.PageImpl(roleList, pageable, roleList.size.toLong())
+        val pageResult = PageImpl(roleList, pageable, roleList.size.toLong())
         Mockito.`when`(roleService.findPage(Mockito.any(), Mockito.any())).thenReturn(pageResult)
 
         mockMvc.perform(
