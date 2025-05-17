@@ -1,6 +1,5 @@
 package com.zhengchalei.gox.modules.generator
 
-import freemarker.template.Configuration
 import freemarker.template.Template
 import java.io.File
 import java.nio.file.Files

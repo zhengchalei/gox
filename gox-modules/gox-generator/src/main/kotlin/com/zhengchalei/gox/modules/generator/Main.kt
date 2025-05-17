@@ -13,7 +13,6 @@ fun main(args: Array<String>) {
             FieldDefinition("password", "String"),
             FieldDefinition("status", "Integer"),
             FieldDefinition("ip", "String"),
-            FieldDefinition("loginTime", "Date"),
             FieldDefinition("remark", "String")
         )
     )
