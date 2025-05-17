@@ -174,12 +174,16 @@ class RoutePermissionInterceptor(
             // 无权限访问
             logger.warn("用户 id:[{}], username:[{}] 无权限访问: {} {}", user.id, user.username, method, path)
             response.status = HttpStatus.FORBIDDEN.value()
+            response.contentType = "application/json"
+            response.characterEncoding = "UTF-8"
             response.writer.write("无权限访问")
             return false
 
         } catch (e: Exception) {
             logger.error("路由权限检查异常", e)
             response.status = HttpStatus.INTERNAL_SERVER_ERROR.value()
+            response.contentType = "application/json"
+            response.characterEncoding = "UTF-8"
             response.writer.write("服务器内部错误")
             return false
         }
