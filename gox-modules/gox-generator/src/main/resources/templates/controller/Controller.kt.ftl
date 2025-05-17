@@ -1,5 +1,6 @@
 package ${packageName}.controller
 
+import com.zhengchalei.gox.framework.config.oneIndex
 import ${packageName}.entity.dto.*
 import ${packageName}.service.${entityName}Service
 import io.swagger.v3.oas.annotations.Operation
@@ -25,17 +26,7 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
         val result = service.findById(id)
         return ResponseEntity.ok(result)
     }
-<#if entityName == "User">
-    @Operation(summary = "根据用户名查询${entityName}", description = "通过用户名获取${entityName}详细信息")
-    @GetMapping("/username/{username}")
-    fun findByUsername(
-        @Parameter(description = "用户名", required = true)
-        @PathVariable username: String
-    ): ResponseEntity<${entityName}DetailDTO> {
-        val result = service.findByUsername(username)
-        return ResponseEntity.ok(result)
-    }
-</#if>
+
     @Operation(summary = "删除${entityName}", description = "根据${entityName}ID删除${entityName}")
     @DeleteMapping("/{id}")
     fun deleteById(
@@ -75,7 +66,7 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
         @RequestParam(defaultValue = "10") size: Int,
         specification: ${entityName}Specification
     ): ResponseEntity<Page<${entityName}ListDTO>> {
-        val pageRequest = PageRequest.of(page, size)
+        val pageRequest = PageRequest.of(page, size).oneIndex()
         val pageResult = service.findPage(pageRequest, specification)
         return ResponseEntity.ok(pageResult)
     }

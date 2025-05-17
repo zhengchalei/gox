@@ -7,7 +7,7 @@ import java.io.File
 import java.nio.file.Files
 
 class CodeGenerator(
-    private val outputDir: String = "d:/generated",
+    private val outputDir: String = "C:\\Users\\xiaoshitou\\IdeaProjects\\gox\\gox-modules\\gox-system",
     val packageName: String,
     val entityName: String,
     val tableName: String,
@@ -19,7 +19,6 @@ class CodeGenerator(
         templateExceptionHandler = TemplateExceptionHandler.RETHROW_HANDLER
     }
 
-
     fun generate() {
         generateEntity()
         generateDto()
@@ -28,33 +27,33 @@ class CodeGenerator(
         generateRepository()
     }
 
-    private fun generateEntity() {
-        val template = cfg.getTemplate("entity/Entity.kt.ftl")
-        val outputFile = File("$outputDir/${packageName.replace('.', '/')}/$entityName.kt")
+    private fun generateDto() {
+        val template = cfg.getTemplate("dto/Entity.dto.ftl")
+        val outputFile = File("$outputDir/dto/${packageName.replace('.', '/')}/$entityName.dto")
         writeToFile(outputFile, template)
     }
 
-    private fun generateDto() {
-        val template = cfg.getTemplate("dto/Entity.dto.ftl")
-        val outputFile = File("$outputDir/dto/$entityName.dto")
+    private fun generateEntity() {
+        val template = cfg.getTemplate("entity/Entity.kt.ftl")
+        val outputFile = File("$outputDir/kotlin/${packageName.replace('.', '/')}/$entityName.kt")
         writeToFile(outputFile, template)
     }
 
     private fun generateService() {
         val template = cfg.getTemplate("service/Service.kt.ftl")
-        val outputFile = File("$outputDir/${packageName.replace('.', '/')}/${entityName}Service.kt")
+        val outputFile = File("$outputDir/kotlin/${packageName.replace('.', '/')}/${entityName}Service.kt")
         writeToFile(outputFile, template)
     }
 
     private fun generateController() {
         val template = cfg.getTemplate("controller/Controller.kt.ftl")
-        val outputFile = File("$outputDir/${packageName.replace('.', '/')}/${entityName}Controller.kt")
+        val outputFile = File("$outputDir/kotlin/${packageName.replace('.', '/')}/${entityName}Controller.kt")
         writeToFile(outputFile, template)
     }
 
     private fun generateRepository() {
         val template = cfg.getTemplate("repository/Repository.kt.ftl")
-        val outputFile = File("$outputDir/${packageName.replace('.', '/')}/${entityName}Repository.kt")
+        val outputFile = File("$outputDir/kotlin/${packageName.replace('.', '/')}/${entityName}Repository.kt")
         writeToFile(outputFile, template)
     }
 

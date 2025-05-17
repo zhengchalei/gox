@@ -19,14 +19,7 @@ class ${entityName}Service(private val repository: ${entityName}Repository) {
             logger.info("查询${entityName}成功，ID: {}", id)
         }
     }
-<#if entityName == "User">
-    fun findByUsername(username: String): ${entityName}DetailDTO {
-        logger.info("查询${entityName}，用户名: {}", username)
-        return repository.findByUsername(username).also {
-            logger.info("查询${entityName}成功，用户名: {}", username)
-        }
-    }
-</#if>
+
     fun deleteById(id: Long) {
         logger.info("删除${entityName}，ID: {}", id)
         repository.deleteById(id)
@@ -34,15 +27,15 @@ class ${entityName}Service(private val repository: ${entityName}Repository) {
     }
 
     fun create(dto: ${entityName}CreateDTO) {
-        logger.info("创建${entityName}，名称: {}", dto)
+        logger.info("创建${entityName}，数据: {}", dto)
         repository.save(dto)
-        logger.info("创建${entityName}成功，名称: {}", dto)
+        logger.info("创建${entityName}成功，数据: {}", dto)
     }
 
     fun update(dto: ${entityName}UpdateDTO) {
-        logger.info("更新${entityName}，名称: {}", dto)
+        logger.info("更新${entityName}，数据: {}", dto)
         repository.updateById(dto)
-        logger.info("更新${entityName}成功，名称: {}", dto)
+        logger.info("更新${entityName}成功，数据: {}", dto)
     }
 
     fun findPage(

@@ -2,10 +2,6 @@ package ${packageName}.repository
 
 import ${packageName}.entity.${entityName}
 import ${packageName}.entity.dto.*
-import ${packageName}.entity.id
-<#if entityName == "User">
-import ${packageName}.entity.username
-</#if>
 import org.babyfish.jimmer.spring.repository.fetchSpringPage
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.asc
@@ -41,17 +37,7 @@ class ${entityName}Repository(private val sqlClient: KSqlClient) {
             .fetchOneOrNull()
             ?: throw IllegalArgumentException("${entityName}不存在")
     }
-<#if entityName == "User">
-    fun findByUsername(username: String): ${entityName}DetailDTO {
-        return sqlClient
-            .createQuery(${entityName}::class) {
-                where(table.username eq username)
-                select(table.fetch(${entityName}DetailDTO::class))
-            }
-            .fetchOneOrNull()
-            ?: throw IllegalArgumentException("${entityName}不存在")
-    }
-</#if>
+
     fun save(dto: ${entityName}CreateDTO): ${entityName} {
         val saveResult = sqlClient.save(dto)
         if (!saveResult.isModified) {
