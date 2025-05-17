@@ -1,8 +1,11 @@
 package com.zhengchalei.gox.modules.generator
 
 fun main(args: Array<String>) {
+    val projectRoot = System.getProperty("user.dir")
     val generator = CodeGenerator(
-        packageName = "com.zhengchalei.gox.modules.system.entity",
+        projectRoot = projectRoot,
+        moduleName = "system",
+        packageName = "com.zhengchalei.gox.modules.system",
         entityName = "LoginLog",
         tableName = "sys_login_log",
         fields = listOf(
