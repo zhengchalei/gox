@@ -10,9 +10,11 @@ import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "${entityName}管理", description = "${entityName}相关操作")
+@Validated
 @RestController
 @RequestMapping("/api/v1/sys/${entityName?lower_case}")
 class ${entityName}Controller(private val service: ${entityName}Service) {

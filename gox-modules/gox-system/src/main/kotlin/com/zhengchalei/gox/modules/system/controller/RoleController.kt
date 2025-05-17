@@ -10,9 +10,11 @@ import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "角色管理", description = "角色相关操作")
+@Validated
 @RestController
 @RequestMapping("/api/v1/sys/role")
 class RoleController(private val roleService: RoleService) {

@@ -10,9 +10,11 @@ import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "用户管理", description = "用户相关操作")
+@Validated
 @RestController
 @RequestMapping("/api/v1/sys/user")
 class UserController(private val userService: UserService) {

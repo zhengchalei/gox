@@ -13,6 +13,7 @@ RoleListDTO {
     createdTime
     updatedTime
     permissionIds
+    routePermissionIds
 }
 
 RoleDetailDTO {
@@ -27,6 +28,10 @@ RoleDetailDTO {
     permissions {
         #allScalars
     }
+    routePermissionIds
+    routePermissions {
+        #allScalars
+    }
 }
 
 input RoleCreateDTO {
@@ -37,6 +42,7 @@ input RoleCreateDTO {
     description
     @NotNull(message = "权限不能为空")
     permissionIds
+    routePermissionIds
 }
 
 input RoleUpdateDTO {
@@ -49,6 +55,7 @@ input RoleUpdateDTO {
     description
     @NotNull(message = "权限不能为空")
     permissionIds
+    routePermissionIds
 }
 
 specification RoleSpecification {
@@ -60,4 +67,5 @@ specification RoleSpecification {
     createdTime
     updatedTime
     associatedIdIn(permissions) as permissionIds
+    associatedIdIn(routePermissions) as routePermissionIds
 }
