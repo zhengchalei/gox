@@ -1,4 +1,4 @@
-package com.zhengchalei.gox.modules.system.interceptor
+package com.zhengchalei.gox.modules.system.auth.interceptor
 
 import cn.dev33.satoken.stp.StpUtil
 import com.zhengchalei.gox.modules.system.entity.dto.RoutePermissionDetailDTO

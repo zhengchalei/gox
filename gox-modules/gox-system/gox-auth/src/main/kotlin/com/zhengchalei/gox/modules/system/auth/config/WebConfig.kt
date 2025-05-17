@@ -1,6 +1,6 @@
-package com.zhengchalei.gox.modules.system.config
+package com.zhengchalei.gox.modules.system.auth.config
 
-import com.zhengchalei.gox.modules.system.interceptor.RoutePermissionInterceptor
+import com.zhengchalei.gox.modules.system.auth.interceptor.RoutePermissionInterceptor
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
