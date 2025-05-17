@@ -1,0 +1,49 @@
+# 文件模块配置
+gox:
+  file:
+    # 存储类型：local, aliyun, tencent, minio
+    storage-type: local
+    
+    # 本地存储配置
+    local:
+      # 基础存储路径
+      base-path: uploads
+    
+    # 阿里云OSS配置
+    aliyun:
+      # 访问密钥ID
+      access-key-id: your-access-key-id
+      # 访问密钥密码
+      access-key-secret: your-access-key-secret
+      # 端点
+      endpoint: oss-cn-hangzhou.aliyuncs.com
+      # 存储桶名称
+      bucket-name: your-bucket-name
+      # 自定义域名（可选）
+      domain: 
+    
+    # 腾讯云COS配置
+    tencent:
+      # 访问密钥ID
+      secret-id: your-secret-id
+      # 访问密钥密码
+      secret-key: your-secret-key
+      # 区域
+      region: ap-guangzhou
+      # 存储桶名称
+      bucket-name: your-bucket-name
+      # 自定义域名（可选）
+      domain: 
+    
+    # MinIO配置
+    minio:
+      # 端点
+      endpoint: http://localhost:9000
+      # 访问密钥ID
+      access-key: minioadmin
+      # 访问密钥密码
+      secret-key: minioadmin
+      # 存储桶名称
+      bucket-name: file-storage
+      # 是否使用HTTPS
+      secure: false 

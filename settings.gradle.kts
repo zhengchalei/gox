@@ -7,5 +7,6 @@ include(
     "gox-util",
     "gox-modules:gox-system",
     "gox-modules:gox-generator",
-    "gox-modules:gox-system:gox-auth"
+    "gox-modules:gox-system:gox-auth",
+    "gox-modules:gox-file"
 )

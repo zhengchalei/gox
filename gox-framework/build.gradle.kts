@@ -30,5 +30,8 @@ dependencies {
     api("org.springdoc:springdoc-openapi-starter-webmvc-ui:${rootProject.extra["springdocVersion"]}")
     api("cn.dev33:sa-token-spring-boot3-starter:1.42.0")
     api("cn.dev33:sa-token-spring-aop:1.42.0")
+    // 通用工具
+    api("org.apache.commons:commons-lang3")
+    api("commons-io:commons-io:latest.release")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 }
