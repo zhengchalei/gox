@@ -1,14 +1,12 @@
 package com.zhengchalei.gox.modules.system.repository
 
-import com.zhengchalei.gox.modules.system.entity.RoutePermission
+import com.zhengchalei.gox.modules.system.entity.*
 import com.zhengchalei.gox.modules.system.entity.dto.*
-import com.zhengchalei.gox.modules.system.entity.id
-import com.zhengchalei.gox.modules.system.entity.path
-import com.zhengchalei.gox.modules.system.entity.method
 import org.babyfish.jimmer.spring.repository.fetchSpringPage
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.asc
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
+import org.babyfish.jimmer.sql.kt.ast.expression.valueIn
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -31,7 +29,7 @@ class RoutePermissionRepository(private val sqlClient: KSqlClient) {
             }
         return query.fetchSpringPage(pageRequest.pageNumber, pageRequest.pageSize)
     }
-    
+
     fun findByPathAndMethod(path: String, method: String): RoutePermissionDetailDTO? {
         return this.sqlClient
             .createQuery(RoutePermission::class) {
@@ -79,7 +77,7 @@ class RoutePermissionRepository(private val sqlClient: KSqlClient) {
             throw IllegalArgumentException("删除失败")
         }
     }
-    
+
     /**
      * 获取用户角色对应的所有路由权限
      */
@@ -87,11 +85,11 @@ class RoutePermissionRepository(private val sqlClient: KSqlClient) {
         if (roleIds.isEmpty()) {
             return emptyList()
         }
-        
+
         return this.sqlClient
             .createQuery(RoutePermission::class) {
                 where(
-                    table.roles.id valueIn roleIds
+                    table.asTableEx().roles.id valueIn roleIds
                 )
                 select(table.fetch(RoutePermissionDetailDTO::class))
             }

@@ -10,9 +10,11 @@ import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "路由权限管理", description = "路由权限相关操作")
+@Validated
 @RestController
 @RequestMapping("/api/v1/sys/route-permission")
 class RoutePermissionController(private val routePermissionService: RoutePermissionService) {
