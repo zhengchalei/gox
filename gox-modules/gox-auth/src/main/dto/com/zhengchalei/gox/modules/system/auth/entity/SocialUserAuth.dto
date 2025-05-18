@@ -1,0 +1,49 @@
+export com.zhengchalei.gox.modules.system.auth.entity.SocialUserAuth
+    -> package com.zhengchalei.gox.modules.system.auth.dto
+
+import jakarta.validation.constraints.NotNull
+
+// 社会化用户关系DTO
+SocialUserAuthDTO {
+    #allScalars
+    userId
+    socialUserId
+    user {
+        #allScalars
+    }
+    socialUser {
+        #allScalars
+    }
+}
+
+// 社会化用户关系详情DTO
+SocialUserAuthDetailDTO {
+    #allScalars
+    userId
+    socialUserId
+    socialUser {
+        #allScalars
+    }
+}
+
+// 社会化用户关系创建DTO
+input SocialUserAuthCreateDTO {
+    @NotNull(message = "用户ID不能为空")
+    userId
+    @NotNull(message = "社会化用户ID不能为空")
+    socialUserId
+}
+
+// 社会化用户关系查询规格
+specification SocialUserAuthSpecification {
+    user {
+        id
+    }
+    socialUser {
+        id
+        uuid
+        source
+    }
+    createdTime
+    updatedTime
+} 

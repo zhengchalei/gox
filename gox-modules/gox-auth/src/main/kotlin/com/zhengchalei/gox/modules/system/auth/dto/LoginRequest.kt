@@ -17,4 +17,4 @@ data class LoginRequest(
     // rememberMe: Boolean = false
     @Schema(description = "记住我", required = false, example = "false")
     val rememberMe: Boolean = false
-) 
+)

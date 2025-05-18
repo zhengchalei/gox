@@ -10,6 +10,9 @@ java {
 
 kotlin {
     jvmToolchain(21)
+    sourceSets.main {
+        kotlin.srcDir("build/generated/ksp/main/kotlin")
+    }
 }
 
 dependencyManagement {
@@ -19,8 +22,15 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation(project(":gox-modules:gox-system"))
     implementation(project(":gox-framework"))
     implementation(project(":gox-util"))
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-} 
+    ksp("org.babyfish.jimmer:jimmer-ksp:${rootProject.extra["jimmerVersion"]}")
+
+    testImplementation(project(":gox-starter"))
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
+}
