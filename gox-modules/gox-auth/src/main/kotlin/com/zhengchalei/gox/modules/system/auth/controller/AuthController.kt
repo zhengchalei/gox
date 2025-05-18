@@ -1,6 +1,7 @@
 package com.zhengchalei.gox.modules.system.auth.controller
 
 import cn.dev33.satoken.stp.StpUtil
+import com.zhengchalei.gox.R
 import com.zhengchalei.gox.modules.system.auth.dto.LoginRequest
 import com.zhengchalei.gox.modules.system.auth.dto.LoginResponse
 import com.zhengchalei.gox.modules.system.auth.service.AuthService
@@ -13,32 +14,23 @@ import me.zhyd.oauth.utils.AuthStateUtils
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-/**
- * 无需登录的认证控制器
- */
+/** 无需登录的认证控制器 */
 @Tag(name = "认证接口", description = "登录认证相关操作")
 @RestController
 @RequestMapping("/api")
 class AuthController(private val authService: AuthService) {
 
-    /**
-     * 用户名密码登录
-     */
+    /** 用户名密码登录 */
     @Operation(summary = "用户名密码登录")
     @PostMapping("/auth/login")
-    fun login(
-        @Valid
-        @RequestBody loginRequest: LoginRequest
-    ): ResponseEntity<LoginResponse> {
+    fun login(@Valid @RequestBody loginRequest: LoginRequest): ResponseEntity<LoginResponse> {
         val user: User = authService.login(loginRequest)
         StpUtil.login(user.id, loginRequest.rememberMe)
         val loginResponse = LoginResponse(StpUtil.getTokenValue(), user.username)
         return ResponseEntity.ok(loginResponse)
     }
 
-    /**
-     * 获取第三方登录授权地址
-     */
+    /** 获取第三方登录授权地址 */
     @Operation(summary = "获取第三方登录授权地址")
     @GetMapping("/oauth/render/{source}")
     fun renderAuth(@PathVariable source: String): ResponseEntity<String> {
@@ -46,45 +38,50 @@ class AuthController(private val authService: AuthService) {
         return ResponseEntity.ok(authUrl)
     }
 
-    /**
-     * 第三方登录回调接口
-     */
+    /** 第三方登录回调接口 */
     @Operation(summary = "第三方登录回调接口")
     @GetMapping("/oauth/callback/{source}")
     fun callback(
         @PathVariable source: String,
         @ModelAttribute callback: AuthCallback
-    ): ResponseEntity<Any> {
+    ): ResponseEntity<R<Any>> {
         val response = authService.callback(source, callback)
-        if (response.code == 2000) {
+        if (response.ok()) {
             // 授权成功，创建或更新社会化用户并执行登录
             val authUser = response.data
-            
-            // 检查状态值是否包含绑定信息
-            val state = callback.state ?: ""
-            if (state.startsWith("bind_")) {
-                // 这是一个绑定操作，提取用户ID并执行绑定
-                val parts = state.split("_")
-                if (parts.size >= 2) {
-                    try {
-                        val userId = parts[1].toLong()
-                        // 创建或更新社会化用户
-                        val socialUser = authService.createOrUpdateSocialUser(authUser)
-                        // 执行绑定
-                        val bindResult = authService.bindUser(userId, socialUser.id)
-                        return ResponseEntity.ok(bindResult)
-                    } catch (e: Exception) {
-                        return ResponseEntity.badRequest().body("绑定失败: " + e.message)
-                    }
-                }
-            } else {
-                // 执行登录或注册
-                val loginResponse = authService.loginOrRegisterBySocial(authUser)
-                return ResponseEntity.ok(loginResponse)
+            // 仅仅执行登陆， 如果登陆账号不存在，则保存当前上下文信息， 然后用户绑定或者注册
+            val loginResponse = authService.oauth2Login(authUser)
+            if (loginResponse.first != null) {
+                return ResponseEntity.ok(
+                    R(
+                        success = true,
+                        data = loginResponse.first,
+                    )
+                )
             }
+            return ResponseEntity.ok(
+                R(
+                    success = false,
+                    message = "未绑定用户， 是否注册为新用户?",
+                    data = loginResponse.second,
+                )
+            )
         }
-        
+
         // 授权失败或未处理的情况，直接返回原始响应
-        return ResponseEntity.ok(response)
+        return ResponseEntity.badRequest().body(R(success = false, message = "授权失败?"))
     }
-} 
+
+    /**
+     * 根据 oauth-callback 接口返回的 uuid 进行注册
+     * @param uuid 第三方登录返回的 uuid
+     * @return 注册结果
+     */
+    @Operation(summary = "根据 oauth-callback 接口返回的 uuid 进行注册")
+    @GetMapping("/oauth/register/{uuid}")
+    fun register(@PathVariable uuid: String): ResponseEntity<R<LoginResponse>> {
+        // 根据 uuid 进行注册
+        val loginResponse = authService.registerForOAuthUUID(uuid)
+        return ResponseEntity.ok(R(success = true, message = "注册成功", data = loginResponse))
+    }
+}

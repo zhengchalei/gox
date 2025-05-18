@@ -1,100 +1,239 @@
 package com.zhengchalei.gox.modules.system.auth.service
 
+import cn.dev33.satoken.stp.StpUtil
 import com.zhengchalei.gox.modules.system.auth.dto.LoginRequest
 import com.zhengchalei.gox.modules.system.auth.dto.LoginResponse
 import com.zhengchalei.gox.modules.system.auth.dto.SocialUserAuthDetailDTO
 import com.zhengchalei.gox.modules.system.auth.dto.SocialUserDetailDTO
+import com.zhengchalei.gox.modules.system.auth.entity.SocialUser
+import com.zhengchalei.gox.modules.system.auth.entity.SocialUserAuth
+import com.zhengchalei.gox.modules.system.auth.entity.by
+import com.zhengchalei.gox.modules.system.auth.repository.SocialUserAuthRepository
+import com.zhengchalei.gox.modules.system.auth.repository.SocialUserRepository
 import com.zhengchalei.gox.modules.system.entity.User
+import com.zhengchalei.gox.modules.system.entity.by
+import com.zhengchalei.gox.modules.system.entity.dto.UserDetailDTO
+import com.zhengchalei.gox.modules.system.entity.id
+import com.zhengchalei.gox.modules.system.entity.username
+import com.zhengchalei.gox.modules.system.repository.UserRepository
+import com.zhengchalei.gox.util.PasswordUtil
+import me.zhyd.oauth.exception.AuthException
 import me.zhyd.oauth.model.AuthCallback
 import me.zhyd.oauth.model.AuthResponse
 import me.zhyd.oauth.model.AuthUser
+import me.zhyd.oauth.request.AuthRequest
+import me.zhyd.oauth.utils.AuthStateUtils
+import org.babyfish.jimmer.kt.makeIdOnly
+import org.babyfish.jimmer.kt.new
+import org.babyfish.jimmer.sql.kt.KSqlClient
+import org.babyfish.jimmer.sql.kt.ast.expression.eq
+import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
+import java.util.*
 
-interface AuthService {
-    fun login(request: LoginRequest): User
+/**
+ * 认证服务实现类
+ */
+@Service
+@Transactional(rollbackFor = [Exception::class])
+class AuthService(
+    private val sqlClient: KSqlClient,
+    private val socialUserRepository: SocialUserRepository,
+    private val socialUserAuthRepository: SocialUserAuthRepository,
+    private val userRepository: UserRepository,
+    private val authRequestFactory: Map<String, AuthRequest>
+) {
+
+    private val log = LoggerFactory.getLogger(this::class.java)
+
+    // 来自于 oauth2 login 登陆用户， 但是未注册的， 存储登陆信息
+    private val noRegisterOauthLoginAuthUser = HashMap<String, AuthUser>()
+
+
+    fun login(request: LoginRequest): User {
+        val user: User = this.sqlClient.createQuery(User::class) {
+            where(table.username eq request.username)
+            select(table)
+        }.fetchOneOrNull() ?: throw IllegalArgumentException("用户不存在")
+
+        if (!PasswordUtil.matches(request.password, user.password)) {
+            log.warn("密码错误: {}", user.username)
+            throw IllegalArgumentException("密码错误")
+        }
+
+        if (!user.enabled) {
+            log.warn("用户被禁用: {}", user.username)
+            throw IllegalArgumentException("用户被禁用")
+        }
+
+        return user
+    }
 
     /**
      * 获取第三方登录地址
-     *
-     * @param source 平台来源
-     * @param state 状态值
-     * @return 登录授权地址
      */
-    fun getAuthUrl(source: String, state: String): String
+    fun getAuthUrl(source: String, state: String): String {
+        val authRequest = getAuthRequest(source)
+        val finalState = state.ifEmpty { AuthStateUtils.createState() }
+        return authRequest.authorize(finalState)
+    }
 
     /**
      * 授权回调
-     *
-     * @param source 平台来源
-     * @param callback 回调参数
-     * @return 授权响应
      */
-    fun callback(source: String, callback: AuthCallback): AuthResponse<AuthUser>
+    fun callback(source: String, callback: AuthCallback): AuthResponse<AuthUser> {
+        val authRequest = getAuthRequest(source)
+        return authRequest.login(callback)
+    }
 
     /**
      * 根据UUID和来源查询社会化用户
-     *
-     * @param uuid 第三方平台用户UUID
-     * @param source 平台来源
-     * @return 社会化用户详情
      */
-    fun findByUuidAndSource(uuid: String, source: String): SocialUserDetailDTO?
-
-    /**
-     * 创建或更新社会化用户
-     *
-     * @param authUser 认证用户信息
-     * @return 社会化用户详情
-     */
-    fun createOrUpdateSocialUser(authUser: AuthUser): SocialUserDetailDTO
+    fun findByUuidAndSource(uuid: String, source: String): SocialUserDetailDTO? {
+        return socialUserRepository.findByUuidAndSource(uuid, source)
+    }
 
     /**
      * 绑定社会化用户到系统用户
-     *
-     * @param userId 系统用户ID
-     * @param socialUserId 社会化用户ID
-     * @return 社会化用户关系详情
      */
-    fun bindUser(userId: Long, socialUserId: Long): SocialUserAuthDetailDTO
+    fun bindUser(userId: Long, socialUserId: Long): SocialUserAuthDetailDTO {
+        // 检查是否已绑定
+        val existingAuth = socialUserAuthRepository.findBySocialUserId(socialUserId)
+        if (existingAuth != null) {
+            throw IllegalStateException("该社会化账号已绑定到其他用户")
+        }
+
+        // 创建绑定关系
+        val socialUserAuthDraft = new(SocialUserAuth::class).by {
+            // 这里我们假设 user 和 socialUser 字段都是对象引用
+            // 在实际使用中，需要先查询这些对象，然后设置引用
+            this.user = makeIdOnly(userId)
+            this.socialUser = makeIdOnly(socialUserId)
+        }
+
+        val savedAuth = socialUserAuthRepository.save(socialUserAuthDraft)
+        return socialUserAuthRepository.findBySocialUserId(savedAuth.socialUser.id)
+            ?: throw IllegalStateException("无法获取刚刚创建的社会化用户关系")
+    }
 
     /**
      * 解绑社会化用户
-     *
-     * @param userId 系统用户ID
-     * @param source 平台来源
-     * @return 是否解绑成功
      */
-    fun unbindUser(userId: Long, source: String): Boolean
+    fun unbindUser(userId: Long, source: String): Boolean {
+        val auth = socialUserAuthRepository.findByUserIdAndSource(userId, source)
+            ?: return false
+
+        return socialUserAuthRepository.deleteByUserIdAndSocialUserId(userId, auth.socialUserId)
+    }
 
     /**
      * 查询用户绑定的所有社会化账号
-     *
-     * @param userId 系统用户ID
-     * @return 社会化用户关系详情列表
      */
-    fun findBindSocialUsers(userId: Long): List<SocialUserAuthDetailDTO>
+    fun findBindSocialUsers(userId: Long): List<SocialUserAuthDetailDTO> {
+        return socialUserAuthRepository.findByUserId(userId)
+    }
 
     /**
      * 检查用户是否已绑定指定平台的社会化账号
-     *
-     * @param userId 系统用户ID
-     * @param source 平台来源
-     * @return 是否已绑定
      */
-    fun isBound(userId: Long, source: String): Boolean
-    
+    fun isBound(userId: Long, source: String): Boolean {
+        return socialUserAuthRepository.findByUserIdAndSource(userId, source) != null
+    }
+
     /**
      * 当前登录用户绑定第三方平台
-     *
-     * @param source 平台来源
-     * @return 授权绑定地址
      */
-    fun bindCurrentUser(source: String): String
-    
+    fun bindCurrentUser(source: String): String {
+        // 获取当前登录用户ID
+        val loginId = StpUtil.getLoginIdAsLong()
+        // 生成状态值，包含用户ID信息，用于回调时识别用户
+        val state = "bind_${loginId}_${System.currentTimeMillis()}"
+        // 返回授权地址
+        return getAuthUrl(source, state)
+    }
+
     /**
-     * 第三方登录自动注册并返回Token
-     * 
-     * @param authUser 认证用户信息
-     * @return 登录响应
+     * 第三方登录
      */
-    fun loginOrRegisterBySocial(authUser: AuthUser): LoginResponse
-} 
+    fun oauth2Login(authUser: AuthUser): Pair<LoginResponse?, String?> {
+        val id = this.sqlClient.createQuery(User::class) {
+            where(table.username eq authUser.username)
+            select(table.id)
+        }.fetchOneOrNull()
+        if (id != null) {
+            StpUtil.login(id)
+            return Pair(LoginResponse(StpUtil.getTokenValue(), authUser.username), null)
+        }
+        val uuid: String = UUID.randomUUID().toString()
+        noRegisterOauthLoginAuthUser[uuid] = authUser
+        return Pair(null, uuid)
+    }
+
+    /**
+     * 创建 OAUTH Login User
+     */
+    fun createOauthLoginUser(authUser: AuthUser): UserDetailDTO {
+        val socialUserDraft = new(SocialUser::class).by {
+            uuid = authUser.uuid
+            source = authUser.source
+            accessToken = authUser.token.accessToken
+            expireIn = authUser.token.expireIn
+            refreshToken = authUser.token.refreshToken
+            openId = authUser.token.openId
+            uid = authUser.token.uid
+            accessCode = authUser.token.accessCode
+            unionId = authUser.token.unionId
+            scope = authUser.token.scope
+            tokenType = authUser.token.tokenType
+            idToken = authUser.token.idToken
+            macAlgorithm = authUser.token.macAlgorithm
+            macKey = authUser.token.macKey
+            code = authUser.token.code
+            oauthToken = authUser.token.oauthToken
+            oauthTokenSecret = authUser.token.oauthTokenSecret
+            createdTime = LocalDateTime.now()
+            updatedTime = LocalDateTime.now()
+        }
+        val savedSocialUser = socialUserRepository.save(socialUserDraft)
+
+        // 创建用户
+        // 创建新用户，注意User是接口，需要使用new方法创建
+        val user: User = this.userRepository.save(new(User::class).by {
+            this.username = authUser.username
+            this.password = PasswordUtil.encode(UUID.randomUUID().toString())
+            this.enabled = true
+            this.createdTime = LocalDateTime.now()
+            this.updatedTime = LocalDateTime.now()
+            // 在User接口中没有nickname, avatar和email字段，需要确认实际字段名或添加这些字段
+        })
+
+        // 创建绑定关系
+        bindUser(user.id, savedSocialUser.id)
+
+        socialUserRepository.findById(savedSocialUser.id)
+            ?: throw IllegalStateException("无法获取刚刚创建的社会化用户")
+        return this.userRepository.findById(user.id)
+    }
+
+    /**
+     * 根据 oauth-callback 接口返回的 uuid 进行注册
+     */
+    fun registerForOAuthUUID(uuid: String): LoginResponse {
+        val authUser = noRegisterOauthLoginAuthUser[uuid]
+        if (authUser == null) {
+            throw IllegalArgumentException("未找到未注册的第三方登录用户")
+        }
+        val user = createOauthLoginUser(authUser)
+        StpUtil.login(user.id)
+        return LoginResponse(StpUtil.getTokenValue(), user.username)
+    }
+
+    /**
+     * 获取AuthRequest
+     */
+    private fun getAuthRequest(source: String): AuthRequest {
+        return authRequestFactory[source] ?: throw AuthException("未知的授权来源: $source")
+    }
+}

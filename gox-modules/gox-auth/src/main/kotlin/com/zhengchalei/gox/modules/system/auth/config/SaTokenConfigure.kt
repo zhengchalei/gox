@@ -15,6 +15,6 @@ class SaTokenConfigure : WebMvcConfigurer {
             .addPathPatterns("/**")
             // 排除路径, swagger 文档
             .excludePathPatterns("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
-            .excludePathPatterns("/api/auth/login", "/api/oauth/callback/*", "/api/oauth/render/*")
+            .excludePathPatterns("/api/auth/login", "/api/oauth/callback/*", "/api/oauth/render/*", "/api/oauth/register/*")
     }
 }
