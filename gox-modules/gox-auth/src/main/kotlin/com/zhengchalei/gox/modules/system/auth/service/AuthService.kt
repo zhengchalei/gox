@@ -158,6 +158,15 @@ class AuthService(
      * 第三方登录
      */
     fun oauth2Login(authUser: AuthUser): Pair<LoginResponse?, String?> {
+        // 判断是一个绑定的请求
+        val state = authUser.uuid
+        if (state != null && state.startsWith("bind_")) {
+            val userId: Long = StpUtil.getLoginIdAsLong()
+            bindUser(userId, userId)
+            return Pair(LoginResponse(StpUtil.getTokenValue(), authUser.username), null)
+        }
+
+        // 如果当前用户未登陆
         val id = this.sqlClient.createQuery(User::class) {
             where(table.username eq authUser.username)
             select(table.id)
@@ -166,9 +175,9 @@ class AuthService(
             StpUtil.login(id)
             return Pair(LoginResponse(StpUtil.getTokenValue(), authUser.username), null)
         }
-        val uuid: String = UUID.randomUUID().toString()
-        noRegisterOauthLoginAuthUser[uuid] = authUser
-        return Pair(null, uuid)
+        val singleUseCredential: String = UUID.randomUUID().toString()
+        noRegisterOauthLoginAuthUser[singleUseCredential] = authUser
+        return Pair(null, singleUseCredential)
     }
 
     /**
@@ -218,10 +227,10 @@ class AuthService(
     }
 
     /**
-     * 根据 oauth-callback 接口返回的 uuid 进行注册
+     * 根据 临时凭证 进行注册
      */
-    fun registerForOAuthUUID(uuid: String): LoginResponse {
-        val authUser = noRegisterOauthLoginAuthUser[uuid]
+    fun registerBySingleUseCredential(singleUseCredential: String): LoginResponse {
+        val authUser = noRegisterOauthLoginAuthUser[singleUseCredential]
         if (authUser == null) {
             throw IllegalArgumentException("未找到未注册的第三方登录用户")
         }

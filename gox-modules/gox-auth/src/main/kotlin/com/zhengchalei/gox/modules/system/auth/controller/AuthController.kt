@@ -73,15 +73,15 @@ class AuthController(private val authService: AuthService) {
     }
 
     /**
-     * 根据 oauth-callback 接口返回的 uuid 进行注册
-     * @param uuid 第三方登录返回的 uuid
+     * 根据 oauth-callback 接口返回的 临时凭证 进行注册
+     * @param singleUseCredential 第三方登录返回的 临时凭证
      * @return 注册结果
      */
-    @Operation(summary = "根据 oauth-callback 接口返回的 uuid 进行注册")
-    @GetMapping("/oauth/register/{uuid}")
-    fun register(@PathVariable uuid: String): ResponseEntity<R<LoginResponse>> {
-        // 根据 uuid 进行注册
-        val loginResponse = authService.registerForOAuthUUID(uuid)
+    @Operation(summary = "根据 oauth-callback 接口返回的 临时凭证 进行注册")
+    @GetMapping("/register/oauth/{singleUseCredential}")
+    fun registerBySingleUseCredential(@PathVariable singleUseCredential: String): ResponseEntity<R<LoginResponse>> {
+        // 根据 临时凭证 进行注册
+        val loginResponse = authService.registerBySingleUseCredential(singleUseCredential)
         return ResponseEntity.ok(R(success = true, message = "注册成功", data = loginResponse))
     }
 }
