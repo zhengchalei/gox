@@ -8,6 +8,7 @@ import com.zhengchalei.gox.modules.system.auth.service.AuthService
 import com.zhengchalei.gox.modules.system.entity.User
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import me.zhyd.oauth.model.AuthCallback
 import me.zhyd.oauth.utils.AuthStateUtils
@@ -33,9 +34,10 @@ class AuthController(private val authService: AuthService) {
     /** 获取第三方登录授权地址 */
     @Operation(summary = "获取第三方登录授权地址")
     @GetMapping("/oauth/render/{source}")
-    fun renderAuth(@PathVariable source: String): String {
+    fun renderAuth(@PathVariable source: String, response: HttpServletResponse): String {
         val authUrl: String = authService.getAuthUrl(source, AuthStateUtils.createState())
-        return "redirect:$authUrl"
+        response.sendRedirect(authUrl)
+        return authUrl
     }
 
     /** 第三方登录回调接口 */

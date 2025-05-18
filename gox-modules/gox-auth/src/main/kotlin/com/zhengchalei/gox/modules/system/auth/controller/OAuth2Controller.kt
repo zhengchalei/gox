@@ -6,6 +6,7 @@ import com.zhengchalei.gox.modules.system.auth.dto.SocialUserAuthDetailDTO
 import com.zhengchalei.gox.modules.system.auth.service.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.*
 
 /** 需要登录的认证控制器 所有接口都需要登录才能访问 */
@@ -26,9 +27,10 @@ class OAuth2Controller(private val authService: AuthService) {
     /** 发起绑定其他第三方平台 */
     @Operation(summary = "发起绑定其他第三方平台")
     @GetMapping("/oauth/bind-url/{source}")
-    fun getBindUrl(@PathVariable source: String): String {
+    fun getBindUrl(@PathVariable source: String, response: HttpServletResponse): String {
         val url = authService.bindCurrentUser(source)
-        return "redirect:$url"
+        response.sendRedirect(url)
+        return url
     }
 
     /** 当前登录用户解绑指定第三方平台 */
