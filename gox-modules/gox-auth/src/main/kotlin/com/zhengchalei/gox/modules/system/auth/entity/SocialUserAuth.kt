@@ -1,5 +1,6 @@
 package com.zhengchalei.gox.modules.system.auth.entity
 
+import com.zhengchalei.gox.modules.system.entity.User
 import org.babyfish.jimmer.sql.*
 import java.time.LocalDateTime
 
@@ -19,6 +20,7 @@ interface SocialUserAuth {
     /**
      * 系统用户ID
      */
+    @Key
     @ManyToOne
     @JoinColumn(name = "user_id")
     val user: User
@@ -26,6 +28,7 @@ interface SocialUserAuth {
     /**
      * 社会化用户ID
      */
+    @Key
     @ManyToOne
     @JoinColumn(name = "social_user_id")
     val socialUser: SocialUser

@@ -1,8 +1,10 @@
 package com.zhengchalei.gox.modules.system.auth.repository
 
 import com.zhengchalei.gox.modules.system.auth.dto.SocialUserDetailDTO
-import com.zhengchalei.gox.modules.system.auth.dto.SocialUserDetailDTOFetcher
 import com.zhengchalei.gox.modules.system.auth.entity.SocialUser
+import com.zhengchalei.gox.modules.system.auth.entity.id
+import com.zhengchalei.gox.modules.system.auth.entity.source
+import com.zhengchalei.gox.modules.system.auth.entity.uuid
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
 import org.babyfish.jimmer.sql.kt.ast.expression.valueIn
@@ -25,7 +27,7 @@ class SocialUserRepository(private val sqlClient: KSqlClient) {
             .createQuery(SocialUser::class) {
                 where(table.uuid eq uuid)
                 where(table.source eq source)
-                select(table.fetch(SocialUserDetailDTOFetcher.SHALLOW))
+                select(table.fetch(SocialUserDetailDTO::class))
             }
             .fetchOneOrNull()
     }
@@ -37,7 +39,7 @@ class SocialUserRepository(private val sqlClient: KSqlClient) {
         return this.sqlClient
             .createQuery(SocialUser::class) {
                 where(table.id eq id)
-                select(table.fetch(SocialUserDetailDTOFetcher.SHALLOW))
+                select(table.fetch(SocialUserDetailDTO::class))
             }
             .fetchOneOrNull()
     }
@@ -49,7 +51,7 @@ class SocialUserRepository(private val sqlClient: KSqlClient) {
         return this.sqlClient
             .createQuery(SocialUser::class) {
                 where(table.id valueIn ids)
-                select(table.fetch(SocialUserDetailDTOFetcher.SHALLOW))
+                select(table.fetch(SocialUserDetailDTO::class))
             }
             .execute()
     }

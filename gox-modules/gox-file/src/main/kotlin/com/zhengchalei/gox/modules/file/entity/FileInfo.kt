@@ -55,12 +55,12 @@ interface FileInfo {
     /**
      * 创建时间
      */
-    val createTime: LocalDateTime
+    val createdTime: LocalDateTime
     
     /**
      * 更新时间
      */
-    val updateTime: LocalDateTime
+    val updatedTime: LocalDateTime
 }
 
 /**

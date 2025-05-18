@@ -1,14 +1,18 @@
 package com.zhengchalei.gox.modules.system.auth.service.impl
 
+import cn.dev33.satoken.stp.StpUtil
 import com.zhengchalei.gox.modules.system.auth.dto.*
 import com.zhengchalei.gox.modules.system.auth.entity.SocialUser
 import com.zhengchalei.gox.modules.system.auth.entity.SocialUserAuth
+import com.zhengchalei.gox.modules.system.auth.entity.by
 import com.zhengchalei.gox.modules.system.auth.entity.userId
 import com.zhengchalei.gox.modules.system.auth.repository.SocialUserAuthRepository
 import com.zhengchalei.gox.modules.system.auth.repository.SocialUserRepository
 import com.zhengchalei.gox.modules.system.auth.service.AuthService
 import com.zhengchalei.gox.modules.system.entity.User
+import com.zhengchalei.gox.modules.system.entity.by
 import com.zhengchalei.gox.modules.system.entity.username
+import com.zhengchalei.gox.modules.system.repository.UserRepository
 import com.zhengchalei.gox.util.PasswordUtil
 import me.zhyd.oauth.config.AuthConfig
 import me.zhyd.oauth.exception.AuthException
@@ -17,6 +21,7 @@ import me.zhyd.oauth.model.AuthResponse
 import me.zhyd.oauth.model.AuthUser
 import me.zhyd.oauth.request.AuthRequest
 import me.zhyd.oauth.utils.AuthStateUtils
+import org.babyfish.jimmer.kt.makeIdOnly
 import org.babyfish.jimmer.kt.new
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
@@ -25,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
+import java.util.*
 
 /**
  * 认证服务实现类
@@ -34,6 +40,7 @@ class AuthServiceImpl(
     private val sqlClient: KSqlClient,
     private val socialUserRepository: SocialUserRepository,
     private val socialUserAuthRepository: SocialUserAuthRepository,
+    private val userRepository: UserRepository,
     private val authRequestFactory: Map<String, AuthRequest>
 ) : AuthService {
 
@@ -137,10 +144,8 @@ class AuthServiceImpl(
         val socialUserAuthDraft = new(SocialUserAuth::class).by {
             // 这里我们假设 user 和 socialUser 字段都是对象引用
             // 在实际使用中，需要先查询这些对象，然后设置引用
-            this.user = User::class.new { id = userId }
-            this.socialUser = SocialUser::class.new { id = socialUserId }
-            createdTime = LocalDateTime.now()
-            updatedTime = LocalDateTime.now()
+            this.user = makeIdOnly(userId)
+            this.socialUser = makeIdOnly(socialUserId)
         }
 
         val savedAuth = socialUserAuthRepository.save(socialUserAuthDraft)
@@ -172,6 +177,62 @@ class AuthServiceImpl(
     override fun isBound(userId: Long, source: String): Boolean {
         return socialUserAuthRepository.findByUserIdAndSource(userId, source) != null
     }
+    
+    /**
+     * 当前登录用户绑定第三方平台
+     */
+    override fun bindCurrentUser(source: String): String {
+        // 获取当前登录用户ID
+        val loginId = StpUtil.getLoginIdAsLong()
+        // 生成状态值，包含用户ID信息，用于回调时识别用户
+        val state = "bind_${loginId}_${System.currentTimeMillis()}"
+        // 返回授权地址
+        return getAuthUrl(source, state)
+    }
+    
+    /**
+     * 第三方登录或注册
+     */
+    @Transactional
+    override fun loginOrRegisterBySocial(authUser: AuthUser): LoginResponse {
+        // 先创建或更新社会化用户
+        val socialUser = createOrUpdateSocialUser(authUser)
+        
+        // 查找是否已存在绑定关系
+        val socialUserAuth = socialUserAuthRepository.findBySocialUserId(socialUser.id)
+        
+        if (socialUserAuth != null) {
+            // 已有绑定关系，直接登录
+            StpUtil.login(socialUserAuth.userId)
+            val user = userRepository.findById(socialUserAuth.userId)
+                ?: throw IllegalStateException("无法获取用户信息")
+            return LoginResponse(StpUtil.getTokenValue(), user.username)
+        } else {
+            // 没有绑定关系，需要创建新用户并绑定
+            // 生成随机用户名，可以使用第三方平台的用户名作为前缀
+            val username = "${authUser.username}_${UUID.randomUUID().toString().substring(0, 8)}"
+            
+            // 创建新用户，注意User是接口，需要使用new方法创建
+            val user = new(User::class).by {
+                this.username = username
+                this.password = PasswordUtil.encode(UUID.randomUUID().toString())
+                this.enabled = true
+                this.createdTime = LocalDateTime.now()
+                this.updatedTime = LocalDateTime.now()
+                // 在User接口中没有nickname, avatar和email字段，需要确认实际字段名或添加这些字段
+            }
+            
+            val savedUser = userRepository.save(user)
+            
+            // 创建绑定关系
+            bindUser(savedUser.id, socialUser.id)
+            
+            // 执行登录
+            StpUtil.login(savedUser.id)
+            
+            return LoginResponse(StpUtil.getTokenValue(), savedUser.username)
+        }
+    }
 
     /**
      * 获取AuthRequest
@@ -179,35 +240,4 @@ class AuthServiceImpl(
     private fun getAuthRequest(source: String): AuthRequest {
         return authRequestFactory[source] ?: throw AuthException("未知的授权来源: $source")
     }
-    
-    /**
-     * 社会化用户创建DTO实现类
-     */
-    private data class SocialUserCreateDTOImpl(
-        override val uuid: String,
-        override val source: String,
-        override val accessToken: String,
-        override val expireIn: Int?,
-        override val refreshToken: String?,
-        override val openId: String?,
-        override val uid: String?,
-        override val accessCode: String?,
-        override val unionId: String?,
-        override val scope: String?,
-        override val tokenType: String?,
-        override val idToken: String?,
-        override val macAlgorithm: String?,
-        override val macKey: String?,
-        override val code: String?,
-        override val oauthToken: String?,
-        override val oauthTokenSecret: String?
-    ) : SocialUserCreateDTO
-    
-    /**
-     * 社会化用户与系统用户关系表创建DTO实现类
-     */
-    private data class SocialUserAuthCreateDTOImpl(
-        override val userId: Long,
-        override val socialUserId: Long
-    ) : SocialUserAuthCreateDTO
-} 
+}

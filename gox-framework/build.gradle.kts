@@ -33,5 +33,7 @@ dependencies {
     // 通用工具
     api("org.apache.commons:commons-lang3")
     api("commons-io:commons-io:latest.release")
+    // me.zhyd.oauth
+    api("me.zhyd.oauth:JustAuth:${rootProject.extra["justAuthVersion"]}")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 }

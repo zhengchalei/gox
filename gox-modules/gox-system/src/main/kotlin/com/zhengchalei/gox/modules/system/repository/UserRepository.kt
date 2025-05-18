@@ -63,6 +63,15 @@ class UserRepository(private val sqlClient: KSqlClient) {
         return saveResult.modifiedEntity
     }
 
+    fun save(user: User): User {
+        val saveResult = this.sqlClient.save(user)
+        if (!saveResult.isModified) {
+            log.error("创建失败: {}", user)
+            throw IllegalArgumentException("创建失败")
+        }
+        return saveResult.modifiedEntity
+    }
+
     fun updateById(userUpdateDTO: UserUpdateDTO): User {
         val saveResult = this.sqlClient.save(userUpdateDTO)
         if (!saveResult.isModified) {

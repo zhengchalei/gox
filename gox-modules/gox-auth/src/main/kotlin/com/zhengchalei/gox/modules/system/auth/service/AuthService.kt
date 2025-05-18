@@ -1,6 +1,7 @@
 package com.zhengchalei.gox.modules.system.auth.service
 
 import com.zhengchalei.gox.modules.system.auth.dto.LoginRequest
+import com.zhengchalei.gox.modules.system.auth.dto.LoginResponse
 import com.zhengchalei.gox.modules.system.auth.dto.SocialUserAuthDetailDTO
 import com.zhengchalei.gox.modules.system.auth.dto.SocialUserDetailDTO
 import com.zhengchalei.gox.modules.system.entity.User
@@ -80,4 +81,20 @@ interface AuthService {
      * @return 是否已绑定
      */
     fun isBound(userId: Long, source: String): Boolean
+    
+    /**
+     * 当前登录用户绑定第三方平台
+     *
+     * @param source 平台来源
+     * @return 授权绑定地址
+     */
+    fun bindCurrentUser(source: String): String
+    
+    /**
+     * 第三方登录自动注册并返回Token
+     * 
+     * @param authUser 认证用户信息
+     * @return 登录响应
+     */
+    fun loginOrRegisterBySocial(authUser: AuthUser): LoginResponse
 } 

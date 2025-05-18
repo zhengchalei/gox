@@ -7,7 +7,7 @@ gox:
     # 本地存储配置
     local:
       # 基础存储路径
-      base-path: uploads
+      base-path: ./uploads
     
     # 阿里云OSS配置
     aliyun:

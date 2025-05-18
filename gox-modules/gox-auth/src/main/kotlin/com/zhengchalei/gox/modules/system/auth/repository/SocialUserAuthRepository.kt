@@ -1,6 +1,9 @@
 package com.zhengchalei.gox.modules.system.auth.repository
 
+import com.zhengchalei.gox.modules.system.auth.dto.SocialUserAuthDetailDTO
 import com.zhengchalei.gox.modules.system.auth.entity.SocialUserAuth
+import com.zhengchalei.gox.modules.system.auth.entity.*
+import com.zhengchalei.gox.modules.system.entity.id
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
 import org.slf4j.LoggerFactory
@@ -22,7 +25,7 @@ class SocialUserAuthRepository(private val sqlClient: KSqlClient) {
             .createQuery(SocialUserAuth::class) {
                 where(table.user.id eq userId)
                 where(table.socialUser.source eq source)
-                select(table.fetch(SocialUserAuthDetailDTOFetcher.SHALLOW))
+                select(table.fetch(SocialUserAuthDetailDTO::class))
             }
             .fetchOneOrNull()
     }
@@ -34,7 +37,7 @@ class SocialUserAuthRepository(private val sqlClient: KSqlClient) {
         return this.sqlClient
             .createQuery(SocialUserAuth::class) {
                 where(table.user.id eq userId)
-                select(table.fetch(SocialUserAuthDetailDTOFetcher.SHALLOW))
+                select(table.fetch(SocialUserAuthDetailDTO::class))
             }
             .execute()
     }
@@ -46,7 +49,7 @@ class SocialUserAuthRepository(private val sqlClient: KSqlClient) {
         return this.sqlClient
             .createQuery(SocialUserAuth::class) {
                 where(table.socialUser.id eq socialUserId)
-                select(table.fetch(SocialUserAuthDetailDTOFetcher.SHALLOW))
+                select(table.fetch(SocialUserAuthDetailDTO::class))
             }
             .fetchOneOrNull()
     }

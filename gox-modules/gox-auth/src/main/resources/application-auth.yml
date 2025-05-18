@@ -1,37 +1,27 @@
 # JustAuth 配置
-just-auth:
-  # GitHub 配置
-  github:
-    client-id: ${GITHUB_CLIENT_ID:your-github-client-id}
-    client-secret: ${GITHUB_CLIENT_SECRET:your-github-client-secret}
-    redirect-uri: ${GITHUB_REDIRECT_URI:http://localhost:8080/auth/oauth/callback/GITHUB}
-  
-  # Gitee 配置
-  gitee:
-    client-id: ${GITEE_CLIENT_ID:your-gitee-client-id}
-    client-secret: ${GITEE_CLIENT_SECRET:your-gitee-client-secret}
-    redirect-uri: ${GITEE_REDIRECT_URI:http://localhost:8080/auth/oauth/callback/GITEE}
-  
-  # 微信开放平台配置
-  wechat:
-    client-id: ${WECHAT_CLIENT_ID:your-wechat-client-id}
-    client-secret: ${WECHAT_CLIENT_SECRET:your-wechat-client-secret}
-    redirect-uri: ${WECHAT_REDIRECT_URI:http://localhost:8080/auth/oauth/callback/WECHAT_OPEN}
-  
-  # QQ 配置
-  qq:
-    client-id: ${QQ_CLIENT_ID:your-qq-client-id}
-    client-secret: ${QQ_CLIENT_SECRET:your-qq-client-secret}
-    redirect-uri: ${QQ_REDIRECT_URI:http://localhost:8080/auth/oauth/callback/QQ}
-  
-  # 微博配置
-  weibo:
-    client-id: ${WEIBO_CLIENT_ID:your-weibo-client-id}
-    client-secret: ${WEIBO_CLIENT_SECRET:your-weibo-client-secret}
-    redirect-uri: ${WEIBO_REDIRECT_URI:http://localhost:8080/auth/oauth/callback/WEIBO}
-  
-  # 钉钉配置
-  dingtalk:
-    client-id: ${DINGTALK_CLIENT_ID:your-dingtalk-client-id}
-    client-secret: ${DINGTALK_CLIENT_SECRET:your-dingtalk-client-secret}
-    redirect-uri: ${DINGTALK_REDIRECT_URI:http://localhost:8080/auth/oauth/callback/DINGTALK} 
+gox:
+  social:
+    github:
+      clientId: ${GITHUB_CLIENT_ID:your-github-client-id}
+      clientSecret: ${GITHUB_CLIENT_SECRET:your-github-client-secret}
+      redirectUri: ${GITHUB_REDIRECT_URI:http://localhost:8080/auth/oauth/callback/GITHUB}
+    gitee:
+      clientId: a8014e0e97dd22d2e7a31bffcc5e9eb286ff5ac3f75e62747adbee3c008b7cd9
+      clientSecret: 7b1f638e8002981fd3c710edb53bd8747a43ba256bf2732f2435ff133eb7a1ad
+      redirectUri: http://localhost:8080/auth/oauth/callback/GITEE
+    wechat:
+      clientId: ${WECHAT_CLIENT_ID:your-wechat-client-id}
+      clientSecret: ${WECHAT_CLIENT_SECRET:your-wechat-client-secret}
+      redirectUri: ${WECHAT_REDIRECT_URI:http://localhost:8080/auth/oauth/callback/WECHAT_OPEN}
+    qq:
+      clientId: ${QQ_CLIENT_ID:your-qq-client-id}
+      clientSecret: ${QQ_CLIENT_SECRET:your-qq-client-secret}
+      redirectUri: ${QQ_REDIRECT_URI:http://localhost:8080/auth/oauth/callback/QQ}
+    weibo:
+      clientId: ${WEIBO_CLIENT_ID:your-weibo-client-id}
+      clientSecret: ${WEIBO_CLIENT_SECRET:your-weibo-client-secret}
+      redirectUri: ${WEIBO_REDIRECT_URI:http://localhost:8080/auth/oauth/callback/WEIBO}
+    dingtalk:
+      clientId: ${DINGTALK_CLIENT_ID:your-dingtalk-client-id}
+      clientSecret: ${DINGTALK_CLIENT_SECRET:your-dingtalk-client-secret}
+      redirectUri: ${DINGTALK_REDIRECT_URI:http://localhost:8080/auth/oauth/callback/DINGTALK}

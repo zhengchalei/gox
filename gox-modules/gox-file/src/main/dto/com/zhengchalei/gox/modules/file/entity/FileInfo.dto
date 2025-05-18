@@ -12,8 +12,8 @@ FileInfoListDTO {
     size
     mimeType
     storageType
-    createTime
-    updateTime
+    createdTime
+    updatedTime
 }
 
 FileInfoDetailDTO {
@@ -25,8 +25,8 @@ FileInfoDetailDTO {
     size
     mimeType
     storageType
-    createTime
-    updateTime
+    createdTime
+    updatedTime
 }
 
 input FileInfoCreateDTO {
@@ -55,6 +55,6 @@ specification FileInfoSpecification {
     size
     mimeType
     storageType
-    createTime
-    updateTime
+    createdTime
+    updatedTime
 }

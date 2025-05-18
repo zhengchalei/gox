@@ -27,6 +27,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     ksp("org.babyfish.jimmer:jimmer-ksp:${rootProject.extra["jimmerVersion"]}")
 
+    implementation(project(":gox-modules:gox-system"))
+
     testImplementation(project(":gox-starter"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

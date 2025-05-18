@@ -23,7 +23,7 @@ dependencies {
     implementation(project(":gox-util"))
     implementation(project(":gox-modules:gox-system"))
     implementation(project(":gox-modules:gox-file"))
-    implementation(project(":gox-modules:gox-system:gox-auth"))
+    implementation(project(":gox-modules:gox-auth"))
 
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-devtools")
