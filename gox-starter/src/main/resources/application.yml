@@ -9,10 +9,8 @@ spring:
     url: jdbc:mysql://localhost:3306/gox
     username: root
     password: root
-  data:
-    web:
-      pageable:
-        one-indexed-parameters: true
+  profiles:
+    include: file, auth
 
 jimmer:
   dialect: org.babyfish.jimmer.sql.dialect.MySqlDialect

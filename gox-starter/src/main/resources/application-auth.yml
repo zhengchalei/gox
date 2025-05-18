@@ -1,0 +1,27 @@
+# JustAuth 配置
+gox:
+  oauth2:
+    github:
+      client-id: ${GITHUB_CLIENT_ID:your-github-client-id}
+      client-secret: ${GITHUB_CLIENT_SECRET:your-github-client-secret}
+      redirect-uri: ${GITHUB_REDIRECT_URI:http://localhost:8080/api/oauth/callback/github}
+    gitee:
+      client-id: a8014e0e97dd22d2e7a31bffcc5e9eb286ff5ac3f75e62747adbee3c008b7cd9
+      client-secret: 7b1f638e8002981fd3c710edb53bd8747a43ba256bf2732f2435ff133eb7a1ad
+      redirect-uri: ${GITEE_REDIRECT_URI:http://localhost:8080/api/oauth/callback/gitee}
+    wechat:
+      client-id: ${WECHAT_CLIENT_ID:your-wechat-client-id}
+      client-secret: ${WECHAT_CLIENT_SECRET:your-wechat-client-secret}
+      redirect-uri: ${WECHAT_REDIRECT_URI:http://localhost:8080/api/oauth/callback/wechat}
+    qq:
+      client-id: ${QQ_CLIENT_ID:your-qq-client-id}
+      client-secret: ${QQ_CLIENT_SECRET:your-qq-client-secret}
+      redirect-uri: ${QQ_REDIRECT_URI:http://localhost:8080/api/oauth/callback/qq}
+    weibo:
+      client-id: ${WEIBO_CLIENT_ID:your-weibo-client-id}
+      client-secret: ${WEIBO_CLIENT_SECRET:your-weibo-client-secret}
+      redirect-uri: ${WEIBO_REDIRECT_URI:http://localhost:8080/api/oauth/callback/weibo}
+    dingtalk:
+      client-id: ${DINGTALK_CLIENT_ID:your-dingtalk-client-id}
+      client-secret: ${DINGTALK_CLIENT_SECRET:your-dingtalk-client-secret}
+      redirect-uri: ${DINGTALK_REDIRECT_URI:http://localhost:8080/api/oauth/callback/dingtalk}

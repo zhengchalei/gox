@@ -1,13 +1,11 @@
 package com.zhengchalei.gox.modules.system.auth.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.context.annotation.PropertySource
 import org.springframework.stereotype.Component
 
 /** JustAuth配置属性 */
-@PropertySource("classpath:application-auth.yml")
 @Component
-@ConfigurationProperties(prefix = "gox.social")
+@ConfigurationProperties(prefix = "gox.oauth2")
 class JustAuthProperties {
     // 旧版Map格式配置（保持兼容）
     var github: SocialProperties? = null
@@ -26,7 +24,7 @@ class SocialProperties() {
     var redirectUri: String? = null
 
     fun isEmpty(): Boolean =
-            clientId?.isBlank() == true ||
-                    clientSecret?.isBlank() == true ||
-                    redirectUri?.isBlank() == true
+        clientId?.isBlank() == true ||
+                clientSecret?.isBlank() == true ||
+                redirectUri?.isBlank() == true
 }

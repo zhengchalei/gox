@@ -13,77 +13,74 @@ class JustAuthConfig() {
     /** 创建AuthRequest工厂 */
     @Bean
     fun authRequestFactory(
-            authStateCache: AuthStateCache,
-            justAuthProperties: JustAuthProperties,
+        authStateCache: AuthStateCache,
+        justAuthProperties: JustAuthProperties,
     ): Map<String, AuthRequest> {
         val authRequests = mutableMapOf<String, AuthRequest>()
-
         // 构建各平台的AuthRequest对象
-        with(justAuthProperties) {
-            // GitHub配置
-            justAuthProperties.github?.let { config ->
-                val authConfig =
-                        AuthConfig.builder()
-                                .clientId(config.clientId)
-                                .clientSecret(config.clientSecret)
-                                .redirectUri(config.redirectUri)
-                                .build()
-                authRequests["github"] = AuthGithubRequest(authConfig, authStateCache)
-            }
-            // Gitee配置
-            justAuthProperties.gitee?.let { config ->
-                val authConfig =
-                        AuthConfig.builder()
-                                .clientId(config.clientId)
-                                .clientSecret(config.clientSecret)
-                                .redirectUri(config.redirectUri)
-                                .build()
-                authRequests["gitee"] = AuthGiteeRequest(authConfig, authStateCache)
-            }
+        // GitHub配置
+        justAuthProperties.github?.let { config ->
+            val authConfig =
+                AuthConfig.builder()
+                    .clientId(config.clientId)
+                    .clientSecret(config.clientSecret)
+                    .redirectUri(config.redirectUri)
+                    .build()
+            authRequests["github"] = AuthGithubRequest(authConfig, authStateCache)
+        }
+        // Gitee配置
+        justAuthProperties.gitee?.let { config ->
+            val authConfig =
+                AuthConfig.builder()
+                    .clientId(config.clientId)
+                    .clientSecret(config.clientSecret)
+                    .redirectUri(config.redirectUri)
+                    .build()
+            authRequests["gitee"] = AuthGiteeRequest(authConfig, authStateCache)
+        }
 
-            // 微信配置
-            justAuthProperties.wechat?.let { config ->
-                val authConfig =
-                        AuthConfig.builder()
-                                .clientId(config.clientId)
-                                .clientSecret(config.clientSecret)
-                                .redirectUri(config.redirectUri)
-                                .build()
-                authRequests["wechat"] = AuthWeChatOpenRequest(authConfig, authStateCache)
-            }
+        // 微信配置
+        justAuthProperties.wechat?.let { config ->
+            val authConfig =
+                AuthConfig.builder()
+                    .clientId(config.clientId)
+                    .clientSecret(config.clientSecret)
+                    .redirectUri(config.redirectUri)
+                    .build()
+            authRequests["wechat"] = AuthWeChatOpenRequest(authConfig, authStateCache)
+        }
 
-            // QQ配置
-            justAuthProperties.qq?.let { config ->
-                val authConfig =
-                        AuthConfig.builder()
-                                .clientId(config.clientId)
-                                .clientSecret(config.clientSecret)
-                                .redirectUri(config.redirectUri)
-                                .build()
-                authRequests["qq"] = AuthQqRequest(authConfig, authStateCache)
-            }
+        // QQ配置
+        justAuthProperties.qq?.let { config ->
+            val authConfig =
+                AuthConfig.builder()
+                    .clientId(config.clientId)
+                    .clientSecret(config.clientSecret)
+                    .redirectUri(config.redirectUri)
+                    .build()
+            authRequests["qq"] = AuthQqRequest(authConfig, authStateCache)
+        }
 
-            // 微博配置
-            justAuthProperties.weibo?.let { config ->
-                val authConfig =
-                        AuthConfig.builder()
-                                .clientId(config.clientId)
-                                .clientSecret(config.clientSecret)
-                                .redirectUri(config.redirectUri)
-                                .build()
-                authRequests["weibo"] = AuthWeiboRequest(authConfig, authStateCache)
-            }
+        // 微博配置
+        justAuthProperties.weibo?.let { config ->
+            val authConfig =
+                AuthConfig.builder()
+                    .clientId(config.clientId)
+                    .clientSecret(config.clientSecret)
+                    .redirectUri(config.redirectUri)
+                    .build()
+            authRequests["weibo"] = AuthWeiboRequest(authConfig, authStateCache)
+        }
 
-            // 钉钉配置
-            justAuthProperties.dingtalk?.let { config ->
-                val authConfig =
-                        AuthConfig.builder()
-                                .clientId(config.clientId)
-                                .clientSecret(config.clientSecret)
-                                .redirectUri(config.redirectUri)
-                                .build()
-                authRequests["dingtalk"] = AuthDingTalkRequest(authConfig, authStateCache)
-            }
+        // 钉钉配置
+        justAuthProperties.dingtalk?.let { config ->
+            val authConfig =
+                AuthConfig.builder()
+                    .clientId(config.clientId)
+                    .clientSecret(config.clientSecret)
+                    .redirectUri(config.redirectUri)
+                    .build()
+            authRequests["dingtalk"] = AuthDingTalkRequest(authConfig, authStateCache)
         }
 
         return authRequests
