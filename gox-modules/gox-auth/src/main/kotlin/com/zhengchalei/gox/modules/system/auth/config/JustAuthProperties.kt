@@ -4,26 +4,29 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.PropertySource
 import org.springframework.stereotype.Component
 
-/** JustAuth 配置 */
+/** JustAuth配置属性 */
 @PropertySource("classpath:application-auth.yml")
 @Component
 @ConfigurationProperties(prefix = "gox.social")
 class JustAuthProperties {
-    /** GitHub配置 */
-    var github: Map<String, String> = mutableMapOf()
+    // 旧版Map格式配置（保持兼容）
+    var github: SocialProperties? = null
+    var gitee: SocialProperties? = null
+    var wechat: SocialProperties? = null
+    var qq: SocialProperties? = null
+    var weibo: SocialProperties? = null
+    var dingtalk: SocialProperties? = null
+}
 
-    /** Gitee配置 */
-    var gitee: Map<String, String> = mutableMapOf()
+/** 社交登录平台配置 */
+class SocialProperties() {
 
-    /** 微信配置 */
-    var wechat: Map<String, String> = mutableMapOf()
+    var clientId: String? = null
+    var clientSecret: String? = null
+    var redirectUri: String? = null
 
-    /** QQ配置 */
-    var qq: Map<String, String> = mutableMapOf()
-
-    /** 微博配置 */
-    var weibo: Map<String, String> = mutableMapOf()
-
-    /** 钉钉配置 */
-    var dingtalk: Map<String, String> = mutableMapOf()
+    fun isEmpty(): Boolean =
+            clientId?.isBlank() == true ||
+                    clientSecret?.isBlank() == true ||
+                    redirectUri?.isBlank() == true
 }
