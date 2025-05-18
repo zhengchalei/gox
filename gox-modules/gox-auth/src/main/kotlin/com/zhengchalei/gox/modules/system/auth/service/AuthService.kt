@@ -89,13 +89,6 @@ class AuthService(
     }
 
     /**
-     * 根据UUID和来源查询社会化用户
-     */
-    fun findByUuidAndSource(uuid: String, source: String): SocialUserDetailDTO? {
-        return socialUserRepository.findByUuidAndSource(uuid, source)
-    }
-
-    /**
      * 绑定社会化用户到系统用户
      */
     fun bindUser(userId: Long, socialUserId: Long): SocialUserAuthDetailDTO {
@@ -157,9 +150,9 @@ class AuthService(
     /**
      * 第三方登录
      */
-    fun oauth2Login(authUser: AuthUser): Pair<LoginResponse?, String?> {
+    fun oauth2Login(authUser: AuthUser, callback: AuthCallback): Pair<LoginResponse?, String?> {
         // 判断是一个绑定的请求
-        val state = authUser.uuid
+        val state = callback.state
         if (state != null && state.startsWith("bind_")) {
             val userId: Long = StpUtil.getLoginIdAsLong()
             bindUser(userId, userId)

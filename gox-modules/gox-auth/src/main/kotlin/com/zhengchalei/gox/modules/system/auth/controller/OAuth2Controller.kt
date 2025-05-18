@@ -8,19 +8,14 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
 
-/**
- * 需要登录的认证控制器
- * 所有接口都需要登录才能访问
- */
+/** 需要登录的认证控制器 所有接口都需要登录才能访问 */
 @Tag(name = "用户认证", description = "需要登录的认证相关操作")
 @RestController
 @RequestMapping("/api")
 @SaCheckLogin
 class OAuth2Controller(private val authService: AuthService) {
 
-    /**
-     * 获取当前登录用户绑定的所有OAuth2账号
-     */
+    /** 获取当前登录用户绑定的所有OAuth2账号 */
     @Operation(summary = "获取当前登录用户绑定的所有OAuth2账号")
     @GetMapping("/oauth/my-bindings")
     fun listMyBindings(): List<SocialUserAuthDetailDTO> {
@@ -28,28 +23,23 @@ class OAuth2Controller(private val authService: AuthService) {
         return authService.findBindSocialUsers(loginId)
     }
 
-    /**
-     * 获取当前登录用户绑定第三方平台的授权地址
-     */
-    @Operation(summary = "获取当前登录用户绑定第三方平台的授权地址")
+    /** 发起绑定其他第三方平台 */
+    @Operation(summary = "发起绑定其他第三方平台")
     @GetMapping("/oauth/bind-url/{source}")
     fun getBindUrl(@PathVariable source: String): String {
-        return authService.bindCurrentUser(source)
+        val url = authService.bindCurrentUser(source)
+        return "redirect:$url"
     }
 
-    /**
-     * 当前登录用户解绑OAuth2账号
-     */
-    @Operation(summary = "当前登录用户解绑OAuth2账号")
+    /** 当前登录用户解绑指定第三方平台 */
+    @Operation(summary = "当前登录用户解绑指定第三方平台")
     @DeleteMapping("/oauth/unbind/{source}")
     fun unbindMyAccount(@PathVariable source: String): Boolean {
         val loginId = StpUtil.getLoginIdAsLong()
         return authService.unbindUser(loginId, source)
     }
 
-    /**
-     * 检查当前登录用户是否已绑定指定平台
-     */
+    /** 检查当前登录用户是否已绑定指定平台 */
     @Operation(summary = "检查当前登录用户是否已绑定指定平台")
     @GetMapping("/oauth/is-bound/{source}")
     fun isBound(@PathVariable source: String): Boolean {
@@ -57,13 +47,11 @@ class OAuth2Controller(private val authService: AuthService) {
         return authService.isBound(loginId, source)
     }
 
-    /**
-     * 登出
-     */
+    /** 登出 */
     @Operation(summary = "登出")
     @PostMapping("/logout")
     fun logout(): Boolean {
         StpUtil.logout()
         return true
     }
-} 
+}

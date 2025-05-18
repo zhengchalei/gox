@@ -33,9 +33,9 @@ class AuthController(private val authService: AuthService) {
     /** 获取第三方登录授权地址 */
     @Operation(summary = "获取第三方登录授权地址")
     @GetMapping("/oauth/render/{source}")
-    fun renderAuth(@PathVariable source: String): ResponseEntity<String> {
+    fun renderAuth(@PathVariable source: String): String {
         val authUrl: String = authService.getAuthUrl(source, AuthStateUtils.createState())
-        return ResponseEntity.ok(authUrl)
+        return "redirect:$authUrl"
     }
 
     /** 第三方登录回调接口 */
@@ -50,7 +50,7 @@ class AuthController(private val authService: AuthService) {
             // 授权成功，创建或更新社会化用户并执行登录
             val authUser = response.data
             // 仅仅执行登陆， 如果登陆账号不存在，则保存当前上下文信息， 然后用户绑定或者注册
-            val loginResponse = authService.oauth2Login(authUser)
+            val loginResponse = authService.oauth2Login(authUser, callback)
             if (loginResponse.first != null) {
                 return ResponseEntity.ok(
                     R(
