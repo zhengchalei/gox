@@ -19,6 +19,8 @@ dependencyManagement {
 }
 
 dependencies {
+    implementation(project(":gox-util"))
+
     api("org.springframework.boot:spring-boot-starter-web")
     api("org.springframework.boot:spring-boot-starter-data-jdbc")
     api("org.babyfish.jimmer:jimmer-spring-boot-starter:${rootProject.extra["jimmerVersion"]}")
