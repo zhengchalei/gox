@@ -1,5 +1,6 @@
 package com.zhengchalei.gox.modules.system.controller
 
+import com.zhengchalei.gox.R
 import com.zhengchalei.gox.framework.config.oneIndex
 import com.zhengchalei.gox.modules.system.entity.dto.*
 import com.zhengchalei.gox.modules.system.service.UserService
@@ -9,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -24,9 +24,9 @@ class UserController(private val userService: UserService) {
     fun findByUsername(
         @Parameter(description = "用户名", required = true)
         @PathVariable username: String
-    ): ResponseEntity<UserDetailDTO> {
+    ): R<UserDetailDTO> {
         val user = userService.findByUsername(username)
-        return ResponseEntity.ok(user)
+        return R.data(user)
     }
 
     @Operation(summary = "根据ID查询用户", description = "通过用户ID获取用户详细信息")
@@ -34,9 +34,9 @@ class UserController(private val userService: UserService) {
     fun findById(
         @Parameter(description = "用户ID", required = true)
         @PathVariable id: Long
-    ): ResponseEntity<UserDetailDTO> {
+    ): R<UserDetailDTO> {
         val user = userService.findById(id)
-        return ResponseEntity.ok(user)
+        return R.data(user)
     }
 
     @Operation(summary = "删除用户", description = "根据用户ID删除用户")
@@ -44,9 +44,9 @@ class UserController(private val userService: UserService) {
     fun deleteById(
         @Parameter(description = "用户ID", required = true)
         @PathVariable id: Long
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         userService.deleteById(id)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "创建用户", description = "创建新用户")
@@ -54,9 +54,9 @@ class UserController(private val userService: UserService) {
     fun create(
         @Parameter(description = "用户信息", required = true)
         @Valid @RequestBody userCreateDTO: UserCreateDTO
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         userService.create(userCreateDTO)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "更新用户", description = "更新用户信息")
@@ -64,9 +64,9 @@ class UserController(private val userService: UserService) {
     fun update(
         @Parameter(description = "用户信息", required = true)
         @Valid @RequestBody userUpdateDTO: UserUpdateDTO
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         userService.update(userUpdateDTO)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "分页查询用户", description = "分页查询用户列表")
@@ -77,9 +77,9 @@ class UserController(private val userService: UserService) {
         @Parameter(description = "每页数量", required = false)
         @RequestParam(defaultValue = "10") size: Int,
         userSpecification: UserSpecification,
-    ): ResponseEntity<Page<UserListDTO>> {
+    ): R<Page<UserListDTO>> {
         val pageRequest: PageRequest = PageRequest.of(page, size).oneIndex()
         val pageResult = userService.findPage(pageRequest, userSpecification)
-        return ResponseEntity.ok(pageResult)
+        return R.data(pageResult)
     }
 }

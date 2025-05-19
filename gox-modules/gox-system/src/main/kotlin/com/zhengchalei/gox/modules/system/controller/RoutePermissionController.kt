@@ -1,5 +1,6 @@
 package com.zhengchalei.gox.modules.system.controller
 
+import com.zhengchalei.gox.R
 import com.zhengchalei.gox.framework.config.oneIndex
 import com.zhengchalei.gox.modules.system.entity.dto.*
 import com.zhengchalei.gox.modules.system.service.RoutePermissionService
@@ -9,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -24,9 +24,9 @@ class RoutePermissionController(private val routePermissionService: RoutePermiss
     fun findById(
         @Parameter(description = "路由权限ID", required = true)
         @PathVariable id: Long
-    ): ResponseEntity<RoutePermissionDetailDTO> {
+    ): R<RoutePermissionDetailDTO> {
         val routePermission = routePermissionService.findById(id)
-        return ResponseEntity.ok(routePermission)
+        return R.data(routePermission)
     }
 
     @Operation(summary = "删除路由权限", description = "根据路由权限ID删除路由权限")
@@ -34,9 +34,9 @@ class RoutePermissionController(private val routePermissionService: RoutePermiss
     fun deleteById(
         @Parameter(description = "路由权限ID", required = true)
         @PathVariable id: Long
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         routePermissionService.deleteById(id)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "创建路由权限", description = "创建新路由权限")
@@ -44,9 +44,9 @@ class RoutePermissionController(private val routePermissionService: RoutePermiss
     fun create(
         @Parameter(description = "路由权限信息", required = true)
         @Valid @RequestBody routePermissionCreateDTO: RoutePermissionCreateDTO
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         routePermissionService.create(routePermissionCreateDTO)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "更新路由权限", description = "更新路由权限信息")
@@ -54,9 +54,9 @@ class RoutePermissionController(private val routePermissionService: RoutePermiss
     fun update(
         @Parameter(description = "路由权限信息", required = true)
         @Valid @RequestBody routePermissionUpdateDTO: RoutePermissionUpdateDTO
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         routePermissionService.update(routePermissionUpdateDTO)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "分页查询路由权限", description = "分页查询路由权限列表")
@@ -67,12 +67,12 @@ class RoutePermissionController(private val routePermissionService: RoutePermiss
         @Parameter(description = "每页数量", required = false)
         @RequestParam(defaultValue = "10") size: Int,
         routePermissionSpecification: RoutePermissionSpecification,
-    ): ResponseEntity<Page<RoutePermissionListDTO>> {
+    ): R<Page<RoutePermissionListDTO>> {
         val pageRequest: PageRequest = PageRequest.of(page, size).oneIndex()
         val pageResult = routePermissionService.findPage(pageRequest, routePermissionSpecification)
-        return ResponseEntity.ok(pageResult)
+        return R.data(pageResult)
     }
-    
+
     @Operation(summary = "根据路径和方法查询路由权限", description = "根据路径和HTTP方法查询路由权限")
     @GetMapping("/path")
     fun findByPathAndMethod(
@@ -80,18 +80,18 @@ class RoutePermissionController(private val routePermissionService: RoutePermiss
         @RequestParam path: String,
         @Parameter(description = "HTTP方法", required = true)
         @RequestParam method: String
-    ): ResponseEntity<RoutePermissionDetailDTO?> {
+    ): R<RoutePermissionDetailDTO?> {
         val routePermission = routePermissionService.findByPathAndMethod(path, method)
-        return ResponseEntity.ok(routePermission)
+        return R.data(routePermission)
     }
-    
+
     @Operation(summary = "根据角色ID查询路由权限", description = "根据角色ID列表查询对应的路由权限")
     @GetMapping("/roles")
     fun findByRoleIds(
         @Parameter(description = "角色ID列表", required = true)
         @RequestParam roleIds: List<Long>
-    ): ResponseEntity<List<RoutePermissionDetailDTO>> {
+    ): R<List<RoutePermissionDetailDTO>> {
         val routePermissions = routePermissionService.findByRoleIds(roleIds)
-        return ResponseEntity.ok(routePermissions)
+        return R.data(routePermissions)
     }
 } 
