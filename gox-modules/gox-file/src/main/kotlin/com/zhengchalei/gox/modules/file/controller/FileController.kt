@@ -1,5 +1,6 @@
 package com.zhengchalei.gox.modules.file.controller
 
+import com.zhengchalei.gox.R
 import com.zhengchalei.gox.framework.config.oneIndex
 import com.zhengchalei.gox.modules.file.entity.StorageType
 import com.zhengchalei.gox.modules.file.entity.dto.FileInfoDetailDTO
@@ -30,49 +31,40 @@ import java.time.Duration
 @RestController
 @RequestMapping("/api/v1/file")
 class FileController(
-    private val fileService: FileService,
-    private val localFileStorageService: LocalFileStorageServiceImpl
+    private val fileService: FileService, private val localFileStorageService: LocalFileStorageServiceImpl
 ) {
 
     /** 上传文件 */
     @Operation(summary = "上传文件", description = "上传单个文件")
     @PostMapping("/upload")
     fun upload(
-        @Parameter(description = "文件", required = true)
-        @RequestParam("file")
-        file: MultipartFile
-    ): ResponseEntity<FileInfoDetailDTO> {
+        @Parameter(description = "文件", required = true) @RequestParam("file") file: MultipartFile
+    ): R<FileInfoDetailDTO> {
         val fileInfo = fileService.upload(file)
-        return ResponseEntity.ok(fileInfo)
+        return R.data(fileInfo)
     }
 
     /** 批量上传文件 */
     @Operation(summary = "批量上传文件", description = "批量上传多个文件")
     @PostMapping("/batch-upload")
     fun batchUpload(
-        @Parameter(description = "文件列表", required = true)
-        @RequestParam("files")
-        files: List<MultipartFile>
-    ): ResponseEntity<List<FileInfoDetailDTO>> {
+        @Parameter(description = "文件列表", required = true) @RequestParam("files") files: List<MultipartFile>
+    ): R<List<FileInfoDetailDTO>> {
         val fileInfos = fileService.batchUpload(files)
-        return ResponseEntity.ok(fileInfos)
+        return R.data(fileInfos)
     }
 
     /** 分页查询文件 */
     @Operation(summary = "分页查询文件", description = "根据条件分页查询文件")
     @GetMapping("/page")
     fun page(
-        @Parameter(description = "页码", required = false)
-        @RequestParam(defaultValue = "1")
-        page: Int,
-        @Parameter(description = "每页数量", required = false)
-        @RequestParam(defaultValue = "10")
-        size: Int,
+        @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") page: Int,
+        @Parameter(description = "每页数量", required = false) @RequestParam(defaultValue = "10") size: Int,
         fileInfoSpecification: FileInfoSpecification
-    ): ResponseEntity<Page<FileInfoListDTO>> {
+    ): R<Page<FileInfoListDTO>> {
         val pageRequest = PageRequest.of(page, size).oneIndex()
         val pageResult = fileService.findPage(pageRequest, fileInfoSpecification)
-        return ResponseEntity.ok(pageResult)
+        return R.data(pageResult)
     }
 
     /** 根据ID查询文件详情 */
@@ -80,9 +72,9 @@ class FileController(
     @GetMapping("/{id}")
     fun findById(
         @Parameter(description = "文件ID", required = true) @PathVariable id: Long
-    ): ResponseEntity<FileInfoDetailDTO> {
+    ): R<FileInfoDetailDTO> {
         val fileInfo = fileService.findById(id)
-        return ResponseEntity.ok(fileInfo)
+        return R.data(fileInfo)
     }
 
     /** 根据存储名称查询文件详情 */
@@ -90,21 +82,19 @@ class FileController(
     @GetMapping("/storage/{storageName}")
     fun findByStorageName(
         @Parameter(description = "文件存储名称", required = true) @PathVariable storageName: String
-    ): ResponseEntity<FileInfoDetailDTO> {
+    ): R<FileInfoDetailDTO> {
         val fileInfo = fileService.findByStorageName(storageName)
-        return ResponseEntity.ok(fileInfo)
+        return R.data(fileInfo)
     }
 
     /** 根据原始名称查询文件信息 */
     @Operation(summary = "按原始名称搜索文件", description = "根据文件原始名称模糊搜索文件列表")
     @GetMapping("/search")
     fun search(
-        @Parameter(description = "文件原始名称", required = true)
-        @RequestParam("name")
-        originalName: String
-    ): ResponseEntity<List<FileInfoListDTO>> {
+        @Parameter(description = "文件原始名称", required = true) @RequestParam("name") originalName: String
+    ): R<List<FileInfoListDTO>> {
         val fileInfos = fileService.findByOriginalName(originalName)
-        return ResponseEntity.ok(fileInfos)
+        return R.data(fileInfos)
     }
 
     /** 根据存储类型查询文件信息 */
@@ -112,9 +102,9 @@ class FileController(
     @GetMapping("/type/{storageType}")
     fun findByStorageType(
         @Parameter(description = "存储类型", required = true) @PathVariable storageType: StorageType
-    ): ResponseEntity<List<FileInfoListDTO>> {
+    ): R<List<FileInfoListDTO>> {
         val fileInfos = fileService.findByStorageType(storageType)
-        return ResponseEntity.ok(fileInfos)
+        return R.data(fileInfos)
     }
 
     /** 获取文件下载URL */
@@ -122,10 +112,10 @@ class FileController(
     @GetMapping("/url/{id}")
     fun getDownloadUrl(
         @Parameter(description = "文件ID", required = true) @PathVariable id: Long
-    ): ResponseEntity<Map<String, String>> {
+    ): R<Map<String, String>> {
         val fileInfo = fileService.findById(id)
         val url = fileService.getDownloadUrl(fileInfo)
-        return ResponseEntity.ok(mapOf("url" to url))
+        return R.data(mapOf("url" to url))
     }
 
     /** 获取文件临时访问URL */
@@ -133,14 +123,15 @@ class FileController(
     @GetMapping("/temp-url/{id}")
     fun getTemporaryUrl(
         @Parameter(description = "文件ID", required = true) @PathVariable id: Long,
-        @Parameter(description = "有效期(分钟)", required = false)
-        @RequestParam("minutes", defaultValue = "5")
-        minutes: Long
-    ): ResponseEntity<Map<String, String>> {
+        @Parameter(description = "有效期(分钟)", required = false) @RequestParam(
+            "minutes",
+            defaultValue = "5"
+        ) minutes: Long
+    ): R<Map<String, String>> {
         val fileInfo = fileService.findById(id)
         val duration = Duration.ofMinutes(minutes)
         val url = fileService.getTemporaryUrl(fileInfo, duration)
-        return ResponseEntity.ok(mapOf("url" to url, "expiresIn" to "${minutes}分钟"))
+        return R.data(mapOf("url" to url, "expiresIn" to "${minutes}分钟"))
     }
 
     /** 下载文件 */
@@ -157,16 +148,11 @@ class FileController(
             val resource = UrlResource(file.toURI())
 
             val encodedFilename =
-                URLEncoder.encode(fileInfo.originalName, StandardCharsets.UTF_8.toString())
-                    .replace("+", "%20")
+                URLEncoder.encode(fileInfo.originalName, StandardCharsets.UTF_8.toString()).replace("+", "%20")
 
-            return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(fileInfo.mimeType))
-                .header(
-                    HttpHeaders.CONTENT_DISPOSITION,
-                    "attachment; filename*=UTF-8''$encodedFilename"
-                )
-                .body(resource)
+            return ResponseEntity.ok().contentType(MediaType.parseMediaType(fileInfo.mimeType)).header(
+                    HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''$encodedFilename"
+                ).body(resource)
         } else {
             // 非本地文件，重定向到临时URL
             val tempUrl = fileService.getTemporaryUrl(fileInfo, Duration.ofMinutes(5))
@@ -177,9 +163,7 @@ class FileController(
     /** 临时访问文件（通过token） */
     @GetMapping("/temp/{storageName}")
     fun tempAccess(
-        @PathVariable storageName: String,
-        @RequestParam token: String,
-        @RequestParam expires: Long
+        @PathVariable storageName: String, @RequestParam token: String, @RequestParam expires: Long
     ): ResponseEntity<Resource> {
         // 验证token和过期时间
         if (System.currentTimeMillis() > expires) {
@@ -193,9 +177,7 @@ class FileController(
             val file = localFileStorageService.getPhysicalPath(fileInfo).toFile()
             val resource = UrlResource(file.toURI())
 
-            return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(fileInfo.mimeType))
-                .body(resource)
+            return ResponseEntity.ok().contentType(MediaType.parseMediaType(fileInfo.mimeType)).body(resource)
         } else {
             return ResponseEntity.badRequest().body(null)
         }
@@ -204,15 +186,9 @@ class FileController(
     /** 删除文件 */
     @Operation(summary = "删除文件", description = "根据文件ID删除文件")
     @DeleteMapping("/{id}")
-    fun delete(
-        @Parameter(description = "文件ID", required = true) @PathVariable id: Long
-    ): ResponseEntity<Void> {
-        val result = fileService.delete(id)
-        return if (result) {
-            ResponseEntity.ok().build()
-        } else {
-            ResponseEntity.notFound().build()
-        }
+    fun delete(@Parameter(description = "文件ID", required = true) @PathVariable id: Long): R<Void> {
+        fileService.delete(id)
+        return R.success()
     }
 
     /** 批量删除文件 */
@@ -220,8 +196,8 @@ class FileController(
     @DeleteMapping("/batch")
     fun batchDelete(
         @Parameter(description = "文件ID列表", required = true) @RequestBody ids: List<Long>
-    ): ResponseEntity<Map<String, Int>> {
-        val count = fileService.batchDelete(ids)
-        return ResponseEntity.ok(mapOf("deletedCount" to count))
+    ): R<Void> {
+        fileService.batchDelete(ids)
+        return R.success()
     }
 }

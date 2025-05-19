@@ -24,20 +24,19 @@ class AuthController(private val authService: AuthService) {
     /** 用户名密码登录 */
     @Operation(summary = "用户名密码登录")
     @PostMapping("/auth/login")
-    fun login(@Valid @RequestBody loginRequest: LoginRequest): ResponseEntity<LoginResponse> {
+    fun login(@Valid @RequestBody loginRequest: LoginRequest): R<LoginResponse> {
         val user: User = authService.login(loginRequest)
         StpUtil.login(user.id, loginRequest.rememberMe)
         val loginResponse = LoginResponse(StpUtil.getTokenValue(), user.username)
-        return ResponseEntity.ok(loginResponse)
+        return R(success = true, message = "登录成功", data = loginResponse)
     }
 
     /** 获取第三方登录授权地址 */
     @Operation(summary = "获取第三方登录授权地址")
     @GetMapping("/oauth/render/{source}")
-    fun renderAuth(@PathVariable source: String, response: HttpServletResponse): String {
+    fun renderAuth(@PathVariable source: String, response: HttpServletResponse) {
         val authUrl: String = authService.getAuthUrl(source, AuthStateUtils.createState())
         response.sendRedirect(authUrl)
-        return authUrl
     }
 
     /** 第三方登录回调接口 */
@@ -46,7 +45,7 @@ class AuthController(private val authService: AuthService) {
     fun callback(
         @PathVariable source: String,
         @ModelAttribute callback: AuthCallback
-    ): ResponseEntity<R<Any>> {
+    ): R<Any> {
         val response = authService.callback(source, callback)
         if (response.ok()) {
             // 授权成功，创建或更新社会化用户并执行登录
@@ -54,24 +53,18 @@ class AuthController(private val authService: AuthService) {
             // 仅仅执行登陆， 如果登陆账号不存在，则保存当前上下文信息， 然后用户绑定或者注册
             val loginResponse = authService.oauth2Login(authUser, callback)
             if (loginResponse.first != null) {
-                return ResponseEntity.ok(
-                    R(
-                        success = true,
-                        data = loginResponse.first,
-                    )
+                return R(
+                    success = true,
+                    data = loginResponse.first,
                 )
             }
-            return ResponseEntity.ok(
-                R(
-                    success = false,
-                    message = "未绑定用户， 是否注册为新用户?",
-                    data = loginResponse.second,
-                )
+            return R(
+                success = false,
+                message = "未绑定用户， 是否注册为新用户?",
+                data = loginResponse.second,
             )
         }
-
-        // 授权失败或未处理的情况，直接返回原始响应
-        return ResponseEntity.badRequest().body(R(success = false, message = "授权失败?"))
+        throw IllegalArgumentException("第三方登录失败")
     }
 
     /**
@@ -81,9 +74,9 @@ class AuthController(private val authService: AuthService) {
      */
     @Operation(summary = "根据 oauth-callback 接口返回的 临时凭证 进行注册")
     @GetMapping("/register/oauth/{singleUseCredential}")
-    fun registerBySingleUseCredential(@PathVariable singleUseCredential: String): ResponseEntity<R<LoginResponse>> {
+    fun registerBySingleUseCredential(@PathVariable singleUseCredential: String): R<LoginResponse> {
         // 根据 临时凭证 进行注册
         val loginResponse = authService.registerBySingleUseCredential(singleUseCredential)
-        return ResponseEntity.ok(R(success = true, message = "注册成功", data = loginResponse))
+        return R(success = true, message = "注册成功", data = loginResponse)
     }
 }

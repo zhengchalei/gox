@@ -5,6 +5,8 @@ import cn.dev33.satoken.stp.StpUtil
 import com.zhengchalei.gox.R
 import com.zhengchalei.gox.modules.system.auth.dto.SocialUserAuthDetailDTO
 import com.zhengchalei.gox.modules.system.auth.service.AuthService
+import com.zhengchalei.gox.modules.system.entity.dto.UserDetailDTO
+import com.zhengchalei.gox.modules.system.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
@@ -15,7 +17,24 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api")
 @SaCheckLogin
-class OAuth2Controller(private val authService: AuthService) {
+class CurrentUserController(private val authService: AuthService, private val userService: UserService) {
+
+    /** 登出 */
+    @Operation(summary = "登出")
+    @PostMapping("/logout")
+    fun logout(): R<Boolean> {
+        StpUtil.logout()
+        return R(success = true)
+    }
+
+    /** 获取当前登录用户信息 */
+    @Operation(summary = "获取当前登录用户信息")
+    @GetMapping("/user/info")
+    fun getCurrentUserInfo(): R<UserDetailDTO> {
+        val loginId = StpUtil.getLoginIdAsLong()
+        val userInfo = userService.findById(loginId)
+        return R(success = true, data = userInfo)
+    }
 
     /** 获取当前登录用户绑定的所有OAuth2账号 */
     @Operation(summary = "获取当前登录用户绑定的所有OAuth2账号")
@@ -50,13 +69,5 @@ class OAuth2Controller(private val authService: AuthService) {
         val loginId = StpUtil.getLoginIdAsLong()
         val result = authService.isBound(loginId, source)
         return R(success = true, data = result)
-    }
-
-    /** 登出 */
-    @Operation(summary = "登出")
-    @PostMapping("/logout")
-    fun logout(): R<Boolean> {
-        StpUtil.logout()
-        return R(success = true)
     }
 }
