@@ -43,15 +43,17 @@ class UserService(private val userRepository: UserRepository) {
     /** 创建用户 */
     fun create(userCreateDTO: UserCreateDTO) {
         logger.info("创建用户，用户名: {}", userCreateDTO.username)
-        userRepository.save(userCreateDTO)
+        userRepository.save(userCreateDTO.toEntity {
+            nickname = username
+        })
         logger.info("创建用户成功，用户名: {}", userCreateDTO.username)
     }
 
     /** 更新用户 */
     fun update(userUpdateDTO: UserUpdateDTO) {
         logger.info("更新用户，用户名: {}", userUpdateDTO.username)
-        if (StpUtil.getLoginIdAsLong() != Consts.ADMIN_ID) {
-            this.findById(userUpdateDTO.id!!)
+        if (userUpdateDTO.id == Consts.ADMIN_ID && StpUtil.getLoginIdAsLong() != Consts.ADMIN_ID) {
+            this.findById(userUpdateDTO.id)
                     .roles
                     .firstOrNull { it.name == Consts.ADMIN_ROLE_NAME }
                     ?.let { throw RuntimeException("不允许更新管理员") }

@@ -6,6 +6,8 @@ import com.zhengchalei.gox.modules.system.entity.id
 import com.zhengchalei.gox.modules.system.entity.username
 import com.zhengchalei.gox.util.PasswordUtil
 import org.babyfish.jimmer.spring.repository.fetchSpringPage
+import org.babyfish.jimmer.sql.ast.mutation.AssociatedSaveMode
+import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.asc
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
@@ -73,8 +75,11 @@ class UserRepository(private val sqlClient: KSqlClient) {
     }
 
     fun updateById(userUpdateDTO: UserUpdateDTO): User {
-        val saveResult = this.sqlClient.save(userUpdateDTO)
-        if (!saveResult.isModified) {
+        this.sqlClient.executeUpdate(User::class) {
+            userUpdateDTO
+        }
+        val saveResult = this.sqlClient.save(userUpdateDTO, SaveMode.UPDATE_ONLY)
+        if (!saveResult.isRowAffected) {
             log.error("更新失败: {}", userUpdateDTO.username)
             throw IllegalArgumentException("更新失败")
         }

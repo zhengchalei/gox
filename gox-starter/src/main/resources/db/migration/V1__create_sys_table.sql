@@ -1,11 +1,15 @@
 CREATE TABLE IF NOT EXISTS `sys_user`
 (
     `id`           BIGINT PRIMARY KEY auto_increment COMMENT '用户ID',
-    `username`     VARCHAR(64) UNIQUE                                              NOT NULL COMMENT '用户名',
-    `enabled`      BOOLEAN   DEFAULT TRUE                                          NOT NULL COMMENT '是否启用',
-    `password`     VARCHAR(255)                                                    NOT NULL COMMENT '密码(建议存储加密后的值)',
-    `created_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP                             NOT NULL COMMENT '创建时间',
-    `updated_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL COMMENT '更新时间',
+    `username`     VARCHAR(64) UNIQUE                                                                                NOT NULL COMMENT '用户名',
+    `nickname`     VARCHAR(64)                                                                                       NOT NULL COMMENT '昵称',
+    `avatar`       VARCHAR(255) DEFAULT 'https://i1.hdslb.com/bfs/face/57238d151820c8ba76ff31f88845b2a5200f1e72.jpg' NOT NULL COMMENT '头像',
+    `email`        VARCHAR(64) COMMENT '邮箱',
+    `phone`        VARCHAR(64) COMMENT '手机号',
+    `enabled`      BOOLEAN      DEFAULT TRUE                                                                         NOT NULL COMMENT '是否启用',
+    `password`     VARCHAR(255)                                                                                      NOT NULL COMMENT '密码(建议存储加密后的值)',
+    `created_time` TIMESTAMP    DEFAULT CURRENT_TIMESTAMP                                                            NOT NULL COMMENT '创建时间',
+    `updated_time` TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP                                NOT NULL COMMENT '更新时间',
     INDEX `idx_username` (`username`) COMMENT '用户名索引'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -68,10 +72,10 @@ CREATE TABLE IF NOT EXISTS `sys_role_permission`
 CREATE TABLE IF NOT EXISTS `sys_route_permission`
 (
     `id`           BIGINT PRIMARY KEY auto_increment COMMENT '路由权限ID',
-    `path`         VARCHAR(255)                                                   NOT NULL COMMENT '路由路径',
-    `method`       VARCHAR(10)                                                    NOT NULL COMMENT 'HTTP方法(GET,POST,PUT,DELETE等)',
+    `path`         VARCHAR(255)                                                    NOT NULL COMMENT '路由路径',
+    `method`       VARCHAR(10)                                                     NOT NULL COMMENT 'HTTP方法(GET,POST,PUT,DELETE等)',
     `description`  VARCHAR(255) COMMENT '路由描述',
-    `created_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP                            NOT NULL COMMENT '创建时间',
+    `created_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP                             NOT NULL COMMENT '创建时间',
     `updated_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL COMMENT '更新时间',
     UNIQUE KEY `uk_path_method` (`path`, `method`) COMMENT '路径方法唯一约束',
     INDEX `idx_path` (`path`) COMMENT '路径索引'
@@ -82,10 +86,10 @@ CREATE TABLE IF NOT EXISTS `sys_route_permission`
 -- 创建角色与路由权限关联表
 CREATE TABLE IF NOT EXISTS `sys_role_route`
 (
-    `id`                 BIGINT PRIMARY KEY auto_increment COMMENT '关联ID',
-    `role_id`            BIGINT                              NOT NULL COMMENT '角色ID',
+    `id`                  BIGINT PRIMARY KEY auto_increment COMMENT '关联ID',
+    `role_id`             BIGINT                              NOT NULL COMMENT '角色ID',
     `route_permission_id` BIGINT                              NOT NULL COMMENT '路由权限ID',
-    `created_time`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '创建时间',
+    `created_time`        TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '创建时间',
     UNIQUE KEY `uk_role_route` (`role_id`, `route_permission_id`) COMMENT '角色路由唯一约束',
     FOREIGN KEY (`role_id`) REFERENCES `sys_role` (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`route_permission_id`) REFERENCES `sys_route_permission` (`id`) ON DELETE CASCADE

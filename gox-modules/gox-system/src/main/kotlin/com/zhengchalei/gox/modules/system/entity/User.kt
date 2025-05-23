@@ -13,6 +13,14 @@ interface User {
     @Key
     val username: String
 
+    val nickname: String
+
+    val avatar: String
+
+    val email: String?
+
+    val phone: String?
+
     val password: String
 
     val enabled: Boolean

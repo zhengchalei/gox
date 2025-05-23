@@ -1,10 +1,10 @@
 -- 初始化管理员用户
-INSERT INTO `sys_user` (`username`, `enabled`, `password`)
-VALUES ('admin', TRUE, '$2a$10$aewa/XxpIRpidDfHxb9OsOfXpJRBYKDsHrQr8aMTtMO7r5ETWP3q.');
+INSERT INTO `sys_user` (`username`, `enabled`, `password`, `nickname`)
+VALUES ('admin', TRUE, '$2a$10$aewa/XxpIRpidDfHxb9OsOfXpJRBYKDsHrQr8aMTtMO7r5ETWP3q.', '管理员');
 
 -- 初始化测试用户
-INSERT INTO `sys_user` (`username`, `enabled`, `password`)
-VALUES ('test', TRUE, '$2a$10$aewa/XxpIRpidDfHxb9OsOfXpJRBYKDsHrQr8aMTtMO7r5ETWP3q.');
+INSERT INTO `sys_user` (`username`, `enabled`, `password`, `nickname`)
+VALUES ('test', TRUE, '$2a$10$aewa/XxpIRpidDfHxb9OsOfXpJRBYKDsHrQr8aMTtMO7r5ETWP3q.', 'Test User');
 
 -- 初始化角色数据
 INSERT INTO `sys_role` (`name`, `code`, `description`, `enabled`)
