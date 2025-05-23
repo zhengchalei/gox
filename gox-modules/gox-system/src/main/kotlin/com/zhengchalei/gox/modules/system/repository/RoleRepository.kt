@@ -42,28 +42,16 @@ class RoleRepository(private val sqlClient: KSqlClient) {
 
     fun save(roleCreateDTO: RoleCreateDTO): Role {
         val saveResult = this.sqlClient.save(roleCreateDTO)
-        if (!saveResult.isModified) {
-            log.error("创建失败: {}", roleCreateDTO)
-            throw IllegalArgumentException("创建失败")
-        }
         return saveResult.modifiedEntity
     }
 
     fun updateById(roleUpdateDTO: RoleUpdateDTO): Role {
         val saveResult = this.sqlClient.save(roleUpdateDTO)
-        if (!saveResult.isModified) {
-            log.error("更新失败: {}", roleUpdateDTO.name)
-            throw IllegalArgumentException("更新失败")
-        }
         return saveResult.modifiedEntity
     }
 
     // delete role
     fun deleteById(id: Long) {
         val deleteCount = this.sqlClient.executeDelete(Role::class) { where(table.id eq id) }
-        if (deleteCount == 0) {
-            log.error("删除失败: {}", id)
-            throw IllegalArgumentException("删除失败")
-        }
     }
 }

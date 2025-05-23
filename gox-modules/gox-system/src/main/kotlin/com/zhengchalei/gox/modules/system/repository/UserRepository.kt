@@ -6,7 +6,6 @@ import com.zhengchalei.gox.modules.system.entity.id
 import com.zhengchalei.gox.modules.system.entity.username
 import com.zhengchalei.gox.util.PasswordUtil
 import org.babyfish.jimmer.spring.repository.fetchSpringPage
-import org.babyfish.jimmer.sql.ast.mutation.AssociatedSaveMode
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.asc
@@ -58,19 +57,11 @@ class UserRepository(private val sqlClient: KSqlClient) {
         val saveResult = this.sqlClient.save(userCreateDTO.toEntity {
             password = PasswordUtil.defaultPassword()
         })
-        if (!saveResult.isModified) {
-            log.error("创建失败: {}", userCreateDTO)
-            throw IllegalArgumentException("创建失败")
-        }
         return saveResult.modifiedEntity
     }
 
     fun save(user: User): User {
         val saveResult = this.sqlClient.save(user)
-        if (!saveResult.isModified) {
-            log.error("创建失败: {}", user)
-            throw IllegalArgumentException("创建失败")
-        }
         return saveResult.modifiedEntity
     }
 
@@ -79,19 +70,11 @@ class UserRepository(private val sqlClient: KSqlClient) {
             userUpdateDTO
         }
         val saveResult = this.sqlClient.save(userUpdateDTO, SaveMode.UPDATE_ONLY)
-        if (!saveResult.isRowAffected) {
-            log.error("更新失败: {}", userUpdateDTO.username)
-            throw IllegalArgumentException("更新失败")
-        }
         return saveResult.modifiedEntity
     }
 
     // delete user
     fun deleteById(id: Long) {
         val count = this.sqlClient.executeDelete(User::class) { where(table.id eq id) }
-        if (count == 0) {
-            log.error("删除失败: {}", id)
-            throw IllegalArgumentException("删除失败")
-        }
     }
 }

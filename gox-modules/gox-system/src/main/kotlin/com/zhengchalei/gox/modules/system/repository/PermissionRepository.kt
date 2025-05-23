@@ -42,28 +42,16 @@ class PermissionRepository(private val sqlClient: KSqlClient) {
 
     fun save(permissionCreateDTO: PermissionCreateDTO): Permission {
         val saveResult = this.sqlClient.save(permissionCreateDTO)
-        if (!saveResult.isModified) {
-            log.error("创建失败: {}", permissionCreateDTO)
-            throw IllegalArgumentException("创建失败")
-        }
         return saveResult.modifiedEntity
     }
 
     fun updateById(permissionUpdateDTO: PermissionUpdateDTO): Permission {
         val saveResult = this.sqlClient.save(permissionUpdateDTO)
-        if (!saveResult.isModified) {
-            log.error("更新失败: {}", permissionUpdateDTO.name)
-            throw IllegalArgumentException("更新失败")
-        }
         return saveResult.modifiedEntity
     }
 
     // delete permission
     fun deleteById(id: Long) {
         val count: Int = this.sqlClient.executeDelete(Permission::class) { where(table.id eq id) }
-        if (count == 0) {
-            log.error("删除失败: {}", id)
-            throw IllegalArgumentException()
-        }
     }
 }

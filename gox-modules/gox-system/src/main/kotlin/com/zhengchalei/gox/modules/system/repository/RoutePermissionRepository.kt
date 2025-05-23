@@ -54,28 +54,16 @@ class RoutePermissionRepository(private val sqlClient: KSqlClient) {
 
     fun save(routePermissionCreateDTO: RoutePermissionCreateDTO): RoutePermission {
         val saveResult = this.sqlClient.save(routePermissionCreateDTO)
-        if (!saveResult.isModified) {
-            log.error("创建失败: {}", routePermissionCreateDTO)
-            throw IllegalArgumentException("创建失败")
-        }
         return saveResult.modifiedEntity
     }
 
     fun updateById(routePermissionUpdateDTO: RoutePermissionUpdateDTO): RoutePermission {
         val saveResult = this.sqlClient.save(routePermissionUpdateDTO)
-        if (!saveResult.isModified) {
-            log.error("更新失败: {}", routePermissionUpdateDTO.path)
-            throw IllegalArgumentException("更新失败")
-        }
         return saveResult.modifiedEntity
     }
 
     fun deleteById(id: Long) {
         val count: Int = this.sqlClient.executeDelete(RoutePermission::class) { where(table.id eq id) }
-        if (count == 0) {
-            log.error("删除失败: {}", id)
-            throw IllegalArgumentException("删除失败")
-        }
     }
 
     /**
