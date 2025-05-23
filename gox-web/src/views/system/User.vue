@@ -121,8 +121,8 @@
       <!-- 分页 -->
       <div class="pagination-wrapper">
         <el-pagination
-          v-model:current-page="pagination.page"
-          v-model:page-size="pagination.size"
+          v-model:current-page="pagination.currentPage"
+          v-model:page-size="pagination.pageSize"
           :page-sizes="[10, 20, 50, 100]"
           :total="pagination.total"
           layout="total, sizes, prev, pager, next, jumper"
@@ -271,8 +271,8 @@ const searchForm = reactive<UserSpecification>({
 
 // 分页
 const pagination = reactive({
-  page: 1,
-  size: 10,
+  currentPage: 1,
+  pageSize: 10,
   total: 0,
 });
 
@@ -323,8 +323,8 @@ const fetchUsers = async () => {
   try {
     loading.value = true;
     const response = await userApi.findPage(
-      pagination.page,
-      pagination.size,
+      pagination.currentPage,
+      pagination.pageSize,
       searchForm
     );
 
@@ -338,7 +338,7 @@ const fetchUsers = async () => {
 };
 
 const handleSearch = () => {
-  pagination.page = 1;
+  pagination.currentPage = 1;
   fetchUsers();
 };
 
@@ -358,12 +358,12 @@ const handleSelectionChange = (selection: UserListDTO[]) => {
 };
 
 const handleSizeChange = (size: number) => {
-  pagination.size = size;
+  pagination.pageSize = size;
   fetchUsers();
 };
 
 const handleCurrentChange = (page: number) => {
-  pagination.page = page;
+  pagination.currentPage = page;
   fetchUsers();
 };
 

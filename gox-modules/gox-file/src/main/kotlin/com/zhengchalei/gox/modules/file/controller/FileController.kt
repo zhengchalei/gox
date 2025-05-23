@@ -58,11 +58,11 @@ class FileController(
     @Operation(summary = "分页查询文件", description = "根据条件分页查询文件")
     @GetMapping("/page")
     fun page(
-        @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") page: Int,
-        @Parameter(description = "每页数量", required = false) @RequestParam(defaultValue = "10") size: Int,
+        @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") currentPage: Int,
+        @Parameter(description = "每页数量", required = false) @RequestParam(defaultValue = "10") pageSize: Int,
         fileInfoSpecification: FileInfoSpecification
     ): R<Page<FileInfoListDTO>> {
-        val pageRequest = PageRequest.of(page, size).oneIndex()
+        val pageRequest = PageRequest.of(currentPage, pageSize).oneIndex()
         val pageResult = fileService.findPage(pageRequest, fileInfoSpecification)
         return R.data(pageResult)
     }

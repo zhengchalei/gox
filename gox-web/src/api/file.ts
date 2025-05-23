@@ -58,15 +58,17 @@ export const fileApi = {
   },
 
   // 分页查询文件
-  findPage: (page: number = 1, size: number = 10, specification: FileInfoSpecification): Promise<RPageFileInfoListDTO> => {
+  findPage: (currentPage: number = 1, pageSize: number = 10, specification: FileInfoSpecification): Promise<RPageFileInfoListDTO> => {
     const params = new URLSearchParams({
-      page: page.toString(),
-      size: size.toString(),
+      currentPage: currentPage.toString(),
+      pageSize: pageSize.toString(),
       ...Object.fromEntries(
-        Object.entries(specification).map(([key, value]) => [
-          `fileInfoSpecification.${key}`,
-          value?.toString() || ''
-        ])
+        Object.entries(specification)
+          .filter(([_, value]) => value !== undefined && value !== '')
+          .map(([key, value]) => [
+            key,
+            Array.isArray(value) ? value.join(',') : value?.toString() || ''
+          ])
       )
     })
     return api.get(`/api/v1/file/page?${params}`)

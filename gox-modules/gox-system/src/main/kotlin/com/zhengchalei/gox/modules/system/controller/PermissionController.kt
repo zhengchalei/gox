@@ -64,15 +64,11 @@ class PermissionController(private val permissionService: PermissionService) {
     @Operation(summary = "分页查询权限", description = "分页查询权限列表")
     @GetMapping("/page")
     fun findPage(
-        @Parameter(description = "页码", required = false)
-        @RequestParam(defaultValue = "1")
-        page: Int,
-        @Parameter(description = "每页数量", required = false)
-        @RequestParam(defaultValue = "10")
-        size: Int,
+        @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") currentPage: Int,
+        @Parameter(description = "每页数量", required = false) @RequestParam(defaultValue = "10") pageSize: Int,
         permissionSpecification: PermissionSpecification,
     ): R<Page<PermissionListDTO>> {
-        val pageRequest: PageRequest = PageRequest.of(page, size).oneIndex()
+        val pageRequest: PageRequest = PageRequest.of(currentPage, pageSize).oneIndex()
         val pageResult = permissionService.findPage(pageRequest, permissionSpecification)
         return R.data(pageResult)
     }

@@ -53,20 +53,10 @@
               </el-menu-item>
             </el-sub-menu>
 
-            <el-sub-menu index="file" class="sub-menu">
-              <template #title>
-                <el-icon><FolderOpened /></el-icon>
-                <span>文件管理</span>
-              </template>
-              <el-menu-item index="/file/upload" class="menu-item">
-                <el-icon><Upload /></el-icon>
-                <template #title>文件上传</template>
-              </el-menu-item>
-              <el-menu-item index="/file/list" class="menu-item">
-                <el-icon><Document /></el-icon>
-                <template #title>文件列表</template>
-              </el-menu-item>
-            </el-sub-menu>
+            <el-menu-item index="/file" class="menu-item">
+              <el-icon><FolderOpened /></el-icon>
+              <template #title>文件管理</template>
+            </el-menu-item>
 
             <el-menu-item index="/profile" class="menu-item">
               <el-icon><User /></el-icon>

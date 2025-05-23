@@ -93,22 +93,21 @@ const routes: RouteRecordRaw[] = [
         },
         children: [
           {
-            path: 'upload',
-            name: 'FileUpload',
-            component: () => import('../views/file/Upload.vue'),
-            meta: {
-              requiresAuth: true,
-              title: '文件上传'
-            }
-          },
-          {
-            path: 'list',
-            name: 'FileList',
+            path: '',
+            name: 'FileManagement',
             component: () => import('../views/file/List.vue'),
             meta: {
               requiresAuth: true,
-              title: '文件列表'
+              title: '文件管理'
             }
+          },
+          {
+            path: 'upload',
+            redirect: '/file'
+          },
+          {
+            path: 'list',
+            redirect: '/file'
           }
         ]
       }

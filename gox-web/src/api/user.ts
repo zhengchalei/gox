@@ -30,14 +30,17 @@ export const userApi = {
   },
 
   // 分页查询用户
-  findPage: (page: number = 1, size: number = 10, specification: UserSpecification): Promise<RPageUserListDTO> => {
+  findPage: (currentPage: number = 1, pageSize: number = 10, specification: UserSpecification): Promise<RPageUserListDTO> => {
     const params = new URLSearchParams({
-      page: page.toString(),
-      size: size.toString(),
+      currentPage: currentPage.toString(),
+      pageSize: pageSize.toString(),
       ...Object.fromEntries(
         Object.entries(specification)
           .filter(([_, value]) => value !== undefined && value !== '')
-          .map(([key, value]) => [key, value?.toString() || ''])
+          .map(([key, value]) => [
+            key,
+            Array.isArray(value) ? value.join(',') : value?.toString() || ''
+          ])
       )
     })
     return api.get(`/api/v1/sys/user/page?${params}`)

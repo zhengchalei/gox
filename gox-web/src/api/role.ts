@@ -25,10 +25,10 @@ export const roleApi = {
   },
 
   // 分页查询角色
-  findPage: (page: number = 1, size: number = 10, specification: RoleSpecification): Promise<RPageRoleListDTO> => {
+  findPage: (currentPage: number = 1, pageSize: number = 10, specification: RoleSpecification): Promise<RPageRoleListDTO> => {
     const params = new URLSearchParams({
-      page: page.toString(),
-      size: size.toString(),
+      currentPage: currentPage.toString(),
+      pageSize: pageSize.toString(),
       ...Object.fromEntries(
         Object.entries(specification)
           .filter(([_, value]) => value !== undefined && value !== '')

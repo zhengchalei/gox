@@ -81,8 +81,8 @@
       <!-- 分页 -->
       <div class="pagination-wrapper">
         <el-pagination
-          v-model:current-page="pagination.page"
-          v-model:page-size="pagination.size"
+          v-model:current-page="pagination.currentPage"
+          v-model:page-size="pagination.pageSize"
           :page-sizes="[10, 20, 50, 100]"
           :total="pagination.total"
           layout="total, sizes, prev, pager, next, jumper"
@@ -203,8 +203,8 @@ const searchForm = reactive<PermissionSpecification>({
 
 // 分页
 const pagination = reactive({
-  page: 1,
-  size: 10,
+  currentPage: 1,
+  pageSize: 10,
   total: 0
 })
 
@@ -252,7 +252,7 @@ const formatDateTime = (dateTime: string) => {
 const fetchPermissions = async () => {
   try {
     loading.value = true
-    const response = await permissionApi.findPage(pagination.page, pagination.size, searchForm)
+    const response = await permissionApi.findPage(pagination.currentPage, pagination.pageSize, searchForm)
     
     tableData.value = response.data.content
     pagination.total = response.data.totalElements
@@ -273,7 +273,7 @@ const fetchRoles = async () => {
 }
 
 const handleSearch = () => {
-  pagination.page = 1
+  pagination.currentPage = 1
   fetchPermissions()
 }
 
@@ -290,12 +290,12 @@ const handleSelectionChange = (selection: PermissionListDTO[]) => {
 }
 
 const handleSizeChange = (size: number) => {
-  pagination.size = size
+  pagination.pageSize = size
   fetchPermissions()
 }
 
 const handleCurrentChange = (page: number) => {
-  pagination.page = page
+  pagination.currentPage = page
   fetchPermissions()
 }
 

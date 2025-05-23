@@ -89,8 +89,8 @@
       <!-- 分页 -->
       <div class="pagination-wrapper">
         <el-pagination
-          v-model:current-page="pagination.page"
-          v-model:page-size="pagination.size"
+          v-model:current-page="pagination.currentPage"
+          v-model:page-size="pagination.pageSize"
           :page-sizes="[10, 20, 50, 100]"
           :total="pagination.total"
           layout="total, sizes, prev, pager, next, jumper"
@@ -213,8 +213,8 @@ const searchForm = reactive<RoleSpecification>({
 
 // 分页
 const pagination = reactive({
-  page: 1,
-  size: 10,
+  currentPage: 1,
+  pageSize: 10,
   total: 0
 })
 
@@ -263,7 +263,7 @@ const formatDateTime = (dateTime: string) => {
 const fetchRoles = async () => {
   try {
     loading.value = true
-    const response = await roleApi.findPage(pagination.page, pagination.size, searchForm)
+    const response = await roleApi.findPage(pagination.currentPage, pagination.pageSize, searchForm)
     
     tableData.value = response.data.content
     pagination.total = response.data.totalElements
@@ -284,7 +284,7 @@ const fetchPermissions = async () => {
 }
 
 const handleSearch = () => {
-  pagination.page = 1
+  pagination.currentPage = 1
   fetchRoles()
 }
 
@@ -302,12 +302,12 @@ const handleSelectionChange = (selection: RoleListDTO[]) => {
 }
 
 const handleSizeChange = (size: number) => {
-  pagination.size = size
+  pagination.pageSize = size
   fetchRoles()
 }
 
 const handleCurrentChange = (page: number) => {
-  pagination.page = page
+  pagination.currentPage = page
   fetchRoles()
 }
 

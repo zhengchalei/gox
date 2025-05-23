@@ -22,8 +22,7 @@ class RoutePermissionController(private val routePermissionService: RoutePermiss
     @Operation(summary = "根据ID查询路由权限", description = "通过路由权限ID获取路由权限详细信息")
     @GetMapping("/{id}")
     fun findById(
-        @Parameter(description = "路由权限ID", required = true)
-        @PathVariable id: Long
+        @Parameter(description = "路由权限ID", required = true) @PathVariable id: Long
     ): R<RoutePermissionDetailDTO> {
         val routePermission = routePermissionService.findById(id)
         return R.data(routePermission)
@@ -32,8 +31,7 @@ class RoutePermissionController(private val routePermissionService: RoutePermiss
     @Operation(summary = "删除路由权限", description = "根据路由权限ID删除路由权限")
     @DeleteMapping("/{id}")
     fun deleteById(
-        @Parameter(description = "路由权限ID", required = true)
-        @PathVariable id: Long
+        @Parameter(description = "路由权限ID", required = true) @PathVariable id: Long
     ): R<Void> {
         routePermissionService.deleteById(id)
         return R.success()
@@ -42,8 +40,10 @@ class RoutePermissionController(private val routePermissionService: RoutePermiss
     @Operation(summary = "创建路由权限", description = "创建新路由权限")
     @PostMapping
     fun create(
-        @Parameter(description = "路由权限信息", required = true)
-        @Valid @RequestBody routePermissionCreateDTO: RoutePermissionCreateDTO
+        @Parameter(
+            description = "路由权限信息",
+            required = true
+        ) @Valid @RequestBody routePermissionCreateDTO: RoutePermissionCreateDTO
     ): R<Void> {
         routePermissionService.create(routePermissionCreateDTO)
         return R.success()
@@ -52,8 +52,10 @@ class RoutePermissionController(private val routePermissionService: RoutePermiss
     @Operation(summary = "更新路由权限", description = "更新路由权限信息")
     @PutMapping
     fun update(
-        @Parameter(description = "路由权限信息", required = true)
-        @Valid @RequestBody routePermissionUpdateDTO: RoutePermissionUpdateDTO
+        @Parameter(
+            description = "路由权限信息",
+            required = true
+        ) @Valid @RequestBody routePermissionUpdateDTO: RoutePermissionUpdateDTO
     ): R<Void> {
         routePermissionService.update(routePermissionUpdateDTO)
         return R.success()
@@ -62,13 +64,11 @@ class RoutePermissionController(private val routePermissionService: RoutePermiss
     @Operation(summary = "分页查询路由权限", description = "分页查询路由权限列表")
     @GetMapping("/page")
     fun findPage(
-        @Parameter(description = "页码", required = false)
-        @RequestParam(defaultValue = "1") page: Int,
-        @Parameter(description = "每页数量", required = false)
-        @RequestParam(defaultValue = "10") size: Int,
+        @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") currentPage: Int,
+        @Parameter(description = "每页数量", required = false) @RequestParam(defaultValue = "10") pageSize: Int,
         routePermissionSpecification: RoutePermissionSpecification,
     ): R<Page<RoutePermissionListDTO>> {
-        val pageRequest: PageRequest = PageRequest.of(page, size).oneIndex()
+        val pageRequest: PageRequest = PageRequest.of(currentPage, pageSize).oneIndex()
         val pageResult = routePermissionService.findPage(pageRequest, routePermissionSpecification)
         return R.data(pageResult)
     }
@@ -76,10 +76,8 @@ class RoutePermissionController(private val routePermissionService: RoutePermiss
     @Operation(summary = "根据路径和方法查询路由权限", description = "根据路径和HTTP方法查询路由权限")
     @GetMapping("/path")
     fun findByPathAndMethod(
-        @Parameter(description = "路径", required = true)
-        @RequestParam path: String,
-        @Parameter(description = "HTTP方法", required = true)
-        @RequestParam method: String
+        @Parameter(description = "路径", required = true) @RequestParam path: String,
+        @Parameter(description = "HTTP方法", required = true) @RequestParam method: String
     ): R<RoutePermissionDetailDTO?> {
         val routePermission = routePermissionService.findByPathAndMethod(path, method)
         return R.data(routePermission)
@@ -88,8 +86,7 @@ class RoutePermissionController(private val routePermissionService: RoutePermiss
     @Operation(summary = "根据角色ID查询路由权限", description = "根据角色ID列表查询对应的路由权限")
     @GetMapping("/roles")
     fun findByRoleIds(
-        @Parameter(description = "角色ID列表", required = true)
-        @RequestParam roleIds: List<Long>
+        @Parameter(description = "角色ID列表", required = true) @RequestParam roleIds: List<Long>
     ): R<List<RoutePermissionDetailDTO>> {
         val routePermissions = routePermissionService.findByRoleIds(roleIds)
         return R.data(routePermissions)

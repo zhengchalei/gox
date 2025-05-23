@@ -62,13 +62,11 @@ class RoleController(private val roleService: RoleService) {
     @Operation(summary = "分页查询角色", description = "分页查询角色列表")
     @GetMapping("/page")
     fun findPage(
-        @Parameter(description = "页码", required = false)
-        @RequestParam(defaultValue = "1") page: Int,
-        @Parameter(description = "每页数量", required = false)
-        @RequestParam(defaultValue = "10") size: Int,
+        @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") currentPage: Int,
+        @Parameter(description = "每页数量", required = false) @RequestParam(defaultValue = "10") pageSize: Int,
         roleSpecification: RoleSpecification,
     ): R<Page<RoleListDTO>> {
-        val pageRequest: PageRequest = PageRequest.of(page, size).oneIndex()
+        val pageRequest: PageRequest = PageRequest.of(currentPage, pageSize).oneIndex()
         val pageResult = roleService.findPage(pageRequest, roleSpecification)
         return R.data(pageResult)
     }

@@ -25,10 +25,10 @@ export const permissionApi = {
   },
 
   // 分页查询权限
-  findPage: (page: number = 1, size: number = 10, specification: PermissionSpecification): Promise<RPagePermissionListDTO> => {
+  findPage: (currentPage: number = 1, pageSize: number = 10, specification: PermissionSpecification): Promise<RPagePermissionListDTO> => {
     const params = new URLSearchParams({
-      page: page.toString(),
-      size: size.toString(),
+      currentPage: currentPage.toString(),
+      pageSize: pageSize.toString(),
       ...Object.fromEntries(
         Object.entries(specification)
           .filter(([_, value]) => value !== undefined && value !== '')
