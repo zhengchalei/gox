@@ -108,27 +108,27 @@ class FileController(
     }
 
     /** 获取文件下载URL */
-    @Operation(summary = "获取文件下载URL", description = "根据文件ID获取文件的下载URL")
-    @GetMapping("/url/{id}")
+    @Operation(summary = "获取文件下载URL", description = "根据文件storageName获取文件的下载URL")
+    @GetMapping("/url/{storageName}")
     fun getDownloadUrl(
-        @Parameter(description = "文件ID", required = true) @PathVariable id: Long
+        @Parameter(description = "文件名", required = true) @PathVariable storageName: String
     ): R<Map<String, String>> {
-        val fileInfo = fileService.findById(id)
+        val fileInfo = fileService.findByStorageName(storageName)
         val url = fileService.getDownloadUrl(fileInfo)
         return R.data(mapOf("url" to url))
     }
 
     /** 获取文件临时访问URL */
-    @Operation(summary = "获取文件临时访问URL", description = "根据文件ID获取文件的临时访问URL，有效期可自定义")
-    @GetMapping("/temp-url/{id}")
+    @Operation(summary = "获取文件临时访问URL", description = "根据文件storageName获取文件的临时访问URL，有效期可自定义")
+    @GetMapping("/temp-url/{storageName}")
     fun getTemporaryUrl(
-        @Parameter(description = "文件ID", required = true) @PathVariable id: Long,
+        @Parameter(description = "文件ID", required = true) @PathVariable storageName: String,
         @Parameter(description = "有效期(分钟)", required = false) @RequestParam(
             "minutes",
             defaultValue = "5"
         ) minutes: Long
     ): R<Map<String, String>> {
-        val fileInfo = fileService.findById(id)
+        val fileInfo = fileService.findByStorageName(storageName)
         val duration = Duration.ofMinutes(minutes)
         val url = fileService.getTemporaryUrl(fileInfo, duration)
         return R.data(mapOf("url" to url, "expiresIn" to "${minutes}分钟"))
@@ -151,12 +151,27 @@ class FileController(
                 URLEncoder.encode(fileInfo.originalName, StandardCharsets.UTF_8.toString()).replace("+", "%20")
 
             return ResponseEntity.ok().contentType(MediaType.parseMediaType(fileInfo.mimeType)).header(
-                    HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''$encodedFilename"
-                ).body(resource)
+                HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''$encodedFilename"
+            ).body(resource)
         } else {
             // 非本地文件，重定向到临时URL
             val tempUrl = fileService.getTemporaryUrl(fileInfo, Duration.ofMinutes(5))
             return ResponseEntity.status(302).header(HttpHeaders.LOCATION, tempUrl).build()
+        }
+    }
+
+    /** 预览 */
+    @GetMapping("/preview/{storageName}")
+    fun preview(
+        @PathVariable storageName: String
+    ): ResponseEntity<Resource> {
+        val fileInfo = fileService.findByStorageName(storageName)
+        if (fileInfo.storageType == StorageType.LOCAL) {
+            val file = localFileStorageService.getPhysicalPath(fileInfo).toFile()
+            val resource = UrlResource(file.toURI())
+            return ResponseEntity.ok().contentType(MediaType.parseMediaType(fileInfo.mimeType)).body(resource)
+        } else {
+            return ResponseEntity.badRequest().body(null)
         }
     }
 

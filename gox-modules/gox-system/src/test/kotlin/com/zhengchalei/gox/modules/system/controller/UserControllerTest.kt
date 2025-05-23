@@ -2,6 +2,8 @@ package com.zhengchalei.gox.modules.system.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.zhengchalei.gox.modules.system.entity.dto.UserCreateDTO
+import com.zhengchalei.gox.modules.system.entity.dto.UserDetailDTO
+import com.zhengchalei.gox.modules.system.entity.dto.UserListDTO
 import com.zhengchalei.gox.modules.system.entity.dto.UserUpdateDTO
 import com.zhengchalei.gox.modules.system.service.UserService
 import com.zhengchalei.gox.starter.GoxApplication
@@ -10,12 +12,15 @@ import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.LocalDateTime
 
 @AutoConfigureMockMvc
 @SpringBootTest(classes = [GoxApplication::class])
@@ -34,14 +39,18 @@ class UserControllerTest {
     fun `should find user by username`() {
         val username = "testuser"
         Mockito.`when`(userService.findByUsername(username)).thenReturn(
-            com.zhengchalei.gox.modules.system.entity.dto.UserDetailDTO(
+            UserDetailDTO(
                 id = 1L,
                 username = username,
                 enabled = true,
-                createdTime = java.time.LocalDateTime.now(),
-                updatedTime = java.time.LocalDateTime.now(),
+                createdTime = LocalDateTime.now(),
+                updatedTime = LocalDateTime.now(),
                 roles = listOf(),
-                roleIds = listOf()
+                roleIds = listOf(),
+                nickname = "",
+                avatar = "",
+                email = "",
+                phone = "",
             )
         )
 
@@ -54,14 +63,18 @@ class UserControllerTest {
     fun `should find user by id`() {
         val userId = 1L
         Mockito.`when`(userService.findById(userId)).thenReturn(
-            com.zhengchalei.gox.modules.system.entity.dto.UserDetailDTO(
+            UserDetailDTO(
                 id = userId,
                 username = "testuser",
                 enabled = true,
-                createdTime = java.time.LocalDateTime.now(),
-                updatedTime = java.time.LocalDateTime.now(),
+                createdTime = LocalDateTime.now(),
+                updatedTime = LocalDateTime.now(),
                 roles = listOf(),
-                roleIds = listOf()
+                roleIds = listOf(),
+                nickname = "",
+                avatar = "",
+                email = "",
+                phone = "",
             )
         )
 
@@ -109,17 +122,20 @@ class UserControllerTest {
     fun `should find user page`() {
         val page = 1
         val size = 10
-        val pageable = org.springframework.data.domain.PageRequest.of(page, size)
+        val pageable = PageRequest.of(page, size)
         val userList = listOf(
-            com.zhengchalei.gox.modules.system.entity.dto.UserListDTO(
+            UserListDTO(
                 id = 1L,
                 username = "testuser",
                 enabled = true,
-                createdTime = java.time.LocalDateTime.now(),
-                updatedTime = java.time.LocalDateTime.now()
+                createdTime = LocalDateTime.now(),
+                updatedTime = LocalDateTime.now(),
+                nickname = "",
+                email = "",
+                phone = "",
             )
         )
-        val pageResult = org.springframework.data.domain.PageImpl(userList, pageable, userList.size.toLong())
+        val pageResult = PageImpl(userList, pageable, userList.size.toLong())
         Mockito.`when`(userService.findPage(Mockito.any(), Mockito.any())).thenReturn(pageResult)
 
         mockMvc.perform(

@@ -5,6 +5,18 @@
         <div class="card-header">
           <span>文件管理</span>
           <div class="header-actions">
+            <!-- 视图模式切换 -->
+            <el-radio-group v-model="viewMode" size="small" style="margin-right: 16px;" @change="handleViewModeChange">
+              <el-radio-button value="table">
+                <el-icon><List /></el-icon>
+                表格视图
+              </el-radio-button>
+              <el-radio-button value="grid">
+                <el-icon><Grid /></el-icon>
+                网格视图
+              </el-radio-button>
+            </el-radio-group>
+            
             <el-button type="danger" :disabled="selectedFiles.length === 0" @click="handleBatchDelete">
               <el-icon><Delete /></el-icon>
               批量删除 ({{ selectedFiles.length }})
@@ -53,24 +65,68 @@
         </el-form>
       </div>
 
-      <!-- 网格视图 -->
-      <div class="grid-view">
-        <el-divider content-position="left">文件预览</el-divider>
-        
-        <!-- 调试用表格视图 -->
-        <div v-if="tableData.length > 0" style="margin-bottom: 20px;">
-          <el-table :data="tableData" style="width: 100%" size="small">
-            <el-table-column prop="id" label="ID" width="80" />
-            <el-table-column prop="originalName" label="文件名" min-width="200" />
-            <el-table-column prop="size" label="大小" width="120">
+      <!-- 表格视图 -->
+      <div v-if="viewMode === 'table'" class="table-view">
+        <el-divider content-position="left">文件列表</el-divider>
+        <div v-loading="loading">
+          <el-table 
+            :data="tableData" 
+            style="width: 100%" 
+            @selection-change="handleSelectionChange"
+            row-key="id"
+          >
+            <el-table-column type="selection" width="55" />
+            <el-table-column prop="originalName" label="文件名" min-width="200" show-overflow-tooltip>
+              <template #default="{ row }">
+                <div class="file-name-cell">
+                  <el-icon class="file-icon" :size="20">
+                    <Picture v-if="isImage(row.mimeType)" />
+                    <Document v-else-if="isDocument(row.mimeType)" />
+                    <VideoPlay v-else-if="isVideo(row.mimeType)" />
+                    <Headset v-else-if="isAudio(row.mimeType)" />
+                    <Files v-else />
+                  </el-icon>
+                  <span>{{ row.originalName }}</span>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="size" label="文件大小" width="120" sortable>
               <template #default="{ row }">
                 {{ formatFileSize(row.size) }}
               </template>
             </el-table-column>
-            <el-table-column prop="mimeType" label="类型" width="150" />
-            <el-table-column prop="storageType" label="存储" width="100" />
+            <el-table-column prop="mimeType" label="文件类型" width="180" show-overflow-tooltip />
+            <el-table-column prop="storageType" label="存储类型" width="100">
+              <template #default="{ row }">
+                <el-tag size="small" :type="getStorageTypeColor(row.storageType)">
+                  {{ getStorageTypeName(row.storageType) }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="createdTime" label="上传时间" width="180" sortable>
+              <template #default="{ row }">
+                {{ formatDateTime(row.createdTime) }}
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="200" fixed="right">
+              <template #default="{ row }">
+                <el-button-group size="small">
+                  <el-button @click="handlePreview(row)">预览</el-button>
+                  <el-button @click="handleDownload(row)">下载</el-button>
+                  <el-button @click="handleDelete(row)" type="danger">删除</el-button>
+                </el-button-group>
+              </template>
+            </el-table-column>
           </el-table>
         </div>
+        
+        <!-- 空状态 -->
+        <el-empty v-if="!loading && tableData.length === 0" description="暂无文件" />
+      </div>
+
+      <!-- 网格视图 -->
+      <div v-else class="grid-view">
+        <el-divider content-position="left">文件预览</el-divider>
         
         <div v-loading="loading" class="file-grid">
           <div 
@@ -122,7 +178,7 @@
         <el-pagination
           v-model:current-page="pagination.currentPage"
           v-model:page-size="pagination.pageSize"
-          :page-sizes="[12, 24, 48, 96]"
+          :page-sizes="viewMode === 'table' ? [10, 20, 50, 100] : [12, 24, 48, 96]"
           :total="pagination.total"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="handleSizeChange"
@@ -260,11 +316,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, nextTick } from 'vue'
+import { ref, reactive, onMounted, nextTick, watch } from 'vue'
 import { ElMessage, ElMessageBox, type UploadFile, type UploadFiles } from 'element-plus'
 import { 
   Delete, Upload, Search, Refresh, UploadFilled,
-  Document, Picture, VideoPlay, Headset, Files 
+  Document, Picture, VideoPlay, Headset, Files, List, Grid 
 } from '@element-plus/icons-vue'
 import { fileApi } from '../../api/file'
 import type { FileInfoListDTO, FileInfoDetailDTO, FileInfoSpecification } from '../../types/api'
@@ -291,9 +347,23 @@ const searchForm = reactive<FileInfoSpecification>({
 // 分页
 const pagination = reactive({
   currentPage: 1,
-  pageSize: 24,
+  pageSize: 20, // 默认为表格模式的页面大小
   total: 0
 })
+
+// 视图模式
+const viewMode = ref<'table' | 'grid'>('table')
+
+// 当视图模式改变时，调整页面大小
+const handleViewModeChange = () => {
+  if (viewMode.value === 'table') {
+    pagination.pageSize = 20
+  } else {
+    pagination.pageSize = 24
+  }
+  pagination.currentPage = 1
+  fetchFiles()
+}
 
 // 方法
 const formatFileSize = (size: number): string => {
@@ -340,8 +410,14 @@ const getStorageTypeName = (storageType: string) => {
 }
 
 const getPreviewUrl = (file: FileInfoListDTO) => {
+  console.log('file', JSON.stringify(file))
   // 这里需要根据实际的API来构建预览URL
-  return `/api/files/preview/${file.storageName}`
+  return `/api/v1/file/preview/${file.storageName}`
+}
+
+// 表格视图的选择处理
+const handleSelectionChange = (selection: FileInfoListDTO[]) => {
+  selectedFiles.value = selection
 }
 
 const fetchFiles = async () => {
@@ -568,6 +644,9 @@ onMounted(() => {
   console.log('文件管理页面已挂载，开始获取数据')
   fetchFiles()
 })
+
+// 监听视图模式变化
+watch(viewMode, handleViewModeChange)
 </script>
 
 <style scoped>
@@ -581,8 +660,27 @@ onMounted(() => {
   margin-left: 10px;
 }
 
+.header-actions .el-radio-group {
+  margin-right: 16px;
+}
+
 .search-bar {
   margin-bottom: 20px;
+}
+
+.table-view {
+  margin: 20px 0;
+}
+
+.file-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.file-icon {
+  color: #606266;
+  flex-shrink: 0;
 }
 
 .grid-view {

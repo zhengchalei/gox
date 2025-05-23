@@ -6,27 +6,11 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Min
 
 FileInfoListDTO {
-    id
-    originalName
-    extension
-    size
-    mimeType
-    storageType
-    createdTime
-    updatedTime
+    #allScalars
 }
 
 FileInfoDetailDTO {
-    id
-    originalName
-    storageName
-    path
-    extension
-    size
-    mimeType
-    storageType
-    createdTime
-    updatedTime
+    #allScalars
 }
 
 input FileInfoCreateDTO {
@@ -47,14 +31,5 @@ input FileInfoCreateDTO {
 }
 
 specification FileInfoSpecification {
-    id
-    originalName
-    storageName
-    path
-    extension
-    size
-    mimeType
-    storageType
-    createdTime
-    updatedTime
+    #allScalars
 }
