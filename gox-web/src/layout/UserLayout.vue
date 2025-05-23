@@ -131,10 +131,10 @@
             <el-dropdown class="user-dropdown" @command="handleUserCommand">
               <div class="user-info">
                 <el-avatar :size="32" class="user-avatar">
-                  {{ userInfo.username?.charAt(0).toUpperCase() }}
+                  {{ userInfo.nickname?.charAt(0).toUpperCase() }}
                 </el-avatar>
                 <div v-if="!collapsed" class="user-details">
-                  <div class="username">{{ userInfo.username }}</div>
+                  <div class="username">{{ userInfo.nickname }}</div>
                   <div class="user-role">{{ getUserRoleName() }}</div>
                 </div>
                 <el-icon class="arrow-icon"><ArrowDown /></el-icon>
@@ -178,24 +178,6 @@
 import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
-import {
-  Grid,
-  Setting,
-  User,
-  UserFilled,
-  Lock,
-  Link,
-  FolderOpened,
-  Upload,
-  Document,
-  Fold,
-  Expand,
-  FullScreen,
-  Bell,
-  ArrowDown,
-  SwitchButton,
-  Search,
-} from "@element-plus/icons-vue";
 import { loginApi } from "../api";
 import type { UserDetailDTO } from "../types/api";
 
@@ -208,12 +190,16 @@ const searchValue = ref("");
 const notificationCount = ref(0);
 const userInfo = ref<UserDetailDTO>({
   id: 0,
-  username: "加载中...",
+  username: '',
+  nickname: '加载中...',
+  avatar: '',
+  email: '',
+  phone: '',
   enabled: true,
-  createdTime: "",
-  updatedTime: "",
+  createdTime: '',
+  updatedTime: '',
   roleIds: [],
-  roles: [],
+  roles: []
 });
 
 // 计算属性

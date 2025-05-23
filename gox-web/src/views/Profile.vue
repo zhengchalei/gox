@@ -43,6 +43,10 @@ import type { UserDetailDTO } from '../types/api'
 const userForm = ref<UserDetailDTO>({
   id: 0,
   username: '',
+  nickname: '',
+  avatar: '',
+  email: '',
+  phone: '',
   enabled: true,
   createdTime: '',
   updatedTime: '',
