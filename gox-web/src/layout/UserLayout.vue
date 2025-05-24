@@ -47,10 +47,6 @@
                 <el-icon><Lock /></el-icon>
                 <template #title>权限管理</template>
               </el-menu-item>
-              <el-menu-item index="/system/route-permission" class="menu-item">
-                <el-icon><Link /></el-icon>
-                <template #title>路由权限</template>
-              </el-menu-item>
             </el-sub-menu>
 
             <el-menu-item index="/file" class="menu-item">

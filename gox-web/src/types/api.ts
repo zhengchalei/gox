@@ -111,8 +111,6 @@ export interface RoleDetailDTO {
   updatedTime: string
   permissionIds: number[]
   permissions: PermissionInfo[]
-  routePermissionIds: number[]
-  routePermissions: RoutePermissionInfo[]
 }
 
 export interface RoleListDTO {
@@ -124,7 +122,6 @@ export interface RoleListDTO {
   createdTime: string
   updatedTime: string
   permissionIds: number[]
-  routePermissionIds: number[]
 }
 
 export interface RoleCreateDTO {
@@ -151,7 +148,6 @@ export interface RoleSpecification {
   createdTime?: string
   updatedTime?: string
   permissionIds?: number[]
-  routePermissionIds?: number[]
 }
 
 export interface RoleInfo {
@@ -217,16 +213,6 @@ export interface PermissionInfo {
   id: number
   name: string
   code: string
-  description?: string
-  createdTime: string
-  updatedTime: string
-}
-
-// 路由权限相关类型
-export interface RoutePermissionInfo {
-  id: number
-  path: string
-  method: string
   description?: string
   createdTime: string
   updatedTime: string
