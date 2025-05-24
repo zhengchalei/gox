@@ -11,6 +11,9 @@ spring:
     password: root
   profiles:
     include: file, auth
+  servlet:
+    multipart:
+      max-file-size: 10MB
 
 jimmer:
   dialect: org.babyfish.jimmer.sql.dialect.MySqlDialect
