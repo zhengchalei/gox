@@ -72,15 +72,6 @@ const routes: RouteRecordRaw[] = [
               title: '权限管理'
             }
           },
-          {
-            path: 'route-permission',
-            name: 'SystemRoutePermission',
-            component: () => import('../views/system/RoutePermission.vue'),
-            meta: {
-              requiresAuth: true,
-              title: '路由权限'
-            }
-          }
         ]
       },
       // 文件管理路由

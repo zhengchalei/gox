@@ -13,7 +13,6 @@ RoleListDTO {
     createdTime
     updatedTime
     permissionIds
-    routePermissionIds
 }
 
 RoleDetailDTO {
@@ -26,10 +25,6 @@ RoleDetailDTO {
     updatedTime
     permissionIds
     permissions {
-        #allScalars
-    }
-    routePermissionIds
-    routePermissions {
         #allScalars
     }
 }
@@ -65,5 +60,4 @@ specification RoleSpecification {
     createdTime
     updatedTime
     associatedIdIn(permissions) as permissionIds
-    associatedIdIn(routePermissions) as routePermissionIds
 }

@@ -67,32 +67,3 @@ CREATE TABLE IF NOT EXISTS `sys_role_permission`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT ='角色权限关联表';
-
--- 创建路由权限表
-CREATE TABLE IF NOT EXISTS `sys_route_permission`
-(
-    `id`           BIGINT PRIMARY KEY auto_increment COMMENT '路由权限ID',
-    `path`         VARCHAR(255)                                                    NOT NULL COMMENT '路由路径',
-    `method`       VARCHAR(10)                                                     NOT NULL COMMENT 'HTTP方法(GET,POST,PUT,DELETE等)',
-    `description`  VARCHAR(255) COMMENT '路由描述',
-    `created_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP                             NOT NULL COMMENT '创建时间',
-    `updated_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL COMMENT '更新时间',
-    UNIQUE KEY `uk_path_method` (`path`, `method`) COMMENT '路径方法唯一约束',
-    INDEX `idx_path` (`path`) COMMENT '路径索引'
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci COMMENT ='系统路由权限表';
-
--- 创建角色与路由权限关联表
-CREATE TABLE IF NOT EXISTS `sys_role_route`
-(
-    `id`                  BIGINT PRIMARY KEY auto_increment COMMENT '关联ID',
-    `role_id`             BIGINT                              NOT NULL COMMENT '角色ID',
-    `route_permission_id` BIGINT                              NOT NULL COMMENT '路由权限ID',
-    `created_time`        TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '创建时间',
-    UNIQUE KEY `uk_role_route` (`role_id`, `route_permission_id`) COMMENT '角色路由唯一约束',
-    FOREIGN KEY (`role_id`) REFERENCES `sys_role` (`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`route_permission_id`) REFERENCES `sys_route_permission` (`id`) ON DELETE CASCADE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci COMMENT ='角色路由权限关联表';

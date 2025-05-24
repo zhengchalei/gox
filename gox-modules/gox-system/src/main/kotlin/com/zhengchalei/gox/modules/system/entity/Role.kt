@@ -41,15 +41,5 @@ interface Role {
 
     @IdView("permissions")
     val permissionIds: List<Long>
-    
-    @ManyToMany
-    @JoinTable(
-        name = "sys_role_route",
-        joinColumnName = "role_id",
-        inverseJoinColumnName = "route_permission_id"
-    )
-    val routePermissions: List<RoutePermission>
 
-    @IdView("routePermissions")
-    val routePermissionIds: List<Long>
 }
