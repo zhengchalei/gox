@@ -3,13 +3,11 @@ package com.zhengchalei.gox.modules.file.service.impl
 import com.aliyun.oss.OSS
 import com.aliyun.oss.OSSClientBuilder
 import com.aliyun.oss.model.ObjectMetadata
-import com.zhengchalei.gox.modules.file.config.FileProperties
 import com.zhengchalei.gox.modules.file.entity.FileInfo
 import com.zhengchalei.gox.modules.file.entity.StorageType
 import com.zhengchalei.gox.modules.file.entity.dto.FileInfoDetailDTO
 import jakarta.annotation.PostConstruct
 import jakarta.annotation.PreDestroy
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -23,9 +21,6 @@ import java.util.*
 @Service
 @ConditionalOnProperty(prefix = "gox.file", name = ["storageType"], havingValue = "aliyun")
 class AliyunOssFileStorageServiceImpl : AbstractFileStorageService() {
-
-    @Autowired
-    private lateinit var fileProperties: FileProperties
 
     private lateinit var ossClient: OSS
 
@@ -60,8 +55,8 @@ class AliyunOssFileStorageServiceImpl : AbstractFileStorageService() {
         val originalFilename = file.originalFilename ?: "unknown"
         val extension = getExtension(originalFilename)
         val path = generatePath()
-        val storageName = generateStorageName(extension)
-        val objectName = path + storageName
+        val fileKey = generateFileKey(extension)
+        val objectName = path + fileKey
 
         // 设置元数据
         val metadata = ObjectMetadata()
@@ -73,7 +68,7 @@ class AliyunOssFileStorageServiceImpl : AbstractFileStorageService() {
 
         return createFileInfo(
             originalFilename = originalFilename,
-            storageName = storageName,
+            fileKey = fileKey,
             path = path,
             size = file.size,
             mimeType = file.contentType ?: "application/octet-stream"
@@ -86,8 +81,8 @@ class AliyunOssFileStorageServiceImpl : AbstractFileStorageService() {
     override fun upload(inputStream: InputStream, originalFilename: String, size: Long, mimeType: String): FileInfo {
         val extension = getExtension(originalFilename)
         val path = generatePath()
-        val storageName = generateStorageName(extension)
-        val objectName = path + storageName
+        val fileKey = generateFileKey(extension)
+        val objectName = path + fileKey
 
         // 设置元数据
         val metadata = ObjectMetadata()
@@ -99,26 +94,26 @@ class AliyunOssFileStorageServiceImpl : AbstractFileStorageService() {
 
         return createFileInfo(
             originalFilename = originalFilename,
-            storageName = storageName,
+            fileKey = fileKey,
             path = path,
             size = size,
-            mimeType = mimeType
+            mimeType = mimeType,
         )
     }
 
     override fun getDownloadUrl(fileInfoDetailDTO: FileInfoDetailDTO): String {
         if (fileProperties.aliyun.domain != null) {
-            return "${fileProperties.aliyun.domain}/${fileInfoDetailDTO.path}${fileInfoDetailDTO.storageName}"
+            return "${fileProperties.aliyun.domain}/${fileInfoDetailDTO.path}${fileInfoDetailDTO.fileKey}"
         }
 
-        return "https://${fileProperties.aliyun.bucketName}.${fileProperties.aliyun.endpoint}/${fileInfoDetailDTO.path}${fileInfoDetailDTO.storageName}"
+        return "https://${fileProperties.aliyun.bucketName}.${fileProperties.aliyun.endpoint}/${fileInfoDetailDTO.path}${fileInfoDetailDTO.fileKey}"
     }
 
     override fun getTemporaryUrl(
         fileInfoDetailDTO: FileInfoDetailDTO,
         duration: Duration
     ): String {
-        val objectName = fileInfoDetailDTO.path + fileInfoDetailDTO.storageName
+        val objectName = fileInfoDetailDTO.path + fileInfoDetailDTO.fileKey
         val expiration = Date(System.currentTimeMillis() + duration.toMillis())
 
         return ossClient.generatePresignedUrl(
@@ -132,7 +127,7 @@ class AliyunOssFileStorageServiceImpl : AbstractFileStorageService() {
      * 删除文件
      */
     override fun delete(fileInfoDetailDTO: FileInfoDetailDTO) {
-        val objectName = fileInfoDetailDTO.path + fileInfoDetailDTO.storageName
+        val objectName = fileInfoDetailDTO.path + fileInfoDetailDTO.fileKey
         ossClient.deleteObject(fileProperties.aliyun.bucketName, objectName)
         fileInfoRepository.deleteById(fileInfoDetailDTO.id)
     }

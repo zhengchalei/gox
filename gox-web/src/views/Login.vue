@@ -78,7 +78,6 @@
             
             <el-form-item class="login-options">
               <el-checkbox v-model="loginForm.rememberMe">记住我</el-checkbox>
-              <el-link type="primary" class="forgot-password">忘记密码？</el-link>
             </el-form-item>
             
             <el-form-item>

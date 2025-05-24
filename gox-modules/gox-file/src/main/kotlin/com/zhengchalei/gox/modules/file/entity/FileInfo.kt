@@ -25,13 +25,18 @@ interface FileInfo {
      * 文件存储名称（UUID）
      */
     @Key
-    val storageName: String
+    val fileKey: String
     
     /**
      * 文件存储路径
      */
     val path: String
-    
+
+    /**
+     * download url
+     */
+    val downloadUrl: String
+
     /**
      * 文件后缀
      */

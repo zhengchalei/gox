@@ -1,13 +1,11 @@
 package com.zhengchalei.gox.modules.file.service.impl
 
-import com.zhengchalei.gox.modules.file.config.FileProperties
 import com.zhengchalei.gox.modules.file.entity.FileInfo
 import com.zhengchalei.gox.modules.file.entity.StorageType
 import com.zhengchalei.gox.modules.file.entity.dto.FileInfoDetailDTO
 import io.minio.*
 import io.minio.http.Method
 import jakarta.annotation.PostConstruct
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -21,9 +19,6 @@ import java.util.concurrent.TimeUnit
 @Service
 @ConditionalOnProperty(prefix = "gox.file", name = ["storageType"], havingValue = "minio")
 class MinioFileStorageServiceImpl : AbstractFileStorageService() {
-
-    @Autowired
-    private lateinit var fileProperties: FileProperties
 
     private lateinit var minioClient: MinioClient
 
@@ -63,8 +58,8 @@ class MinioFileStorageServiceImpl : AbstractFileStorageService() {
         val originalFilename = file.originalFilename ?: "unknown"
         val extension = getExtension(originalFilename)
         val path = generatePath()
-        val storageName = generateStorageName(extension)
-        val objectName = path + storageName
+        val fileKey = generateFileKey(extension)
+        val objectName = path + fileKey
 
         // 上传文件
         minioClient.putObject(
@@ -78,7 +73,7 @@ class MinioFileStorageServiceImpl : AbstractFileStorageService() {
 
         return createFileInfo(
             originalFilename = originalFilename,
-            storageName = storageName,
+            fileKey = fileKey,
             path = path,
             size = file.size,
             mimeType = file.contentType ?: "application/octet-stream"
@@ -91,8 +86,8 @@ class MinioFileStorageServiceImpl : AbstractFileStorageService() {
     override fun upload(inputStream: InputStream, originalFilename: String, size: Long, mimeType: String): FileInfo {
         val extension = getExtension(originalFilename)
         val path = generatePath()
-        val storageName = generateStorageName(extension)
-        val objectName = path + storageName
+        val fileKey = generateFileKey(extension)
+        val objectName = path + fileKey
 
         // 上传文件
         minioClient.putObject(
@@ -107,7 +102,7 @@ class MinioFileStorageServiceImpl : AbstractFileStorageService() {
         // 保存文件信息
         return createFileInfo(
             originalFilename = originalFilename,
-            storageName = storageName,
+            fileKey = fileKey,
             path = path,
             size = size,
             mimeType = mimeType
@@ -118,7 +113,7 @@ class MinioFileStorageServiceImpl : AbstractFileStorageService() {
      * 获取文件下载URL
      */
     override fun getDownloadUrl(fileInfoDetailDTO: FileInfoDetailDTO): String {
-        val objectName = fileInfoDetailDTO.path + fileInfoDetailDTO.storageName
+        val objectName = fileInfoDetailDTO.path + fileInfoDetailDTO.fileKey
 
         return minioClient.getPresignedObjectUrl(
             GetPresignedObjectUrlArgs.builder()
@@ -134,7 +129,7 @@ class MinioFileStorageServiceImpl : AbstractFileStorageService() {
      * 获取文件临时访问URL
      */
     override fun getTemporaryUrl(fileInfoDetailDTO: FileInfoDetailDTO, duration: Duration): String {
-        val objectName = fileInfoDetailDTO.path + fileInfoDetailDTO.storageName
+        val objectName = fileInfoDetailDTO.path + fileInfoDetailDTO.fileKey
 
         return minioClient.getPresignedObjectUrl(
             GetPresignedObjectUrlArgs.builder()
@@ -150,7 +145,7 @@ class MinioFileStorageServiceImpl : AbstractFileStorageService() {
      * 删除文件
      */
     override fun delete(fileInfoDetailDTO: FileInfoDetailDTO) {
-        val objectName = fileInfoDetailDTO.path + fileInfoDetailDTO.storageName
+        val objectName = fileInfoDetailDTO.path + fileInfoDetailDTO.fileKey
 
         minioClient.removeObject(
             RemoveObjectArgs.builder()

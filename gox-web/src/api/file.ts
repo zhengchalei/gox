@@ -43,8 +43,8 @@ export const fileApi = {
   },
 
   // 根据存储名称查询文件详情
-  findByStorageName: (storageName: string): Promise<RFileInfoDetailDTO> => {
-    return api.get(`/api/v1/file/storage/${storageName}`)
+  findByfileKey: (fileKey: string): Promise<RFileInfoDetailDTO> => {
+    return api.get(`/api/v1/file/storage/${fileKey}`)
   },
 
   // 按存储类型查询文件
@@ -85,8 +85,8 @@ export const fileApi = {
   },
 
   // 下载文件
-  download: (storageName: string): Promise<Blob> => {
-    return api.get(`/api/v1/file/download/${storageName}`, {
+  download: (fileKey: string): Promise<Blob> => {
+    return api.get(`/api/v1/file/download/${fileKey}`, {
       responseType: 'blob'
     })
   },

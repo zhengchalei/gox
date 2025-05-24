@@ -79,11 +79,11 @@ class FileController(
 
     /** 根据存储名称查询文件详情 */
     @Operation(summary = "根据存储名称查询文件详情", description = "根据文件存储名称获取文件详细信息")
-    @GetMapping("/storage/{storageName}")
-    fun findByStorageName(
-        @Parameter(description = "文件存储名称", required = true) @PathVariable storageName: String
+    @GetMapping("/storage/{fileKey}")
+    fun findByFileKey(
+        @Parameter(description = "文件存储名称", required = true) @PathVariable fileKey: String
     ): R<FileInfoDetailDTO> {
-        val fileInfo = fileService.findByStorageName(storageName)
+        val fileInfo = fileService.findByFileKey(fileKey)
         return R.data(fileInfo)
     }
 
@@ -97,38 +97,28 @@ class FileController(
         return R.data(fileInfos)
     }
 
-    /** 根据存储类型查询文件信息 */
-    @Operation(summary = "按存储类型查询文件", description = "根据存储类型查询文件列表")
-    @GetMapping("/type/{storageType}")
-    fun findByStorageType(
-        @Parameter(description = "存储类型", required = true) @PathVariable storageType: StorageType
-    ): R<List<FileInfoListDTO>> {
-        val fileInfos = fileService.findByStorageType(storageType)
-        return R.data(fileInfos)
-    }
-
     /** 获取文件下载URL */
-    @Operation(summary = "获取文件下载URL", description = "根据文件storageName获取文件的下载URL")
-    @GetMapping("/url/{storageName}")
+    @Operation(summary = "获取文件下载URL", description = "根据文件fileKey获取文件的下载URL")
+    @GetMapping("/url/{fileKey}")
     fun getDownloadUrl(
-        @Parameter(description = "文件名", required = true) @PathVariable storageName: String
+        @Parameter(description = "文件名", required = true) @PathVariable fileKey: String
     ): R<Map<String, String>> {
-        val fileInfo = fileService.findByStorageName(storageName)
+        val fileInfo = fileService.findByFileKey(fileKey)
         val url = fileService.getDownloadUrl(fileInfo)
         return R.data(mapOf("url" to url))
     }
 
     /** 获取文件临时访问URL */
-    @Operation(summary = "获取文件临时访问URL", description = "根据文件storageName获取文件的临时访问URL，有效期可自定义")
-    @GetMapping("/temp-url/{storageName}")
+    @Operation(summary = "获取文件临时访问URL", description = "根据文件fileKey获取文件的临时访问URL，有效期可自定义")
+    @GetMapping("/temp-url/{fileKey}")
     fun getTemporaryUrl(
-        @Parameter(description = "文件ID", required = true) @PathVariable storageName: String,
+        @Parameter(description = "文件ID", required = true) @PathVariable fileKey: String,
         @Parameter(description = "有效期(分钟)", required = false) @RequestParam(
             "minutes",
             defaultValue = "5"
         ) minutes: Long
     ): R<Map<String, String>> {
-        val fileInfo = fileService.findByStorageName(storageName)
+        val fileInfo = fileService.findByFileKey(fileKey)
         val duration = Duration.ofMinutes(minutes)
         val url = fileService.getTemporaryUrl(fileInfo, duration)
         return R.data(mapOf("url" to url, "expiresIn" to "${minutes}分钟"))
@@ -136,11 +126,11 @@ class FileController(
 
     /** 下载文件 */
     @Operation(summary = "下载文件", description = "根据文件存储名称下载文件")
-    @GetMapping("/download/{storageName}")
+    @GetMapping("/download/{fileKey}")
     fun download(
-        @Parameter(description = "文件存储名称", required = true) @PathVariable storageName: String
+        @Parameter(description = "文件存储名称", required = true) @PathVariable fileKey: String
     ): ResponseEntity<Resource> {
-        val fileInfo = fileService.findByStorageName(storageName)
+        val fileInfo = fileService.findByFileKey(fileKey)
 
         // 只支持本地文件直接下载，其他类型通过重定向到临时URL
         if (fileInfo.storageType == StorageType.LOCAL) {
@@ -161,11 +151,11 @@ class FileController(
     }
 
     /** 预览 */
-    @GetMapping("/preview/{storageName}")
+    @GetMapping("/preview/{fileKey}")
     fun preview(
-        @PathVariable storageName: String
+        @PathVariable fileKey: String
     ): ResponseEntity<Resource> {
-        val fileInfo = fileService.findByStorageName(storageName)
+        val fileInfo = fileService.findByFileKey(fileKey)
         if (fileInfo.storageType == StorageType.LOCAL) {
             val file = localFileStorageService.getPhysicalPath(fileInfo).toFile()
             val resource = UrlResource(file.toURI())
@@ -176,16 +166,16 @@ class FileController(
     }
 
     /** 临时访问文件（通过token） */
-    @GetMapping("/temp/{storageName}")
+    @GetMapping("/temp/{fileKey}")
     fun tempAccess(
-        @PathVariable storageName: String, @RequestParam token: String, @RequestParam expires: Long
+        @PathVariable fileKey: String, @RequestParam token: String, @RequestParam expires: Long
     ): ResponseEntity<Resource> {
         // 验证token和过期时间
         if (System.currentTimeMillis() > expires) {
             return ResponseEntity.badRequest().body(null)
         }
 
-        val fileInfo = fileService.findByStorageName(storageName)
+        val fileInfo = fileService.findByFileKey(fileKey)
 
         // 只支持本地文件，其他类型应该已经生成了对应云服务的临时URL
         if (fileInfo.storageType == StorageType.LOCAL) {

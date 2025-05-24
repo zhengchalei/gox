@@ -15,6 +15,11 @@ class FileProperties {
     var storageType: String = "local"
 
     /**
+     * 域名
+     */
+    var domain: String = "http://localhost:8080"
+
+    /**
      * 本地存储配置
      */
     val local = LocalStorageProperties()

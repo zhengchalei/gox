@@ -243,7 +243,7 @@ export enum StorageType {
 export interface FileInfoDetailDTO {
   id: number
   originalName: string
-  storageName: string
+  fileKey: string
   path: string
   extension: string
   size: number
@@ -251,24 +251,26 @@ export interface FileInfoDetailDTO {
   storageType: StorageType
   createdTime: string
   updatedTime: string
+  downloadUrl: string
 }
 
 export interface FileInfoListDTO {
   id: number
   originalName: string
-  storageName: string
+  fileKey: string
   extension: string
   size: number
   mimeType: string
   storageType: StorageType
   createdTime: string
   updatedTime: string
+  downloadUrl: string
 }
 
 export interface FileInfoSpecification {
   id?: number
   originalName?: string
-  storageName?: string
+  fileKey?: string
   path?: string
   extension?: string
   size?: number
@@ -276,6 +278,7 @@ export interface FileInfoSpecification {
   storageType?: StorageType
   createdTime?: string
   updatedTime?: string
+  downloadUrl?: string
 }
 
 // 通用响应类型别名

@@ -52,10 +52,10 @@ class FileInfoRepository(private val sqlClient: KSqlClient) {
     /**
      * 根据存储名称查询文件详情
      */
-    fun findByStorageName(storageName: String): FileInfoDetailDTO? {
+    fun findByFileKey(fileKey: String): FileInfoDetailDTO? {
         return this.sqlClient
             .createQuery(FileInfo::class) {
-                where(table.storageName eq storageName)
+                where(table.fileKey eq fileKey)
                 select(table.fetch(FileInfoDetailDTO::class))
             }
             .fetchOneOrNull()

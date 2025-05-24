@@ -90,6 +90,12 @@
                 </div>
               </template>
             </el-table-column>
+            <!-- fileKey -->
+            <el-table-column prop="fileKey" label="文件Key" min-width="120" show-overflow-tooltip>
+              <template #default="{ row }">
+                {{ row.fileKey }}
+              </template>
+            </el-table-column>
             <el-table-column prop="size" label="文件大小" width="120" sortable>
               <template #default="{ row }">
                 {{ formatFileSize(row.size) }}
@@ -108,9 +114,10 @@
                 {{ formatDateTime(row.createdTime) }}
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="200" fixed="right">
+            <el-table-column label="操作" width="300" fixed="right">
               <template #default="{ row }">
                 <el-button-group size="small">
+                  <el-button @click.stop="handleCopyDownloadUrl(row)">下载地址</el-button>
                   <el-button @click="handlePreview(row)">预览</el-button>
                   <el-button @click="handleDownload(row)">下载</el-button>
                   <el-button @click="handleDelete(row)" type="danger">删除</el-button>
@@ -305,6 +312,7 @@
         <el-divider />
         <el-descriptions :column="2" border>
           <el-descriptions-item label="文件名">{{ previewFile.originalName }}</el-descriptions-item>
+          <el-descriptions-item label="文件Key">{{ previewFile.fileKey }}</el-descriptions-item>
           <el-descriptions-item label="文件大小">{{ formatFileSize(previewFile.size) }}</el-descriptions-item>
           <el-descriptions-item label="文件类型">{{ previewFile.mimeType }}</el-descriptions-item>
           <el-descriptions-item label="存储类型">{{ getStorageTypeName(previewFile.storageType) }}</el-descriptions-item>
@@ -412,7 +420,7 @@ const getStorageTypeName = (storageType: string) => {
 const getPreviewUrl = (file: FileInfoListDTO) => {
   console.log('file', JSON.stringify(file))
   // 这里需要根据实际的API来构建预览URL
-  return `/api/v1/file/preview/${file.storageName}`
+  return `/api/v1/file/preview/${file.fileKey}`
 }
 
 // 表格视图的选择处理
@@ -483,7 +491,7 @@ const handlePreview = async (file: FileInfoListDTO) => {
   // 如果是文本文件，加载内容
   if (isText(file.mimeType)) {
     try {
-      const blob = await fileApi.download(file.storageName)
+      const blob = await fileApi.download(file.fileKey)
       const text = await blob.text()
       textContent.value = text
     } catch (error) {
@@ -503,7 +511,7 @@ const handlePreviewClose = () => {
 
 const handleDownload = async (file: FileInfoListDTO) => {
   try {
-    const blob = await fileApi.download(file.storageName)
+    const blob = await fileApi.download(file.fileKey)
     
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
@@ -519,6 +527,11 @@ const handleDownload = async (file: FileInfoListDTO) => {
     console.error('文件下载失败:', error)
     ElMessage.error('文件下载失败')
   }
+}
+
+const handleCopyDownloadUrl = (file: FileInfoListDTO) => {
+  navigator.clipboard.writeText(file.downloadUrl)
+  ElMessage.success('下载地址已复制到剪贴板')
 }
 
 const handleDelete = async (file: FileInfoListDTO) => {

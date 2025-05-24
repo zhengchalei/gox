@@ -53,10 +53,10 @@ interface FileService {
     /**
      * 根据存储名称查询文件详情
      *
-     * @param storageName 存储名称
+     * @param fileKey 存储名称
      * @return 文件详情DTO
      */
-    fun findByStorageName(storageName: String): FileInfoDetailDTO
+    fun findByFileKey(fileKey: String): FileInfoDetailDTO
 
     /**
      * 根据原始名称查询文件信息

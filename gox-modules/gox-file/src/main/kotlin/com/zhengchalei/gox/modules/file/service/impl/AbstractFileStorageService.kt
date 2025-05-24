@@ -1,5 +1,6 @@
 package com.zhengchalei.gox.modules.file.service.impl
 
+import com.zhengchalei.gox.modules.file.config.FileProperties
 import com.zhengchalei.gox.modules.file.entity.FileInfo
 import com.zhengchalei.gox.modules.file.entity.dto.FileInfoCreateDTO
 import com.zhengchalei.gox.modules.file.entity.dto.FileInfoDetailDTO
@@ -20,6 +21,9 @@ abstract class AbstractFileStorageService : FileStorageService {
     @Autowired
     protected lateinit var fileInfoRepository: FileInfoRepository
 
+    @Autowired
+    protected lateinit var fileProperties: FileProperties
+
     /**
      * 生成存储路径
      * 按日期生成路径：yyyy/MM/dd/
@@ -33,7 +37,7 @@ abstract class AbstractFileStorageService : FileStorageService {
     /**
      * 生成存储文件名（UUID）
      */
-    protected fun generateStorageName(extension: String): String {
+    protected fun generateFileKey(extension: String): String {
         return UUID.randomUUID().toString().replace("-", "") + "." + extension
     }
 
@@ -63,20 +67,21 @@ abstract class AbstractFileStorageService : FileStorageService {
      */
     protected fun createFileInfo(
         originalFilename: String,
-        storageName: String,
+        fileKey: String,
         path: String,
         size: Long,
-        mimeType: String
+        mimeType: String,
     ): FileInfo {
         val extension = getExtension(originalFilename)
         val fileInfoCreateDTO = FileInfoCreateDTO(
             originalName = originalFilename,
-            storageName = storageName,
+            fileKey = fileKey,
             path = path,
             extension = extension,
             size = size,
             mimeType = mimeType,
             storageType = getStorageType(),
+            downloadUrl = fileProperties.domain + "/api/v1/file/download/" + fileKey,
         )
         // 保存到数据库
         return fileInfoRepository.save(fileInfoCreateDTO)

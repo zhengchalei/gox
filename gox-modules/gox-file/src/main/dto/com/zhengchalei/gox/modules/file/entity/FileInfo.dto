@@ -17,7 +17,7 @@ input FileInfoCreateDTO {
     @NotBlank(message = "原始文件名不能为空")
     originalName
     @NotBlank(message = "存储名称不能为空")
-    storageName
+    fileKey
     @NotBlank(message = "存储路径不能为空")
     path
     @NotBlank(message = "文件后缀不能为空")
@@ -28,6 +28,8 @@ input FileInfoCreateDTO {
     mimeType
     @NotNull(message = "存储类型不能为空")
     storageType
+    @NotBlank(message = "下载地址不能为空")
+    downloadUrl
 }
 
 specification FileInfoSpecification {

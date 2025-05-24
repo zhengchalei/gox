@@ -107,10 +107,10 @@ class FileServiceImpl(
     /**
      * 根据存储名称查询文件详情
      */
-    override fun findByStorageName(storageName: String): FileInfoDetailDTO {
-        logger.info("根据存储名称查询文件详情，存储名称: {}", storageName)
-        return fileInfoRepository.findByStorageName(storageName)
-            ?: throw IllegalArgumentException("文件不存在，存储名称: $storageName")
+    override fun findByFileKey(fileKey: String): FileInfoDetailDTO {
+        logger.info("根据存储名称查询文件详情，存储名称: {}", fileKey)
+        return fileInfoRepository.findByFileKey(fileKey)
+            ?: throw IllegalArgumentException("文件不存在，存储名称: $fileKey")
     }
 
     /**

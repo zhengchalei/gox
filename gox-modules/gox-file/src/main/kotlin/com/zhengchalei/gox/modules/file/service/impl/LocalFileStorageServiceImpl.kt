@@ -1,10 +1,8 @@
 package com.zhengchalei.gox.modules.file.service.impl
 
-import com.zhengchalei.gox.modules.file.config.FileProperties
 import com.zhengchalei.gox.modules.file.entity.FileInfo
 import com.zhengchalei.gox.modules.file.entity.StorageType
 import com.zhengchalei.gox.modules.file.entity.dto.FileInfoDetailDTO
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
@@ -21,9 +19,6 @@ import java.time.Duration
 @Service
 class LocalFileStorageServiceImpl : AbstractFileStorageService() {
 
-    @Autowired
-    private lateinit var fileProperties: FileProperties
-
     /**
      * 获取存储类型
      */
@@ -36,20 +31,20 @@ class LocalFileStorageServiceImpl : AbstractFileStorageService() {
         val originalFilename = file.originalFilename ?: "unknown"
         val extension = getExtension(originalFilename)
         val path = generatePath()
-        val storageName = generateStorageName(extension)
+        val fileKey = generateFileKey(extension)
 
         // 创建目录
         val dirPath = Paths.get(fileProperties.local.basePath, path)
         Files.createDirectories(dirPath)
 
         // 保存文件
-        val filePath = dirPath.resolve(storageName)
+        val filePath = dirPath.resolve(fileKey)
         Files.copy(file.inputStream, filePath, StandardCopyOption.REPLACE_EXISTING)
 
         // 保存文件信息
         return createFileInfo(
             originalFilename = originalFilename,
-            storageName = storageName,
+            fileKey = fileKey,
             path = path,
             size = file.size,
             mimeType = file.contentType ?: "application/octet-stream"
@@ -62,20 +57,20 @@ class LocalFileStorageServiceImpl : AbstractFileStorageService() {
     override fun upload(inputStream: InputStream, originalFilename: String, size: Long, mimeType: String): FileInfo {
         val extension = getExtension(originalFilename)
         val path = generatePath()
-        val storageName = generateStorageName(extension)
+        val fileKey = generateFileKey(extension)
 
         // 创建目录
         val dirPath = Paths.get(fileProperties.local.basePath, path)
         Files.createDirectories(dirPath)
 
         // 保存文件
-        val filePath = dirPath.resolve(storageName)
+        val filePath = dirPath.resolve(fileKey)
         Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING)
 
         // 保存文件信息
         return createFileInfo(
             originalFilename = originalFilename,
-            storageName = storageName,
+            fileKey = fileKey,
             path = path,
             size = size,
             mimeType = mimeType
@@ -88,7 +83,7 @@ class LocalFileStorageServiceImpl : AbstractFileStorageService() {
     override fun getDownloadUrl(fileInfoDetailDTO: FileInfoDetailDTO): String {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/api/file/download/")
-            .path(fileInfoDetailDTO.storageName)
+            .path(fileInfoDetailDTO.fileKey)
             .toUriString()
     }
 
@@ -101,7 +96,7 @@ class LocalFileStorageServiceImpl : AbstractFileStorageService() {
         val token = generateTemporaryToken(fileInfoDetailDTO, duration)
         return ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/api/file/temp/")
-            .path(fileInfoDetailDTO.storageName)
+            .path(fileInfoDetailDTO.fileKey)
             .queryParam("token", token)
             .queryParam("expires", System.currentTimeMillis() + duration.toMillis())
             .toUriString()
@@ -111,7 +106,7 @@ class LocalFileStorageServiceImpl : AbstractFileStorageService() {
      * 删除文件
      */
     override fun delete(fileInfoDetailDTO: FileInfoDetailDTO) {
-        val filePath = Paths.get(fileProperties.local.basePath, fileInfoDetailDTO.path, fileInfoDetailDTO.storageName)
+        val filePath = Paths.get(fileProperties.local.basePath, fileInfoDetailDTO.path, fileInfoDetailDTO.fileKey)
         Files.deleteIfExists(filePath)
     }
 
@@ -119,7 +114,7 @@ class LocalFileStorageServiceImpl : AbstractFileStorageService() {
      * 获取文件物理路径
      */
     fun getPhysicalPath(fileInfoDetailDTO: FileInfoDetailDTO): Path {
-        return Paths.get(fileProperties.local.basePath, fileInfoDetailDTO.path, fileInfoDetailDTO.storageName)
+        return Paths.get(fileProperties.local.basePath, fileInfoDetailDTO.path, fileInfoDetailDTO.fileKey)
     }
 
     /**
@@ -128,6 +123,6 @@ class LocalFileStorageServiceImpl : AbstractFileStorageService() {
     private fun generateTemporaryToken(fileInfoDetailDTO: FileInfoDetailDTO, duration: Duration): String {
         // 简单实现，实际项目中应该使用更安全的方式
         val expiresAt = System.currentTimeMillis() + duration.toMillis()
-        return "${fileInfoDetailDTO.id}_${fileInfoDetailDTO.storageName}_${expiresAt}"
+        return "${fileInfoDetailDTO.id}_${fileInfoDetailDTO.fileKey}_${expiresAt}"
     }
 } 

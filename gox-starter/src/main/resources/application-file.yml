@@ -3,7 +3,7 @@ gox:
   file:
     # 存储类型：local, aliyun, tencent, minio
     storage-type: local
-    
+    domain: http://localhost:8080
     # 本地存储配置
     local:
       # 基础存储路径
@@ -46,4 +46,4 @@ gox:
       # 存储桶名称
       bucket-name: file-storage
       # 是否使用HTTPS
-      secure: false 
+      secure: false

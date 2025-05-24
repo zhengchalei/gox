@@ -8,13 +8,11 @@ import com.qcloud.cos.http.HttpProtocol
 import com.qcloud.cos.model.ObjectMetadata
 import com.qcloud.cos.model.PutObjectRequest
 import com.qcloud.cos.region.Region
-import com.zhengchalei.gox.modules.file.config.FileProperties
 import com.zhengchalei.gox.modules.file.entity.FileInfo
 import com.zhengchalei.gox.modules.file.entity.StorageType
 import com.zhengchalei.gox.modules.file.entity.dto.FileInfoDetailDTO
 import jakarta.annotation.PostConstruct
 import jakarta.annotation.PreDestroy
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -29,9 +27,6 @@ import java.util.*
 @Service
 @ConditionalOnProperty(prefix = "gox.file", name = ["storageType"], havingValue = "tencent")
 class TencentCosFileStorageServiceImpl : AbstractFileStorageService() {
-
-    @Autowired
-    private lateinit var fileProperties: FileProperties
 
     private lateinit var cosClient: COSClient
 
@@ -72,8 +67,8 @@ class TencentCosFileStorageServiceImpl : AbstractFileStorageService() {
         val originalFilename = file.originalFilename ?: "unknown"
         val extension = getExtension(originalFilename)
         val path = generatePath()
-        val storageName = generateStorageName(extension)
-        val key = path + storageName
+        val fileKey = generateFileKey(extension)
+        val key = path + fileKey
 
         // 设置元数据
         val metadata = ObjectMetadata()
@@ -90,7 +85,7 @@ class TencentCosFileStorageServiceImpl : AbstractFileStorageService() {
 
         return createFileInfo(
             originalFilename = originalFilename,
-            storageName = storageName,
+            fileKey = fileKey,
             path = path,
             size = file.size,
             mimeType = file.contentType ?: "application/octet-stream"
@@ -104,8 +99,8 @@ class TencentCosFileStorageServiceImpl : AbstractFileStorageService() {
     override fun upload(inputStream: InputStream, originalFilename: String, size: Long, mimeType: String): FileInfo {
         val extension = getExtension(originalFilename)
         val path = generatePath()
-        val storageName = generateStorageName(extension)
-        val key = path + storageName
+        val fileKey = generateFileKey(extension)
+        val key = path + fileKey
 
         // 设置元数据
         val metadata = ObjectMetadata()
@@ -122,7 +117,7 @@ class TencentCosFileStorageServiceImpl : AbstractFileStorageService() {
 
         return createFileInfo(
             originalFilename = originalFilename,
-            storageName = storageName,
+            fileKey = fileKey,
             path = path,
             size = size,
             mimeType = mimeType
@@ -134,17 +129,17 @@ class TencentCosFileStorageServiceImpl : AbstractFileStorageService() {
      */
     override fun getDownloadUrl(fileInfoDetailDTO: FileInfoDetailDTO): String {
         if (fileProperties.tencent.domain != null) {
-            return "${fileProperties.tencent.domain}/${fileInfoDetailDTO.path}${fileInfoDetailDTO.storageName}"
+            return "${fileProperties.tencent.domain}/${fileInfoDetailDTO.path}${fileInfoDetailDTO.fileKey}"
         }
 
-        return "https://${fileProperties.tencent.bucketName}.cos.${fileProperties.tencent.region}.myqcloud.com/${fileInfoDetailDTO.path}${fileInfoDetailDTO.storageName}"
+        return "https://${fileProperties.tencent.bucketName}.cos.${fileProperties.tencent.region}.myqcloud.com/${fileInfoDetailDTO.path}${fileInfoDetailDTO.fileKey}"
     }
 
     /**
      * 获取文件临时访问URL
      */
     override fun getTemporaryUrl(fileInfoDetailDTO: FileInfoDetailDTO, duration: Duration): String {
-        val key = fileInfoDetailDTO.path + fileInfoDetailDTO.storageName
+        val key = fileInfoDetailDTO.path + fileInfoDetailDTO.fileKey
 
         // 计算过期时间（秒）
         val expirationInSeconds = duration.seconds
@@ -165,7 +160,7 @@ class TencentCosFileStorageServiceImpl : AbstractFileStorageService() {
      * 删除文件
      */
     override fun delete(fileInfoDetailDTO: FileInfoDetailDTO) {
-        val key = fileInfoDetailDTO.path + fileInfoDetailDTO.storageName
+        val key = fileInfoDetailDTO.path + fileInfoDetailDTO.fileKey
         cosClient.deleteObject(fileProperties.tencent.bucketName, key)
         fileInfoRepository.deleteById(fileInfoDetailDTO.id)
     }
