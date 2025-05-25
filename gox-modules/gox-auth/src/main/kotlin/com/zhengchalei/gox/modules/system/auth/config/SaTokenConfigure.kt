@@ -14,11 +14,17 @@ class SaTokenConfigure : WebMvcConfigurer {
         registry.addInterceptor(SaInterceptor { handle ->
             try {
                 StpUtil.checkLogin()
-            } catch (e: Exception) {}
+            } catch (e: Exception) {
+            }
         })
             .addPathPatterns("/**")
             // 排除路径, swagger 文档
             .excludePathPatterns("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
-            .excludePathPatterns("/api/auth/login", "/api/oauth/callback/*", "/api/oauth/render/*", "/api/register/oauth/*")
+            .excludePathPatterns(
+                "/api/auth/login",
+                "/api/oauth/callback/*",
+                "/api/oauth/render/*",
+                "/api/register/oauth/*"
+            )
     }
 }

@@ -1,28 +1,28 @@
 package com.zhengchalei.gox.modules.system.repository
 
 import com.zhengchalei.gox.modules.system.entity.Role
-import com.zhengchalei.gox.modules.system.entity.dto.*
+import com.zhengchalei.gox.modules.system.entity.dto.RoleCreateDTO
+import com.zhengchalei.gox.modules.system.entity.dto.RoleListDTO
+import com.zhengchalei.gox.modules.system.entity.dto.RoleSpecification
+import com.zhengchalei.gox.modules.system.entity.dto.RoleUpdateDTO
 import com.zhengchalei.gox.modules.system.entity.id
+import org.babyfish.jimmer.spring.repository.KRepository
 import org.babyfish.jimmer.spring.repository.fetchSpringPage
-import org.babyfish.jimmer.sql.kt.KSqlClient
+import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.ast.expression.asc
-import org.babyfish.jimmer.sql.kt.ast.expression.eq
-import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Repository
 
 @Repository
-class RoleRepository(private val sqlClient: KSqlClient) {
-
-    private val log = LoggerFactory.getLogger(this::class.java)
+interface RoleRepository : KRepository<Role, Long> {
 
     fun findPage(
         pageRequest: PageRequest,
         roleSpecification: RoleSpecification
     ): Page<RoleListDTO> {
         val query =
-            this.sqlClient.createQuery(Role::class) {
+            this.sql.createQuery(Role::class) {
                 where(roleSpecification)
                 orderBy(table.id.asc())
                 select(table.fetch(RoleListDTO::class))
@@ -30,28 +30,14 @@ class RoleRepository(private val sqlClient: KSqlClient) {
         return query.fetchSpringPage(pageRequest.pageNumber, pageRequest.pageSize)
     }
 
-    fun findById(id: Long): RoleDetailDTO {
-        return this.sqlClient
-            .createQuery(Role::class) {
-                where(table.id eq id)
-                select(table.fetch(RoleDetailDTO::class))
-            }
-            .fetchOneOrNull()
-            ?: throw IllegalArgumentException("角色不存在")
-    }
-
     fun save(roleCreateDTO: RoleCreateDTO): Role {
-        val saveResult = this.sqlClient.save(roleCreateDTO)
+        val saveResult = this.sql.save(roleCreateDTO)
         return saveResult.modifiedEntity
     }
 
     fun updateById(roleUpdateDTO: RoleUpdateDTO): Role {
-        val saveResult = this.sqlClient.save(roleUpdateDTO)
+        val saveResult = this.sql.save(roleUpdateDTO, SaveMode.UPDATE_ONLY)
         return saveResult.modifiedEntity
     }
 
-    // delete role
-    fun deleteById(id: Long) {
-        val deleteCount = this.sqlClient.executeDelete(Role::class) { where(table.id eq id) }
-    }
 }

@@ -1,27 +1,23 @@
 package com.zhengchalei.gox.modules.system.auth.repository
 
 import com.zhengchalei.gox.modules.system.auth.dto.SocialUserAuthDetailDTO
-import com.zhengchalei.gox.modules.system.auth.entity.SocialUserAuth
 import com.zhengchalei.gox.modules.system.auth.entity.*
 import com.zhengchalei.gox.modules.system.entity.id
-import org.babyfish.jimmer.sql.kt.KSqlClient
+import org.babyfish.jimmer.spring.repository.KRepository
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 
 /**
  * 社会化用户关系仓库
  */
 @Repository
-class SocialUserAuthRepository(private val sqlClient: KSqlClient) {
-
-    private val log = LoggerFactory.getLogger(this::class.java)
+interface SocialUserAuthRepository : KRepository<SocialUserAuth, Long> {
 
     /**
      * 根据用户ID和来源查询社会化用户关系
      */
     fun findByUserIdAndSource(userId: Long, source: String): SocialUserAuthDetailDTO? {
-        return this.sqlClient
+        return this.sql
             .createQuery(SocialUserAuth::class) {
                 where(table.user.id eq userId)
                 where(table.socialUser.source eq source)
@@ -34,7 +30,7 @@ class SocialUserAuthRepository(private val sqlClient: KSqlClient) {
      * 根据用户ID查询社会化用户关系列表
      */
     fun findByUserId(userId: Long): List<SocialUserAuthDetailDTO> {
-        return this.sqlClient
+        return this.sql
             .createQuery(SocialUserAuth::class) {
                 where(table.user.id eq userId)
                 select(table.fetch(SocialUserAuthDetailDTO::class))
@@ -46,7 +42,7 @@ class SocialUserAuthRepository(private val sqlClient: KSqlClient) {
      * 根据社会化用户ID查询社会化用户关系
      */
     fun findBySocialUserId(socialUserId: Long): SocialUserAuthDetailDTO? {
-        return this.sqlClient
+        return this.sql
             .createQuery(SocialUserAuth::class) {
                 where(table.socialUser.id eq socialUserId)
                 select(table.fetch(SocialUserAuthDetailDTO::class))
@@ -58,11 +54,7 @@ class SocialUserAuthRepository(private val sqlClient: KSqlClient) {
      * 保存社会化用户关系
      */
     fun save(socialUserAuth: SocialUserAuth): SocialUserAuth {
-        val saveResult = this.sqlClient.save(socialUserAuth)
-        if (!saveResult.isModified) {
-            log.error("社会化用户关系保存失败: {}", socialUserAuth)
-            throw IllegalArgumentException("社会化用户关系保存失败")
-        }
+        val saveResult = this.sql.save(socialUserAuth)
         return saveResult.modifiedEntity
     }
 
@@ -70,7 +62,7 @@ class SocialUserAuthRepository(private val sqlClient: KSqlClient) {
      * 删除社会化用户关系
      */
     fun deleteByUserIdAndSocialUserId(userId: Long, socialUserId: Long): Boolean {
-        val deleteCount = this.sqlClient.executeDelete(SocialUserAuth::class) {
+        val deleteCount = this.sql.executeDelete(SocialUserAuth::class) {
             where(table.user.id eq userId)
             where(table.socialUser.id eq socialUserId)
         }

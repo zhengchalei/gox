@@ -1,7 +1,10 @@
 package com.zhengchalei.gox.modules.file.repository
 
 import com.zhengchalei.gox.modules.file.entity.*
-import com.zhengchalei.gox.modules.file.entity.dto.*
+import com.zhengchalei.gox.modules.file.entity.dto.FileInfoCreateDTO
+import com.zhengchalei.gox.modules.file.entity.dto.FileInfoDetailDTO
+import com.zhengchalei.gox.modules.file.entity.dto.FileInfoListDTO
+import com.zhengchalei.gox.modules.file.entity.dto.FileInfoSpecification
 import org.babyfish.jimmer.spring.repository.fetchSpringPage
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.asc

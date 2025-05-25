@@ -1,6 +1,5 @@
 package com.zhengchalei.gox.modules.system.service
 
-import com.zhengchalei.gox.framework.event.RoleRoutePermissionCacheInvalidateEvent
 import com.zhengchalei.gox.modules.system.entity.dto.*
 import com.zhengchalei.gox.modules.system.repository.RoleRepository
 import org.springframework.context.ApplicationEventPublisher
@@ -23,9 +22,9 @@ class RoleService(
      */
     fun findById(id: Long): RoleDetailDTO {
         logger.info("查询角色，ID: {}", id)
-        return roleRepository.findById(id).also {
+        return roleRepository.sql.findById(RoleDetailDTO::class, id)?.also {
             logger.info("查询角色成功，ID: {}", id)
-        }
+        } ?: throw RuntimeException("角色不存在")
     }
 
     /**
@@ -34,9 +33,7 @@ class RoleService(
     fun deleteById(id: Long) {
         logger.info("删除角色，ID: {}", id)
         roleRepository.deleteById(id)
-        // 发布角色缓存失效事件
-        eventPublisher.publishEvent(RoleRoutePermissionCacheInvalidateEvent(this, id))
-        logger.info("删除角色成功，ID: {}, 角色路由权限缓存失效事件已发布", id)
+        logger.info("删除角色成功，ID: {}", id)
     }
 
     /**
@@ -44,7 +41,7 @@ class RoleService(
      */
     fun create(roleCreateDTO: RoleCreateDTO) {
         logger.info("创建角色，名称: {}", roleCreateDTO.name)
-        val role = roleRepository.save(roleCreateDTO)
+        roleRepository.save(roleCreateDTO)
         // 对于新角色，不需要失效缓存，因为还没有关联的权限
         logger.info("创建角色成功，名称: {}", roleCreateDTO.name)
     }
@@ -55,9 +52,7 @@ class RoleService(
     fun update(roleUpdateDTO: RoleUpdateDTO) {
         logger.info("更新角色，名称: {}", roleUpdateDTO.name)
         roleRepository.updateById(roleUpdateDTO)
-        // 发布角色缓存失效事件
-        eventPublisher.publishEvent(RoleRoutePermissionCacheInvalidateEvent(this, roleUpdateDTO.id!!))
-        logger.info("更新角色成功，名称: {}, 角色路由权限缓存失效事件已发布", roleUpdateDTO.name)
+        logger.info("更新角色成功，名称: {}", roleUpdateDTO.name)
     }
 
     /**

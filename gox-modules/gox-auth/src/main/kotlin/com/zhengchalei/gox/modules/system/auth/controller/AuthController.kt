@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import me.zhyd.oauth.model.AuthCallback
 import me.zhyd.oauth.utils.AuthStateUtils
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 /** 无需登录的认证控制器 */

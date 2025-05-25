@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=gox'
+      - 'POSTGRES_PASSWORD=postgres'
+      - 'POSTGRES_USER=postgres'
+    ports:
+      - '5432:5432'
+    restart: always
+  mysql:
+      image: 'mysql:latest'
+      environment:
+        - 'MYSQL_DATABASE=gox'
+        - 'MYSQL_ROOT_PASSWORD=root'
+      ports:
+        - '3306:3306'
+      restart: always
+  redis:
+    image: 'redis:latest'
+    restart: always
+    ports:
+      - '6379:6379'

@@ -29,10 +29,10 @@ dependencies {
     // 文件存储相关依赖
     // MinIO
     implementation("io.minio:minio:latest.release")
-    
+
     // 阿里云OSS
     implementation("com.aliyun.oss:aliyun-sdk-oss:latest.release")
-    
+
     // 腾讯云COS
     implementation("com.qcloud:cos_api:latest.release")
     ksp("org.babyfish.jimmer:jimmer-ksp:${rootProject.extra["jimmerVersion"]}")

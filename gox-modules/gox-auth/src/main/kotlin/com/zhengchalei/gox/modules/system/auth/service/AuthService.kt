@@ -4,7 +4,6 @@ import cn.dev33.satoken.stp.StpUtil
 import com.zhengchalei.gox.modules.system.auth.dto.LoginRequest
 import com.zhengchalei.gox.modules.system.auth.dto.LoginResponse
 import com.zhengchalei.gox.modules.system.auth.dto.SocialUserAuthDetailDTO
-import com.zhengchalei.gox.modules.system.auth.dto.SocialUserDetailDTO
 import com.zhengchalei.gox.modules.system.auth.entity.SocialUser
 import com.zhengchalei.gox.modules.system.auth.entity.SocialUserAuth
 import com.zhengchalei.gox.modules.system.auth.entity.by
@@ -100,8 +99,6 @@ class AuthService(
 
         // 创建绑定关系
         val socialUserAuthDraft = new(SocialUserAuth::class).by {
-            // 这里我们假设 user 和 socialUser 字段都是对象引用
-            // 在实际使用中，需要先查询这些对象，然后设置引用
             this.user = makeIdOnly(userId)
             this.socialUser = makeIdOnly(socialUserId)
         }
@@ -214,9 +211,8 @@ class AuthService(
         // 创建绑定关系
         bindUser(user.id, savedSocialUser.id)
 
-        socialUserRepository.findById(savedSocialUser.id)
-            ?: throw IllegalStateException("无法获取刚刚创建的社会化用户")
-        return this.userRepository.findById(user.id)
+        return this.userRepository.sql.findById(UserDetailDTO::class, user.id)
+            ?: throw IllegalStateException("无法获取刚刚创建的用户")
     }
 
     /**

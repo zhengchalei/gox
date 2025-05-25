@@ -15,7 +15,7 @@ interface User {
 
     val nickname: String
 
-    val avatar: String
+    val avatar: String?
 
     val email: String?
 

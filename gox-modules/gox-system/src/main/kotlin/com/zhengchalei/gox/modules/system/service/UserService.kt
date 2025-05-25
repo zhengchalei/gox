@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil
 import com.zhengchalei.gox.Consts
 import com.zhengchalei.gox.modules.system.entity.dto.*
 import com.zhengchalei.gox.modules.system.repository.UserRepository
+import com.zhengchalei.gox.util.PasswordUtil
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -26,7 +27,9 @@ class UserService(private val userRepository: UserRepository) {
     /** 根据 id 查询用户 */
     fun findById(id: Long): UserDetailDTO {
         logger.info("查询用户，ID: {}", id)
-        return userRepository.findById(id).also { logger.info("查询用户成功，ID: {}", id) }
+        return userRepository.sql.findById(UserDetailDTO::class, id)?.also {
+            logger.info("查询用户成功，ID: {}", id)
+        } ?: throw RuntimeException("用户不存在")
     }
 
     /** 根据 id 删除用户 */
@@ -44,7 +47,8 @@ class UserService(private val userRepository: UserRepository) {
     fun create(userCreateDTO: UserCreateDTO) {
         logger.info("创建用户，用户名: {}", userCreateDTO.username)
         userRepository.save(userCreateDTO.toEntity {
-            nickname = username
+            nickname = userCreateDTO.username
+            password = PasswordUtil.defaultPassword()
         })
         logger.info("创建用户成功，用户名: {}", userCreateDTO.username)
     }
@@ -53,10 +57,8 @@ class UserService(private val userRepository: UserRepository) {
     fun update(userUpdateDTO: UserUpdateDTO) {
         logger.info("更新用户，用户名: {}", userUpdateDTO.username)
         if (userUpdateDTO.id == Consts.ADMIN_ID && StpUtil.getLoginIdAsLong() != Consts.ADMIN_ID) {
-            this.findById(userUpdateDTO.id)
-                    .roles
-                    .firstOrNull { it.name == Consts.ADMIN_ROLE_NAME }
-                    ?.let { throw RuntimeException("不允许更新管理员") }
+            this.findById(userUpdateDTO.id).roles.firstOrNull { it.name == Consts.ADMIN_ROLE_NAME }
+                ?.let { throw RuntimeException("不允许更新管理员") }
         }
         userRepository.updateById(userUpdateDTO)
         logger.info("更新用户成功，用户名: {}", userUpdateDTO.username)
@@ -64,8 +66,7 @@ class UserService(private val userRepository: UserRepository) {
 
     /** 分页查询用户 */
     fun findPage(
-            pageRequest: PageRequest,
-            userSpecification: UserSpecification
+        pageRequest: PageRequest, userSpecification: UserSpecification
     ): Page<UserListDTO> {
         logger.info("分页查询用户，页码: {}, 每页数量: {}", pageRequest.pageNumber, pageRequest.pageSize)
         return userRepository.findPage(pageRequest, userSpecification).also {

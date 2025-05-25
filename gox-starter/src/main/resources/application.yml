@@ -5,23 +5,24 @@ spring:
   application:
     name: gox
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/gox
-    username: root
-    password: root
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/gox
+    username: postgres
+    password: postgres
   profiles:
     include: file, auth
   servlet:
     multipart:
       max-file-size: 10MB
-
+  flyway:
+    enabled: false
+    fail-on-missing-locations: true
 jimmer:
-  dialect: org.babyfish.jimmer.sql.dialect.MySqlDialect
+  dialect: org.babyfish.jimmer.sql.dialect.PostgresDialect
   show-sql: true
   pretty-sql: true
   database-validation-mode: ERROR
   language: kotlin
-
 sa-token:
   is-print: true
   token-name: token
