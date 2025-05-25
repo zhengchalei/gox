@@ -201,6 +201,7 @@ class AuthService(
         // 创建新用户，注意User是接口，需要使用new方法创建
         val user: User = this.userRepository.save(new(User::class).by {
             this.username = authUser.username
+            this.nickname = authUser.nickname
             this.password = PasswordUtil.encode(UUID.randomUUID().toString())
             this.enabled = true
             this.createdTime = LocalDateTime.now()

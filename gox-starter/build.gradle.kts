@@ -26,9 +26,8 @@ dependencies {
     implementation(project(":gox-modules:gox-auth"))
 
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.flywaydb:flyway-core")
-    implementation("org.flywaydb:flyway-database-postgresql")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.liquibase:liquibase-core")
     runtimeOnly("org.postgresql:postgresql")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
