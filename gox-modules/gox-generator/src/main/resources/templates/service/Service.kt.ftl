@@ -34,7 +34,7 @@ class ${entityName}Service(private val repository: ${entityName}Repository) {
 
     fun update(dto: ${entityName}UpdateDTO) {
         logger.info("更新${entityName}，数据: {}", dto)
-        repository.updateById(dto)
+        repository.save(dto, SaveMode.UPDATE_ONLY)
         logger.info("更新${entityName}成功，数据: {}", dto)
     }
 

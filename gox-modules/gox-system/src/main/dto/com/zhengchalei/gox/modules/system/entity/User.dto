@@ -41,6 +41,14 @@ input UserUpdateDTO {
     phone
 }
 
+input UserRoleUpdateDTO {
+    @NotNull(message = "用户ID不能为空")
+    id!
+    @NotNull(message = "角色ID不能为空")
+    roleIds
+}
+
+
 specification UserSpecification {
     #allScalars
     -password

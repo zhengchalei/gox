@@ -31,12 +31,8 @@ interface ${entityName}Repository : KRepository<${entityName}, Long> {
     }
 
     fun save(dto: ${entityName}CreateDTO): ${entityName} {
-        val saveResult = this.sql.save(dto)
+        val saveResult = this.save(dto)
         return saveResult.modifiedEntity
     }
 
-    fun updateById(dto: ${entityName}UpdateDTO): ${entityName} {
-        val updateResult = this.sql.save(dto, SaveMode.UPDATE_ONLY)
-        return updateResult.modifiedEntity
-    }
 }

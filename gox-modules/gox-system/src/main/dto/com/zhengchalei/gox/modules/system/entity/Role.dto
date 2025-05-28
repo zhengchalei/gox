@@ -51,6 +51,14 @@ input RoleUpdateDTO {
     permissionIds
 }
 
+
+input RolePermissionUpdateDTO {
+    @NotNull(message = "角色ID不能为空")
+    id
+    @NotNull(message = "权限ID不能为空")
+    permissionIds
+}
+
 specification RoleSpecification {
     id
     name

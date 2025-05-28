@@ -5,6 +5,7 @@ import com.zhengchalei.gox.Consts
 import com.zhengchalei.gox.modules.system.entity.dto.*
 import com.zhengchalei.gox.modules.system.repository.UserRepository
 import com.zhengchalei.gox.util.PasswordUtil
+import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -29,7 +30,8 @@ class UserService(private val userRepository: UserRepository) {
         logger.info("查询用户，ID: {}", id)
         return userRepository.sql.findById(UserDetailDTO::class, id)?.also {
             logger.info("查询用户成功，ID: {}", id)
-        } ?: throw RuntimeException("用户不存在")
+        }
+                ?: throw RuntimeException("用户不存在")
     }
 
     /** 根据 id 删除用户 */
@@ -46,10 +48,12 @@ class UserService(private val userRepository: UserRepository) {
     /** 创建用户 */
     fun create(userCreateDTO: UserCreateDTO) {
         logger.info("创建用户，用户名: {}", userCreateDTO.username)
-        userRepository.save(userCreateDTO.toEntity {
-            nickname = userCreateDTO.username
-            password = PasswordUtil.defaultPassword()
-        })
+        userRepository.save(
+                userCreateDTO.toEntity {
+                    nickname = userCreateDTO.username
+                    password = PasswordUtil.defaultPassword()
+                }
+        )
         logger.info("创建用户成功，用户名: {}", userCreateDTO.username)
     }
 
@@ -57,16 +61,26 @@ class UserService(private val userRepository: UserRepository) {
     fun update(userUpdateDTO: UserUpdateDTO) {
         logger.info("更新用户，用户名: {}", userUpdateDTO.username)
         if (userUpdateDTO.id == Consts.ADMIN_ID && StpUtil.getLoginIdAsLong() != Consts.ADMIN_ID) {
-            this.findById(userUpdateDTO.id).roles.firstOrNull { it.name == Consts.ADMIN_ROLE_NAME }
-                ?.let { throw RuntimeException("不允许更新管理员") }
+            this.findById(userUpdateDTO.id)
+                    .roles
+                    .firstOrNull { it.name == Consts.ADMIN_ROLE_NAME }
+                    ?.let { throw RuntimeException("不允许更新管理员") }
         }
-        userRepository.updateById(userUpdateDTO)
+        userRepository.save(userUpdateDTO, SaveMode.UPDATE_ONLY)
         logger.info("更新用户成功，用户名: {}", userUpdateDTO.username)
+    }
+
+    /** 修改用户角色 */
+    fun updateUserRole(userRoleUpdateDTO: UserRoleUpdateDTO) {
+        logger.info("修改用户角色，用户ID: {}, 角色ID: {}", userRoleUpdateDTO.id, userRoleUpdateDTO.roleIds)
+        userRepository.save(userRoleUpdateDTO, SaveMode.UPDATE_ONLY)
+        logger.info("修改用户角色成功，用户ID: {}, 角色ID: {}", userRoleUpdateDTO.id, userRoleUpdateDTO.roleIds)
     }
 
     /** 分页查询用户 */
     fun findPage(
-        pageRequest: PageRequest, userSpecification: UserSpecification
+            pageRequest: PageRequest,
+            userSpecification: UserSpecification
     ): Page<UserListDTO> {
         logger.info("分页查询用户，页码: {}, 每页数量: {}", pageRequest.pageNumber, pageRequest.pageSize)
         return userRepository.findPage(pageRequest, userSpecification).also {

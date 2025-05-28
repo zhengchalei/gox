@@ -8,10 +8,4 @@ import org.springframework.stereotype.Repository
 @Repository
 interface SocialUserRepository : KRepository<SocialUser, Long> {
 
-    /** 保存社会化用户 */
-    fun save(socialUser: SocialUser): SocialUser {
-        val saveResult = this.sql.save(socialUser)
-        return saveResult.modifiedEntity
-    }
-
 }

@@ -69,6 +69,16 @@ class UserController(private val userService: UserService) {
         return R.success()
     }
 
+    @Operation(summary = "修改用户角色", description = "修改用户角色")
+    @PostMapping("/role")
+    fun updateUserRole(
+        @Parameter(description = "用户角色信息", required = true)
+        @Valid @RequestBody userRoleUpdateDTO: UserRoleUpdateDTO
+    ): R<Void> {
+        userService.updateUserRole(userRoleUpdateDTO)
+        return R.success()
+    }
+
     @Operation(summary = "分页查询用户", description = "分页查询用户列表")
     @GetMapping(value = ["/page"])
     fun findPage(

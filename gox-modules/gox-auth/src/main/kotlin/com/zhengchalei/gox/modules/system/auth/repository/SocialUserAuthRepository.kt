@@ -51,14 +51,6 @@ interface SocialUserAuthRepository : KRepository<SocialUserAuth, Long> {
     }
 
     /**
-     * 保存社会化用户关系
-     */
-    fun save(socialUserAuth: SocialUserAuth): SocialUserAuth {
-        val saveResult = this.sql.save(socialUserAuth)
-        return saveResult.modifiedEntity
-    }
-
-    /**
      * 删除社会化用户关系
      */
     fun deleteByUserIdAndSocialUserId(userId: Long, socialUserId: Long): Boolean {

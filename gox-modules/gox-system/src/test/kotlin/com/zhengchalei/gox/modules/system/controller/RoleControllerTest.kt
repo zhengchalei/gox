@@ -49,8 +49,6 @@ class RoleControllerTest {
                 updatedTime = LocalDateTime.now(),
                 permissionIds = listOf(),
                 permissions = listOf(),
-                routePermissions = listOf(),
-                routePermissionIds = listOf()
             )
         )
 
@@ -121,7 +119,6 @@ class RoleControllerTest {
                 createdTime = LocalDateTime.now(),
                 updatedTime = LocalDateTime.now(),
                 permissionIds = listOf(),
-                routePermissionIds = listOf()
             )
         )
         val pageResult = PageImpl(roleList, pageable, roleList.size.toLong())

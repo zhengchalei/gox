@@ -59,6 +59,16 @@ class RoleController(private val roleService: RoleService) {
         return R.success()
     }
 
+    @Operation(summary = "分配角色权限", description = "分配角色权限")
+    @PostMapping("/permission")
+    fun updateRolePermission(
+        @Parameter(description = "角色权限信息", required = true)
+        @Valid @RequestBody rolePermissionUpdateDTO: RolePermissionUpdateDTO
+    ): R<Void> {
+        roleService.updateRolePermission(rolePermissionUpdateDTO)
+        return R.success()
+    }
+
     @Operation(summary = "分页查询角色", description = "分页查询角色列表")
     @GetMapping(value = ["/page"])
     fun findPage(

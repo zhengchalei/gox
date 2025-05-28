@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 
 @Service
 @Transactional(rollbackFor = [Exception::class])
@@ -48,7 +49,7 @@ class PermissionService(
      */
     fun update(permissionUpdateDTO: PermissionUpdateDTO) {
         logger.info("更新权限，名称: {}", permissionUpdateDTO.name)
-        permissionRepository.updateById(permissionUpdateDTO)
+        permissionRepository.save(permissionUpdateDTO, SaveMode.UPDATE_ONLY)
         logger.info("更新权限成功，名称: {}", permissionUpdateDTO.name)
     }
 

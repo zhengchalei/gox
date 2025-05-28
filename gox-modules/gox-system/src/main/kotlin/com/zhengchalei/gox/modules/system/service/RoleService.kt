@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 
 @Service
 @Transactional(rollbackFor = [Exception::class])
@@ -50,9 +51,19 @@ class RoleService(
      */
     fun update(roleUpdateDTO: RoleUpdateDTO) {
         logger.info("更新角色，名称: {}", roleUpdateDTO.name)
-        roleRepository.updateById(roleUpdateDTO)
+        roleRepository.save(roleUpdateDTO)
         logger.info("更新角色成功，名称: {}", roleUpdateDTO.name)
     }
+
+    /**
+     * 分配角色权限
+     */
+    fun updateRolePermission(rolePermissionUpdateDTO: RolePermissionUpdateDTO) {
+        logger.info("分配角色权限，角色ID: {}, 权限ID: {}", rolePermissionUpdateDTO.id, rolePermissionUpdateDTO.permissionIds)
+        roleRepository.save(rolePermissionUpdateDTO, SaveMode.UPDATE_ONLY)
+        logger.info("分配角色权限成功，角色ID: {}, 权限ID: {}", rolePermissionUpdateDTO.id, rolePermissionUpdateDTO.permissionIds)
+    }
+
 
     /**
      * 分页查询角色
