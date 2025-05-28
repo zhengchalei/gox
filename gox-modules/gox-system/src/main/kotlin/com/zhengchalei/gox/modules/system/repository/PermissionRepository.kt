@@ -18,16 +18,16 @@ import org.springframework.stereotype.Repository
 interface PermissionRepository : KRepository<Permission, Long> {
 
     fun findPage(
-        pageRequest: PageRequest,
-        permissionSpecification: PermissionSpecification
+            pageRequest: PageRequest,
+            permissionSpecification: PermissionSpecification
     ): Page<PermissionListDTO> {
-        val query =
-            this.sql.createQuery(Permission::class) {
-                where(permissionSpecification)
-                orderBy(table.id.asc())
-                select(table.fetch(PermissionListDTO::class))
-            }
-        return query.fetchSpringPage(pageRequest.pageNumber, pageRequest.pageSize)
+        return this.sql
+                .createQuery(Permission::class) {
+                    where(permissionSpecification)
+                    orderBy(table.id.asc())
+                    select(table.fetch(PermissionListDTO::class))
+                }
+                .fetchSpringPage(pageRequest.pageNumber, pageRequest.pageSize)
     }
 
     fun save(permissionCreateDTO: PermissionCreateDTO): Permission {
@@ -39,5 +39,4 @@ interface PermissionRepository : KRepository<Permission, Long> {
         val saveResult = this.sql.save(permissionUpdateDTO, SaveMode.UPDATE_ONLY)
         return saveResult.modifiedEntity
     }
-
 }

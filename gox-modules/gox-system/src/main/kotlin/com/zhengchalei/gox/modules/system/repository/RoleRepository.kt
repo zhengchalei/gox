@@ -18,16 +18,16 @@ import org.springframework.stereotype.Repository
 interface RoleRepository : KRepository<Role, Long> {
 
     fun findPage(
-        pageRequest: PageRequest,
-        roleSpecification: RoleSpecification
+            pageRequest: PageRequest,
+            roleSpecification: RoleSpecification
     ): Page<RoleListDTO> {
-        val query =
-            this.sql.createQuery(Role::class) {
-                where(roleSpecification)
-                orderBy(table.id.asc())
-                select(table.fetch(RoleListDTO::class))
-            }
-        return query.fetchSpringPage(pageRequest.pageNumber, pageRequest.pageSize)
+        return this.sql
+                .createQuery(Role::class) {
+                    where(roleSpecification)
+                    orderBy(table.id.asc())
+                    select(table.fetch(RoleListDTO::class))
+                }
+                .fetchSpringPage(pageRequest.pageNumber, pageRequest.pageSize)
     }
 
     fun save(roleCreateDTO: RoleCreateDTO): Role {
@@ -36,8 +36,7 @@ interface RoleRepository : KRepository<Role, Long> {
     }
 
     fun updateById(roleUpdateDTO: RoleUpdateDTO): Role {
-        val saveResult = this.sql.save(roleUpdateDTO, SaveMode.UPDATE_ONLY)
-        return saveResult.modifiedEntity
+        val updateResult = this.sql.save(roleUpdateDTO, SaveMode.UPDATE_ONLY)
+        return updateResult.modifiedEntity
     }
-
 }

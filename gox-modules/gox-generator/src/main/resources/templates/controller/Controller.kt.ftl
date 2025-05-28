@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*
 class ${entityName}Controller(private val service: ${entityName}Service) {
 
     @Operation(summary = "根据ID查询${entityName}", description = "通过${entityName}ID获取${entityName}详细信息")
-    @GetMapping("/{id}")
+    @GetMapping(value = ["/{id}"])
     fun findById(
         @Parameter(description = "${entityName}ID", required = true)
         @PathVariable id: Long
@@ -30,7 +30,7 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
     }
 
     @Operation(summary = "删除${entityName}", description = "根据${entityName}ID删除${entityName}")
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = ["/{id}"])
     fun deleteById(
         @Parameter(description = "${entityName}ID", required = true)
         @PathVariable id: Long
@@ -40,7 +40,7 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
     }
 
     @Operation(summary = "创建${entityName}", description = "创建新${entityName}")
-    @PostMapping
+    @PostMapping(value = ["/"])
     fun create(
         @Parameter(description = "${entityName}信息", required = true)
         @Valid @RequestBody dto: ${entityName}CreateDTO
@@ -50,7 +50,7 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
     }
 
     @Operation(summary = "更新${entityName}", description = "更新${entityName}信息")
-    @PutMapping
+    @PutMapping(value = ["/"])
     fun update(
         @Parameter(description = "${entityName}信息", required = true)
         @Valid @RequestBody dto: ${entityName}UpdateDTO
@@ -60,15 +60,13 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
     }
 
     @Operation(summary = "分页查询${entityName}", description = "分页查询${entityName}列表")
-    @GetMapping("/page")
+    @GetMapping(value = ["/page"])
     fun findPage(
-        @Parameter(description = "页码", required = false)
-        @RequestParam(defaultValue = "1") page: Int,
-        @Parameter(description = "每页数量", required = false)
-        @RequestParam(defaultValue = "10") size: Int,
+        @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") currentPage: Int,
+        @Parameter(description = "每页数量", required = false) @RequestParam(defaultValue = "10") pageSize: Int,
         specification: ${entityName}Specification
     ): ResponseEntity<Page<${entityName}ListDTO>> {
-        val pageRequest = PageRequest.of(page, size).oneIndex()
+        val pageRequest = PageRequest.of(currentPage, pageSize).oneIndex()
         val pageResult = service.findPage(pageRequest, specification)
         return ResponseEntity.ok(pageResult)
     }

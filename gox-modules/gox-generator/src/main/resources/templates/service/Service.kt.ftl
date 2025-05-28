@@ -15,9 +15,9 @@ class ${entityName}Service(private val repository: ${entityName}Repository) {
 
     fun findById(id: Long): ${entityName}DetailDTO {
         logger.info("查询${entityName}，ID: {}", id)
-        return repository.findById(id).also {
+        return repository.sql.findById(${entityName}DetailDTO::class, id).also {
             logger.info("查询${entityName}成功，ID: {}", id)
-        }
+        } ?: throw RuntimeException("${entityName}不存在")
     }
 
     fun deleteById(id: Long) {

@@ -4,7 +4,6 @@ import com.zhengchalei.gox.modules.system.entity.User
 import com.zhengchalei.gox.modules.system.entity.dto.*
 import com.zhengchalei.gox.modules.system.entity.id
 import com.zhengchalei.gox.modules.system.entity.username
-import com.zhengchalei.gox.util.PasswordUtil
 import org.babyfish.jimmer.spring.repository.KRepository
 import org.babyfish.jimmer.spring.repository.fetchSpringPage
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
@@ -17,28 +16,27 @@ import org.springframework.stereotype.Repository
 @Repository
 interface UserRepository : KRepository<User, Long> {
 
-
     fun findPage(
-        pageRequest: PageRequest,
-        userSpecification: UserSpecification
+            pageRequest: PageRequest,
+            userSpecification: UserSpecification
     ): Page<UserListDTO> {
-        val query =
-            this.sql.createQuery(User::class) {
-                where(userSpecification)
-                orderBy(table.id.asc())
-                select(table.fetch(UserListDTO::class))
-            }
-        return query.fetchSpringPage(pageRequest.pageNumber, pageRequest.pageSize)
+        return this.sql
+                .createQuery(User::class) {
+                    where(userSpecification)
+                    orderBy(table.id.asc())
+                    select(table.fetch(UserListDTO::class))
+                }
+                .fetchSpringPage(pageRequest.pageNumber, pageRequest.pageSize)
     }
 
     fun findByUsername(username: String): UserDetailDTO {
         return this.sql
-            .createQuery(User::class) {
-                where(table.username eq username)
-                select(table.fetch(UserDetailDTO::class))
-            }
-            .fetchOneOrNull()
-            ?: throw IllegalArgumentException("用户不存在")
+                .createQuery(User::class) {
+                    where(table.username eq username)
+                    select(table.fetch(UserDetailDTO::class))
+                }
+                .fetchOneOrNull()
+                ?: throw IllegalArgumentException("用户不存在")
     }
 
     fun save(user: User): User {
@@ -50,5 +48,4 @@ interface UserRepository : KRepository<User, Long> {
         val saveResult = this.sql.save(userUpdateDTO, SaveMode.UPDATE_ONLY)
         return saveResult.modifiedEntity
     }
-
 }

@@ -42,7 +42,6 @@ class RoleService(
     fun create(roleCreateDTO: RoleCreateDTO) {
         logger.info("创建角色，名称: {}", roleCreateDTO.name)
         roleRepository.save(roleCreateDTO)
-        // 对于新角色，不需要失效缓存，因为还没有关联的权限
         logger.info("创建角色成功，名称: {}", roleCreateDTO.name)
     }
 
