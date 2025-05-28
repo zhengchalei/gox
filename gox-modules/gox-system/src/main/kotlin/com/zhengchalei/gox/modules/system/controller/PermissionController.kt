@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*
 class PermissionController(private val permissionService: PermissionService) {
 
     @Operation(summary = "根据ID查询权限", description = "通过权限ID获取权限详细信息")
-    @GetMapping("/{id}")
+    @GetMapping(value = ["/{id}"])
     fun findById(
         @Parameter(description = "权限ID", required = true) @PathVariable id: Long
     ): R<PermissionDetailDTO> {
@@ -29,7 +29,7 @@ class PermissionController(private val permissionService: PermissionService) {
     }
 
     @Operation(summary = "删除权限", description = "根据权限ID删除权限")
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = ["/{id}"])
     fun deleteById(
         @Parameter(description = "权限ID", required = true) @PathVariable id: Long
     ): R<Void> {
@@ -38,7 +38,7 @@ class PermissionController(private val permissionService: PermissionService) {
     }
 
     @Operation(summary = "创建权限", description = "创建新权限")
-    @PostMapping
+    @PostMapping()
     fun create(
         @Parameter(description = "权限信息", required = true)
         @Valid
@@ -50,7 +50,7 @@ class PermissionController(private val permissionService: PermissionService) {
     }
 
     @Operation(summary = "更新权限", description = "更新权限信息")
-    @PutMapping
+    @PutMapping()
     fun update(
         @Parameter(description = "权限信息", required = true)
         @Valid
@@ -62,7 +62,7 @@ class PermissionController(private val permissionService: PermissionService) {
     }
 
     @Operation(summary = "分页查询权限", description = "分页查询权限列表")
-    @GetMapping("/page")
+    @GetMapping(value = ["/page"])
     fun findPage(
         @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") currentPage: Int,
         @Parameter(description = "每页数量", required = false) @RequestParam(defaultValue = "10") pageSize: Int,

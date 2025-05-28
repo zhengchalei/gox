@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*
 class RoleController(private val roleService: RoleService) {
 
     @Operation(summary = "根据ID查询角色", description = "通过角色ID获取角色详细信息")
-    @GetMapping("/{id}")
+    @GetMapping(value = ["/{id}"])
     fun findById(
         @Parameter(description = "角色ID", required = true)
         @PathVariable id: Long
@@ -30,7 +30,7 @@ class RoleController(private val roleService: RoleService) {
     }
 
     @Operation(summary = "删除角色", description = "根据角色ID删除角色")
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = ["/{id}"])
     fun deleteById(
         @Parameter(description = "角色ID", required = true)
         @PathVariable id: Long
@@ -40,7 +40,7 @@ class RoleController(private val roleService: RoleService) {
     }
 
     @Operation(summary = "创建角色", description = "创建新角色")
-    @PostMapping
+    @PostMapping()
     fun create(
         @Parameter(description = "角色信息", required = true)
         @Valid @RequestBody roleCreateDTO: RoleCreateDTO
@@ -50,7 +50,7 @@ class RoleController(private val roleService: RoleService) {
     }
 
     @Operation(summary = "更新角色", description = "更新角色信息")
-    @PutMapping
+    @PutMapping()
     fun update(
         @Parameter(description = "角色信息", required = true)
         @Valid @RequestBody roleUpdateDTO: RoleUpdateDTO
@@ -60,7 +60,7 @@ class RoleController(private val roleService: RoleService) {
     }
 
     @Operation(summary = "分页查询角色", description = "分页查询角色列表")
-    @GetMapping("/page")
+    @GetMapping(value = ["/page"])
     fun findPage(
         @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") currentPage: Int,
         @Parameter(description = "每页数量", required = false) @RequestParam(defaultValue = "10") pageSize: Int,

@@ -36,7 +36,7 @@ class FileController(
 
     /** 上传文件 */
     @Operation(summary = "上传文件", description = "上传单个文件")
-    @PostMapping("/upload")
+    @PostMapping(value = ["/upload"])
     fun upload(
         @Parameter(description = "文件", required = true) @RequestParam("file") file: MultipartFile
     ): R<FileInfoDetailDTO> {
@@ -46,7 +46,7 @@ class FileController(
 
     /** 批量上传文件 */
     @Operation(summary = "批量上传文件", description = "批量上传多个文件")
-    @PostMapping("/batch-upload")
+    @PostMapping(value = ["/batch-upload"])
     fun batchUpload(
         @Parameter(description = "文件列表", required = true) @RequestParam("files") files: List<MultipartFile>
     ): R<List<FileInfoDetailDTO>> {
@@ -56,7 +56,7 @@ class FileController(
 
     /** 分页查询文件 */
     @Operation(summary = "分页查询文件", description = "根据条件分页查询文件")
-    @GetMapping("/page")
+    @GetMapping(value = ["/page"])
     fun page(
         @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") currentPage: Int,
         @Parameter(description = "每页数量", required = false) @RequestParam(defaultValue = "10") pageSize: Int,
@@ -69,7 +69,7 @@ class FileController(
 
     /** 根据ID查询文件详情 */
     @Operation(summary = "根据ID查询文件详情", description = "根据文件ID获取文件详细信息")
-    @GetMapping("/{id}")
+    @GetMapping(value = ["/{id}"])
     fun findById(
         @Parameter(description = "文件ID", required = true) @PathVariable id: Long
     ): R<FileInfoDetailDTO> {
@@ -79,7 +79,7 @@ class FileController(
 
     /** 根据存储名称查询文件详情 */
     @Operation(summary = "根据存储名称查询文件详情", description = "根据文件存储名称获取文件详细信息")
-    @GetMapping("/storage/{fileKey}")
+    @GetMapping(value = ["/storage/{fileKey}"])
     fun findByFileKey(
         @Parameter(description = "文件存储名称", required = true) @PathVariable fileKey: String
     ): R<FileInfoDetailDTO> {
@@ -89,7 +89,7 @@ class FileController(
 
     /** 根据原始名称查询文件信息 */
     @Operation(summary = "按原始名称搜索文件", description = "根据文件原始名称模糊搜索文件列表")
-    @GetMapping("/search")
+    @GetMapping(value = ["/search"])
     fun search(
         @Parameter(description = "文件原始名称", required = true) @RequestParam("name") originalName: String
     ): R<List<FileInfoListDTO>> {
@@ -99,7 +99,7 @@ class FileController(
 
     /** 获取文件下载URL */
     @Operation(summary = "获取文件下载URL", description = "根据文件fileKey获取文件的下载URL")
-    @GetMapping("/url/{fileKey}")
+    @GetMapping(value = ["/url/{fileKey}"])
     fun getDownloadUrl(
         @Parameter(description = "文件名", required = true) @PathVariable fileKey: String
     ): R<Map<String, String>> {
@@ -110,7 +110,7 @@ class FileController(
 
     /** 获取文件临时访问URL */
     @Operation(summary = "获取文件临时访问URL", description = "根据文件fileKey获取文件的临时访问URL，有效期可自定义")
-    @GetMapping("/temp-url/{fileKey}")
+    @GetMapping(value = ["/temp-url/{fileKey}"])
     fun getTemporaryUrl(
         @Parameter(description = "文件ID", required = true) @PathVariable fileKey: String,
         @Parameter(description = "有效期(分钟)", required = false) @RequestParam(
@@ -126,7 +126,7 @@ class FileController(
 
     /** 下载文件 */
     @Operation(summary = "下载文件", description = "根据文件存储名称下载文件")
-    @GetMapping("/download/{fileKey}")
+    @GetMapping(value = ["/download/{fileKey}"])
     fun download(
         @Parameter(description = "文件存储名称", required = true) @PathVariable fileKey: String
     ): ResponseEntity<Resource> {
@@ -151,7 +151,7 @@ class FileController(
     }
 
     /** 预览 */
-    @GetMapping("/preview/{fileKey}")
+    @GetMapping(value = ["/preview/{fileKey}"])
     fun preview(
         @PathVariable fileKey: String
     ): ResponseEntity<Resource> {
@@ -166,7 +166,7 @@ class FileController(
     }
 
     /** 临时访问文件（通过token） */
-    @GetMapping("/temp/{fileKey}")
+    @GetMapping(value = ["/temp/{fileKey}"])
     fun tempAccess(
         @PathVariable fileKey: String, @RequestParam token: String, @RequestParam expires: Long
     ): ResponseEntity<Resource> {
@@ -190,7 +190,7 @@ class FileController(
 
     /** 删除文件 */
     @Operation(summary = "删除文件", description = "根据文件ID删除文件")
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = ["/{id}"])
     fun delete(@Parameter(description = "文件ID", required = true) @PathVariable id: Long): R<Void> {
         fileService.delete(id)
         return R.success()
@@ -198,7 +198,7 @@ class FileController(
 
     /** 批量删除文件 */
     @Operation(summary = "批量删除文件", description = "批量删除多个文件")
-    @DeleteMapping("/batch")
+    @DeleteMapping(value = ["/batch"])
     fun batchDelete(
         @Parameter(description = "文件ID列表", required = true) @RequestBody ids: List<Long>
     ): R<Void> {

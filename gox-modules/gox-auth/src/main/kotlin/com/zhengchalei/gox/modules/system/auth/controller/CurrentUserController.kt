@@ -21,7 +21,7 @@ class CurrentUserController(private val authService: AuthService, private val us
 
     /** 登出 */
     @Operation(summary = "登出")
-    @PostMapping("/logout")
+    @PostMapping(value = ["/logout"])
     fun logout(): R<Boolean> {
         StpUtil.logout()
         return R(success = true)
@@ -29,7 +29,7 @@ class CurrentUserController(private val authService: AuthService, private val us
 
     /** 获取当前登录用户信息 */
     @Operation(summary = "获取当前登录用户信息")
-    @GetMapping("/user/info")
+    @GetMapping(value = ["/user/info"])
     fun getCurrentUserInfo(): R<UserDetailDTO> {
         val loginId = StpUtil.getLoginIdAsLong()
         val userInfo = userService.findById(loginId)
@@ -38,7 +38,7 @@ class CurrentUserController(private val authService: AuthService, private val us
 
     /** 获取当前登录用户绑定的所有OAuth2账号 */
     @Operation(summary = "获取当前登录用户绑定的所有OAuth2账号")
-    @GetMapping("/oauth/my-bindings")
+    @GetMapping(value = ["/oauth/my-bindings"])
     fun listMyBindings(): R<List<SocialUserAuthDetailDTO>> {
         val loginId = StpUtil.getLoginIdAsLong()
         val socialUsers: List<SocialUserAuthDetailDTO> = authService.findBindSocialUsers(loginId)
@@ -47,7 +47,7 @@ class CurrentUserController(private val authService: AuthService, private val us
 
     /** 发起绑定其他第三方平台 */
     @Operation(summary = "发起绑定其他第三方平台")
-    @GetMapping("/oauth/bind-url/{source}")
+    @GetMapping(value = ["/oauth/bind-url/{source}"])
     fun getBindUrl(@PathVariable source: String, response: HttpServletResponse) {
         val url = authService.bindCurrentUser(source)
         response.sendRedirect(url)
@@ -55,7 +55,7 @@ class CurrentUserController(private val authService: AuthService, private val us
 
     /** 当前登录用户解绑指定第三方平台 */
     @Operation(summary = "当前登录用户解绑指定第三方平台")
-    @DeleteMapping("/oauth/unbind/{source}")
+    @DeleteMapping(value = ["/oauth/unbind/{source}"])
     fun unbindMyAccount(@PathVariable source: String): R<Boolean> {
         val loginId = StpUtil.getLoginIdAsLong()
         val result = authService.unbindUser(loginId, source)
@@ -64,7 +64,7 @@ class CurrentUserController(private val authService: AuthService, private val us
 
     /** 检查当前登录用户是否已绑定指定平台 */
     @Operation(summary = "检查当前登录用户是否已绑定指定平台")
-    @GetMapping("/oauth/is-bound/{source}")
+    @GetMapping(value = ["/oauth/is-bound/{source}"])
     fun isBound(@PathVariable source: String): R<Boolean> {
         val loginId = StpUtil.getLoginIdAsLong()
         val result = authService.isBound(loginId, source)

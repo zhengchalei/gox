@@ -22,7 +22,7 @@ class AuthController(private val authService: AuthService) {
 
     /** 用户名密码登录 */
     @Operation(summary = "用户名密码登录")
-    @PostMapping("/auth/login")
+    @PostMapping(value = ["/auth/login"])
     fun login(@Valid @RequestBody loginRequest: LoginRequest): R<LoginResponse> {
         val user: User = authService.login(loginRequest)
         StpUtil.login(user.id, loginRequest.rememberMe)
@@ -32,7 +32,7 @@ class AuthController(private val authService: AuthService) {
 
     /** 获取第三方登录授权地址 */
     @Operation(summary = "获取第三方登录授权地址")
-    @GetMapping("/oauth/render/{source}")
+    @GetMapping(value = ["/oauth/render/{source}"])
     fun renderAuth(@PathVariable source: String, response: HttpServletResponse) {
         val authUrl: String = authService.getAuthUrl(source, AuthStateUtils.createState())
         response.sendRedirect(authUrl)
@@ -40,7 +40,7 @@ class AuthController(private val authService: AuthService) {
 
     /** 第三方登录回调接口 */
     @Operation(summary = "第三方登录回调接口")
-    @GetMapping("/oauth/callback/{source}")
+    @GetMapping(value = ["/oauth/callback/{source}"])
     fun callback(
         @PathVariable source: String,
         @ModelAttribute callback: AuthCallback
@@ -72,7 +72,7 @@ class AuthController(private val authService: AuthService) {
      * @return 注册结果
      */
     @Operation(summary = "根据 oauth-callback 接口返回的 临时凭证 进行注册")
-    @GetMapping("/register/oauth/{singleUseCredential}")
+    @GetMapping(value = ["/register/oauth/{singleUseCredential}"])
     fun registerBySingleUseCredential(@PathVariable singleUseCredential: String): R<LoginResponse> {
         // 根据 临时凭证 进行注册
         val loginResponse = authService.registerBySingleUseCredential(singleUseCredential)
