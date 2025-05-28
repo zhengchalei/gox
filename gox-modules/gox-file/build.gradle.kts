@@ -24,7 +24,6 @@ dependencyManagement {
 dependencies {
     implementation(project(":gox-framework"))
     implementation(project(":gox-util"))
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     // 文件存储相关依赖
     // MinIO

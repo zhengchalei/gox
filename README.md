@@ -53,7 +53,6 @@ dependencyManagement {
 dependencies {
     implementation(project(":gox-framework"))
     implementation(project(":gox-util"))
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
     ksp("org.babyfish.jimmer:jimmer-ksp:${rootProject.extra["jimmerVersion"]}")
 
     // 添加所需依赖

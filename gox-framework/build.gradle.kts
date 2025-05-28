@@ -39,5 +39,4 @@ dependencies {
     api("org.apache.commons:commons-pool2")
     // me.zhyd.oauth
     api("me.zhyd.oauth:JustAuth:${rootProject.extra["justAuthVersion"]}")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
 }

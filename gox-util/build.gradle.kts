@@ -21,6 +21,5 @@ dependencyManagement {
 dependencies {
     api("org.apache.commons:commons-lang3")
     api("org.mindrot:jbcrypt:0.4")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    // 可按需添加更多工具类依赖
-} 
+    api("org.jetbrains.kotlin:kotlin-reflect")
+}

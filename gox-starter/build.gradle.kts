@@ -26,7 +26,6 @@ dependencies {
     implementation(project(":gox-modules:gox-auth"))
 
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.liquibase:liquibase-core")
     runtimeOnly("org.postgresql:postgresql")
 
