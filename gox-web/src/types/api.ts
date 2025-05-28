@@ -133,7 +133,6 @@ export interface RoleCreateDTO {
   name: string
   code: string
   description?: string
-  permissionIds: number[]
 }
 
 export interface RoleUpdateDTO {
@@ -141,7 +140,6 @@ export interface RoleUpdateDTO {
   name: string
   code: string
   description?: string
-  permissionIds: number[]
 }
 
 export interface RolePermissionUpdateDTO {

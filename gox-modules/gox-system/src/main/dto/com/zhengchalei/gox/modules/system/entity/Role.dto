@@ -35,8 +35,6 @@ input RoleCreateDTO {
     @NotBlank(message = "编码不能为空")
     code
     description
-    @NotNull(message = "权限不能为空")
-    permissionIds
 }
 
 input RoleUpdateDTO {
@@ -47,10 +45,7 @@ input RoleUpdateDTO {
     @NotBlank(message = "编码不能为空")
     code
     description
-    @NotNull(message = "权限不能为空")
-    permissionIds
 }
-
 
 input RolePermissionUpdateDTO {
     @NotNull(message = "角色ID不能为空")

@@ -145,17 +145,6 @@
             :rows="3"
           />
         </el-form-item>
-        <el-form-item label="权限" prop="permissionIds">
-          <el-tree
-            ref="permissionTreeRef"
-            :data="permissionTreeData"
-            show-checkbox
-            node-key="id"
-            :props="{ children: 'children', label: 'name' }"
-            :default-checked-keys="formData.permissionIds"
-            @check="handlePermissionCheck"
-          />
-        </el-form-item>
       </el-form>
 
       <template #footer>
@@ -310,7 +299,6 @@ const formData = reactive<RoleCreateDTO & Partial<RoleUpdateDTO>>({
   name: "",
   code: "",
   description: "",
-  permissionIds: [],
 });
 const formRules = {
   name: [
@@ -336,7 +324,6 @@ const formRules = {
       trigger: "blur",
     },
   ],
-  permissionIds: [{ required: true, message: "请选择权限", trigger: "blur" }],
 };
 
 // 查看详情数据
@@ -415,7 +402,6 @@ const handleAdd = () => {
     name: "",
     code: "",
     description: "",
-    permissionIds: [],
   });
   dialogVisible.value = true;
   // 清空权限树选择
