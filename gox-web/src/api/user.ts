@@ -5,7 +5,8 @@ import type {
   UserSpecification,
   RUserDetailDTO,
   RPageUserListDTO,
-  RVoid
+  RVoid,
+  UserRoleUpdateDTO
 } from '../types/api'
 
 export const userApi = {
@@ -27,6 +28,11 @@ export const userApi = {
   // 根据用户名查询用户
   findByUsername: (username: string): Promise<RUserDetailDTO> => {
     return api.get(`/api/v1/sys/user/username/${username}`)
+  },
+
+  // 修改用户角色
+  assignUserRole: (data: UserRoleUpdateDTO): Promise<RVoid> => {
+    return api.post('/api/v1/sys/user/assign-role', data)
   },
 
   // 分页查询用户

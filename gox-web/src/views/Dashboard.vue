@@ -179,21 +179,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import {
-  Connection,
-  User,
-  Document,
-  UserFilled,
-  Lock,
-  Check,
-  Close,
-  Warning,
-  Upload
-} from '@element-plus/icons-vue'
-import { testApi } from '../api/test'
-import type { UserDetailDTO } from '../types/api'
+import {onMounted, reactive, ref} from 'vue'
+import {ElMessage} from 'element-plus'
+import {Check, Close, Connection, Document, Lock, Upload, User, UserFilled, Warning} from '@element-plus/icons-vue'
+import {testApi} from '../api/test'
+import type {UserDetailDTO} from '../types/api'
 
 // 响应式数据
 const userInfo = ref<UserDetailDTO>({

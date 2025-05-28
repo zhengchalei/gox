@@ -177,10 +177,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addUniqueConstraint tableName="sys_user_role" columnNames="user_id,role_id"
-                             constraintName="uk_user_role"
-                             deferrable="true"
-                             initiallyDeferred="true"/>
+        <addUniqueConstraint tableName="sys_user_role" columnNames="user_id,role_id" constraintName="uk_user_role" />
         <addForeignKeyConstraint baseTableName="sys_user_role" baseColumnNames="user_id"
                                  constraintName="fk_user_role_user" referencedTableName="sys_user"
                                  referencedColumnNames="id"/>
@@ -210,9 +207,7 @@
             </column>
         </createTable>
         <addUniqueConstraint tableName="sys_role_permission" columnNames="role_id,permission_id"
-                             constraintName="uk_role_permission"
-                             deferrable="true"
-                             initiallyDeferred="true"/>
+                             constraintName="uk_role_permission" />
 
         <addForeignKeyConstraint baseTableName="sys_role_permission" baseColumnNames="role_id"
                                  constraintName="fk_role_permission_role" referencedTableName="sys_role"

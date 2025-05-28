@@ -5,7 +5,8 @@ import type {
   RoleSpecification,
   RRoleDetailDTO,
   RPageRoleListDTO,
-  RVoid
+  RVoid,
+  RolePermissionUpdateDTO
 } from '../types/api'
 
 export const roleApi = {
@@ -17,6 +18,11 @@ export const roleApi = {
   // 更新角色
   update: (data: RoleUpdateDTO): Promise<RVoid> => {
     return api.put('/api/v1/sys/role', data)
+  },
+
+  // 分配角色权限
+  assignRolePermission: (data: RolePermissionUpdateDTO): Promise<RVoid> => {
+    return api.post('/api/v1/sys/role/assign-permission', data)
   },
 
   // 根据ID查询角色

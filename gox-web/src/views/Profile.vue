@@ -37,8 +37,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import type { UserDetailDTO } from '../types/api'
+import {onMounted, ref} from 'vue'
+import type {UserDetailDTO} from '../types/api'
 
 const userForm = ref<UserDetailDTO>({
   id: 0,

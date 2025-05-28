@@ -69,13 +69,13 @@ class UserController(private val userService: UserService) {
         return R.success()
     }
 
-    @Operation(summary = "修改用户角色", description = "修改用户角色")
-    @PostMapping("/role")
-    fun updateUserRole(
+    @Operation(summary = "分配用户角色", description = "分配用户角色")
+    @PostMapping("/assign-role")
+    fun assignUserRole(
         @Parameter(description = "用户角色信息", required = true)
         @Valid @RequestBody userRoleUpdateDTO: UserRoleUpdateDTO
     ): R<Void> {
-        userService.updateUserRole(userRoleUpdateDTO)
+        userService.assignUserRole(userRoleUpdateDTO)
         return R.success()
     }
 

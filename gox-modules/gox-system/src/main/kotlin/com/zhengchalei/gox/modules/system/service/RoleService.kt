@@ -58,9 +58,9 @@ class RoleService(
     /**
      * 分配角色权限
      */
-    fun updateRolePermission(rolePermissionUpdateDTO: RolePermissionUpdateDTO) {
+    fun assignRolePermission(rolePermissionUpdateDTO: RolePermissionUpdateDTO) {
         logger.info("分配角色权限，角色ID: {}, 权限ID: {}", rolePermissionUpdateDTO.id, rolePermissionUpdateDTO.permissionIds)
-        roleRepository.save(rolePermissionUpdateDTO, SaveMode.UPDATE_ONLY)
+        roleRepository.save(rolePermissionUpdateDTO)
         logger.info("分配角色权限成功，角色ID: {}, 权限ID: {}", rolePermissionUpdateDTO.id, rolePermissionUpdateDTO.permissionIds)
     }
 

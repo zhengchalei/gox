@@ -103,13 +103,16 @@
             {{ formatDateTime(row.updatedTime) }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" min-width="300" fixed="right">
+        <el-table-column label="操作" min-width="360" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" @click="handleView(row)">
               查看
             </el-button>
             <el-button type="warning" @click="handleEdit(row)">
               编辑
+            </el-button>
+            <el-button type="success" @click="handleAssignRole(row)">
+              分配角色
             </el-button>
             <el-button type="danger" @click="handleDelete(row)">
               删除
@@ -121,8 +124,8 @@
       <!-- 分页 -->
       <div class="pagination-wrapper">
         <el-pagination
-          v-model:current-page="pagination.currentPage"
-          v-model:page-size="pagination.pageSize"
+          :current-page="pagination.currentPage"
+          :page-size="pagination.pageSize"
           :page-sizes="[10, 20, 50, 100]"
           :total="pagination.total"
           layout="total, sizes, prev, pager, next, jumper"
@@ -179,6 +182,52 @@
             type="primary"
             :loading="submitLoading"
             @click="handleSubmit"
+          >
+            确定
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <!-- 分配角色对话框 -->
+    <el-dialog
+      title="分配角色"
+      v-model="assignRoleDialogVisible"
+      width="600px"
+      :before-close="handleAssignDialogClose"
+    >
+      <div v-if="assignUserData">
+        <p><strong>用户名：</strong>{{ assignUserData.username }}</p>
+        <p><strong>昵称：</strong>{{ assignUserData.nickname || "暂无" }}</p>
+        <el-divider />
+        <p><strong>选择角色：</strong></p>
+        <el-checkbox-group v-model="assignRoleIds">
+          <el-card
+            v-for="role in roleList"
+            :key="role.id"
+            class="role-card"
+            :class="{ 'role-card-selected': assignRoleIds.includes(role.id) }"
+          >
+            <el-checkbox :label="role.id" :value="role.id">
+              <div class="role-info">
+                <div class="role-name">{{ role.name }}</div>
+                <div class="role-code">{{ role.code }}</div>
+                <div class="role-description">
+                  {{ role.description || "暂无描述" }}
+                </div>
+              </div>
+            </el-checkbox>
+          </el-card>
+        </el-checkbox-group>
+      </div>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="handleAssignDialogClose">取消</el-button>
+          <el-button
+            type="primary"
+            :loading="assignLoading"
+            @click="handleAssignSubmit"
           >
             确定
           </el-button>
@@ -244,15 +293,17 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, computed } from "vue";
-import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
+import { ElMessage, ElMessageBox, type FormInstance } from "element-plus";
 import { Plus, Search, Refresh } from "@element-plus/icons-vue";
-import { userApi } from "../../api/user";
+import { userApi, roleApi } from "../../api";
 import type {
   UserListDTO,
   UserDetailDTO,
   UserCreateDTO,
   UserUpdateDTO,
   UserSpecification,
+  UserRoleUpdateDTO,
+  RoleListDTO,
 } from "../../types/api";
 
 // 响应式数据
@@ -279,8 +330,10 @@ const pagination = reactive({
 // 对话框
 const dialogVisible = ref(false);
 const viewDialogVisible = ref(false);
+const assignRoleDialogVisible = ref(false);
 const isEdit = ref(false);
 const submitLoading = ref(false);
+const assignLoading = ref(false);
 const dialogTitle = computed(() => (isEdit.value ? "编辑用户" : "新增用户"));
 
 // 表单
@@ -314,6 +367,11 @@ const formRules = {
 // 查看详情数据
 const viewData = ref<UserDetailDTO | null>(null);
 
+// 分配角色数据
+const assignUserData = ref<UserListDTO | null>(null);
+const assignRoleIds = ref<number[]>([]);
+const roleList = ref<RoleListDTO[]>([]);
+
 // 方法
 const formatDateTime = (dateTime: string) => {
   return new Date(dateTime).toLocaleString("zh-CN");
@@ -334,6 +392,15 @@ const fetchUsers = async () => {
     console.error("获取用户列表失败:", error);
   } finally {
     loading.value = false;
+  }
+};
+
+const fetchRoles = async () => {
+  try {
+    const response = await roleApi.findPage(1, 1000, {});
+    roleList.value = response.data.content;
+  } catch (error) {
+    console.error("获取角色列表失败:", error);
   }
 };
 
@@ -400,6 +467,18 @@ const handleView = async (row: UserListDTO) => {
   }
 };
 
+const handleAssignRole = async (row: UserListDTO) => {
+  try {
+    // 获取用户详细信息以获取当前角色
+    const response = await userApi.findById(row.id);
+    assignUserData.value = row;
+    assignRoleIds.value = [...response.data.roleIds];
+    assignRoleDialogVisible.value = true;
+  } catch (error) {
+    console.error("获取用户角色失败:", error);
+  }
+};
+
 const handleDelete = async (row: UserListDTO) => {
   try {
     await ElMessageBox.confirm(
@@ -427,6 +506,12 @@ const handleDialogClose = () => {
   formRef.value?.clearValidate();
 };
 
+const handleAssignDialogClose = () => {
+  assignRoleDialogVisible.value = false;
+  assignUserData.value = null;
+  assignRoleIds.value = [];
+};
+
 const handleSubmit = async () => {
   if (!formRef.value) return;
 
@@ -451,9 +536,34 @@ const handleSubmit = async () => {
   }
 };
 
+const handleAssignSubmit = async () => {
+  if (!assignUserData.value) return;
+
+  try {
+    assignLoading.value = true;
+
+    const updateData: UserRoleUpdateDTO = {
+      id: assignUserData.value.id,
+      roleIds: assignRoleIds.value,
+    };
+
+    await userApi.assignUserRole(updateData);
+    ElMessage.success("分配角色成功");
+
+    assignRoleDialogVisible.value = false;
+    fetchUsers();
+  } catch (error) {
+    console.error("分配角色失败:", error);
+    ElMessage.error("分配角色失败");
+  } finally {
+    assignLoading.value = false;
+  }
+};
+
 // 生命周期
 onMounted(() => {
   fetchUsers();
+  fetchRoles();
 });
 </script>
 
@@ -472,5 +582,43 @@ onMounted(() => {
 
 .detail-content {
   padding: 20px 0;
+}
+
+.role-card {
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.role-card:hover {
+  border-color: #409eff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.role-card-selected {
+  border-color: #409eff;
+  background-color: #f0f9ff;
+}
+
+.role-info {
+  margin-left: 8px;
+}
+
+.role-name {
+  font-weight: bold;
+  font-size: 16px;
+  color: #303133;
+  margin-bottom: 4px;
+}
+
+.role-code {
+  font-size: 12px;
+  color: #909399;
+  margin-bottom: 4px;
+}
+
+.role-description {
+  font-size: 14px;
+  color: #606266;
 }
 </style> 

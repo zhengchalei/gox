@@ -104,11 +104,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { useRouter } from 'vue-router'
-import { ElMessage, ElForm } from 'element-plus'
-import { loginApi } from '../api'
-import type { LoginRequest } from '../types/api'
+import {reactive, ref} from 'vue'
+import {useRouter} from 'vue-router'
+import {ElForm, ElMessage} from 'element-plus'
+import {loginApi} from '../api'
+import type {LoginRequest} from '../types/api'
 
 const router = useRouter()
 

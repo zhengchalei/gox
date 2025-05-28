@@ -88,6 +88,11 @@ export interface UserUpdateDTO {
   phone?: string
 }
 
+export interface UserRoleUpdateDTO {
+  id: number
+  roleIds: number[]
+}
+
 export interface UserSpecification {
   id?: number
   username?: string
@@ -136,6 +141,11 @@ export interface RoleUpdateDTO {
   name: string
   code: string
   description?: string
+  permissionIds: number[]
+}
+
+export interface RolePermissionUpdateDTO {
+  id: number
   permissionIds: number[]
 }
 

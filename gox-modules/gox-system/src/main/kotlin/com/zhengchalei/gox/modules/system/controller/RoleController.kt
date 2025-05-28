@@ -60,12 +60,12 @@ class RoleController(private val roleService: RoleService) {
     }
 
     @Operation(summary = "分配角色权限", description = "分配角色权限")
-    @PostMapping("/permission")
-    fun updateRolePermission(
+    @PostMapping("/assign-permission")
+    fun assignRolePermission(
         @Parameter(description = "角色权限信息", required = true)
         @Valid @RequestBody rolePermissionUpdateDTO: RolePermissionUpdateDTO
     ): R<Void> {
-        roleService.updateRolePermission(rolePermissionUpdateDTO)
+        roleService.assignRolePermission(rolePermissionUpdateDTO)
         return R.success()
     }
 

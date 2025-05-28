@@ -70,11 +70,11 @@ class UserService(private val userRepository: UserRepository) {
         logger.info("更新用户成功，用户名: {}", userUpdateDTO.username)
     }
 
-    /** 修改用户角色 */
-    fun updateUserRole(userRoleUpdateDTO: UserRoleUpdateDTO) {
-        logger.info("修改用户角色，用户ID: {}, 角色ID: {}", userRoleUpdateDTO.id, userRoleUpdateDTO.roleIds)
-        userRepository.save(userRoleUpdateDTO, SaveMode.UPDATE_ONLY)
-        logger.info("修改用户角色成功，用户ID: {}, 角色ID: {}", userRoleUpdateDTO.id, userRoleUpdateDTO.roleIds)
+    /** 分配用户角色 */
+    fun assignUserRole(userRoleUpdateDTO: UserRoleUpdateDTO) {
+        logger.info("分配用户角色，用户ID: {}, 角色ID: {}", userRoleUpdateDTO.id, userRoleUpdateDTO.roleIds)
+        userRepository.save(userRoleUpdateDTO)
+        logger.info("分配用户角色成功，用户ID: {}, 角色ID: {}", userRoleUpdateDTO.id, userRoleUpdateDTO.roleIds)
     }
 
     /** 分页查询用户 */

@@ -324,14 +324,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, nextTick, watch } from 'vue'
-import { ElMessage, ElMessageBox, type UploadFile, type UploadFiles } from 'element-plus'
-import { 
-  Delete, Upload, Search, Refresh, UploadFilled,
-  Document, Picture, VideoPlay, Headset, Files, List, Grid 
+import {nextTick, onMounted, reactive, ref, watch} from 'vue'
+import {ElMessage, ElMessageBox, type UploadFile, type UploadFiles} from 'element-plus'
+import {
+  Delete,
+  Document,
+  Files,
+  Grid,
+  Headset,
+  List,
+  Picture,
+  Refresh,
+  Search,
+  UploadFilled,
+  VideoPlay
 } from '@element-plus/icons-vue'
-import { fileApi } from '../../api/file'
-import type { FileInfoListDTO, FileInfoDetailDTO, FileInfoSpecification } from '../../types/api'
+import {fileApi} from '../../api/file'
+import type {FileInfoListDTO, FileInfoSpecification} from '../../types/api'
 
 // 响应式数据
 const loading = ref(false)
