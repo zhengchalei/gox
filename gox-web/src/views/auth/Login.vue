@@ -10,7 +10,7 @@
           <h1 class="brand-title">GOX 管理系统</h1>
           <p class="brand-subtitle">现代化的后台管理解决方案</p>
         </div>
-        
+
         <div class="illustration">
           <div class="geometric-shape shape-1"></div>
           <div class="geometric-shape shape-2"></div>
@@ -21,7 +21,7 @@
             <div class="element element-3"></div>
           </div>
         </div>
-        
+
         <div class="features">
           <div class="feature-item">
             <el-icon><Shield /></el-icon>
@@ -37,7 +37,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- 右侧登录表单 -->
       <div class="login-right">
         <div class="login-box">
@@ -45,7 +45,7 @@
             <h2>欢迎登录</h2>
             <p>请输入您的账号信息</p>
           </div>
-          
+
           <el-form
             ref="formRef"
             :model="loginForm"
@@ -62,7 +62,7 @@
                 class="form-input"
               />
             </el-form-item>
-            
+
             <el-form-item prop="password">
               <el-input
                 v-model="loginForm.password"
@@ -75,11 +75,11 @@
                 @keyup.enter="handleLogin"
               />
             </el-form-item>
-            
+
             <el-form-item class="login-options">
               <el-checkbox v-model="loginForm.rememberMe">记住我</el-checkbox>
             </el-form-item>
-            
+
             <el-form-item>
               <el-button
                 type="primary"
@@ -93,8 +93,14 @@
               </el-button>
             </el-form-item>
           </el-form>
-          
+
           <div class="login-footer">
+            <p>
+              还没有账号？
+              <el-link type="primary" :underline="false" @click="goToRegister">
+                立即注册
+              </el-link>
+            </p>
             <p>© 2024 GOX 管理系统. All rights reserved.</p>
           </div>
         </div>
@@ -104,73 +110,83 @@
 </template>
 
 <script setup lang="ts">
-import {reactive, ref} from 'vue'
-import {useRouter} from 'vue-router'
-import {ElForm, ElMessage} from 'element-plus'
-import {loginApi} from '../api'
-import type {LoginRequest} from '../types/api'
+import { reactive, ref } from "vue";
+import { useRouter } from "vue-router";
+import { ElForm, ElMessage } from "element-plus";
+import { loginApi } from "../../api";
+import type { LoginRequest } from "../../types/api";
 
-const router = useRouter()
+const router = useRouter();
 
 // 表单引用
-const formRef = ref<InstanceType<typeof ElForm>>()
+const formRef = ref<InstanceType<typeof ElForm>>();
 
 // 登录表单
 const loginForm = reactive<LoginRequest>({
-  username: '',
-  password: '',
-  rememberMe: false
-})
+  username: "",
+  password: "",
+  rememberMe: false,
+});
 
 // 加载状态
-const loading = ref(false)
+const loading = ref(false);
 
 // 表单验证规则
 const loginRules = {
   username: [
-    { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 1, max: 50, message: '用户名长度在 1 到 50 个字符', trigger: 'blur' }
+    { required: true, message: "请输入用户名", trigger: "blur" },
+    {
+      min: 1,
+      max: 50,
+      message: "用户名长度在 1 到 50 个字符",
+      trigger: "blur",
+    },
   ],
   password: [
-    { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 1, max: 50, message: '密码长度在 1 到 50 个字符', trigger: 'blur' }
-  ]
-}
+    { required: true, message: "请输入密码", trigger: "blur" },
+    { min: 1, max: 50, message: "密码长度在 1 到 50 个字符", trigger: "blur" },
+  ],
+};
 
 // 登录处理
 const handleLogin = async () => {
-  if (!formRef.value) return
-  
-  const valid = await formRef.value.validate().catch(() => false)
-  if (!valid) return
-  
-  loading.value = true
-  
+  if (!formRef.value) return;
+
+  const valid = await formRef.value.validate().catch(() => false);
+  if (!valid) return;
+
+  loading.value = true;
+
   try {
-    const response = await loginApi.login(loginForm)
-    
+    const response = await loginApi.login(loginForm);
+
     if (response.success) {
       // 保存token
-      localStorage.setItem('token', response.data.token)
-      
+      localStorage.setItem("token", response.data.token);
+
       // 获取用户信息
-      const userInfoResponse = await loginApi.getUserInfo()
+      const userInfoResponse = await loginApi.getUserInfo();
       if (userInfoResponse.success) {
-        localStorage.setItem('userInfo', JSON.stringify(userInfoResponse.data))
+        localStorage.setItem("userInfo", JSON.stringify(userInfoResponse.data));
       }
-      
-      ElMessage.success('登录成功')
-      router.push('/')
+
+      ElMessage.success("登录成功");
+      router.push("/");
     } else {
-      ElMessage.error(response.message || '登录失败')
+      ElMessage.error(response.message || "登录失败");
     }
   } catch (error: any) {
-    console.error('登录失败:', error)
+    console.error("登录失败:", error);
     // API拦截器已经处理了错误消息
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
+
+// 跳转到注册页面
+const goToRegister = () => {
+  router.push("/auth/register");
+};
 </script>
 
 <style scoped>
@@ -417,7 +433,8 @@ const handleLogin = async () => {
 
 /* 动画 */
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -450,26 +467,26 @@ const handleLogin = async () => {
     height: auto;
     flex-direction: column;
   }
-  
+
   .login-left {
     flex: none;
     height: 300px;
     padding: 40px;
   }
-  
+
   .brand-title {
     font-size: 28px;
   }
-  
+
   .brand-subtitle {
     font-size: 16px;
   }
-  
+
   .features {
     gap: 16px;
     justify-content: center;
   }
-  
+
   .illustration {
     display: none;
   }
@@ -479,25 +496,25 @@ const handleLogin = async () => {
   .login-container {
     padding: 20px;
   }
-  
+
   .login-wrapper {
     width: 100%;
     border-radius: 12px;
   }
-  
+
   .login-left {
     height: 200px;
     padding: 30px;
   }
-  
+
   .login-right {
     padding: 40px 30px;
   }
-  
+
   .brand-title {
     font-size: 24px;
   }
-  
+
   .features {
     flex-direction: column;
     gap: 12px;

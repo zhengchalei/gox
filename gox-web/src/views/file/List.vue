@@ -6,7 +6,12 @@
           <span>文件管理</span>
           <div class="header-actions">
             <!-- 视图模式切换 -->
-            <el-radio-group v-model="viewMode" size="small" style="margin-right: 16px;" @change="handleViewModeChange">
+            <el-radio-group
+              v-model="viewMode"
+              size="small"
+              style="margin-right: 16px"
+              @change="handleViewModeChange"
+            >
               <el-radio-button value="table">
                 <el-icon><List /></el-icon>
                 表格视图
@@ -16,36 +21,45 @@
                 网格视图
               </el-radio-button>
             </el-radio-group>
-            
-            <el-button type="danger" :disabled="selectedFiles.length === 0" @click="handleBatchDelete">
+
+            <el-button
+              type="danger"
+              :disabled="selectedFiles.length === 0"
+              @click="handleBatchDelete"
+            >
               <el-icon><Delete /></el-icon>
               批量删除 ({{ selectedFiles.length }})
             </el-button>
           </div>
         </div>
       </template>
-      
+
       <!-- 搜索栏 -->
       <div class="search-bar">
         <el-form :model="searchForm" :inline="true" @submit.prevent>
           <el-form-item label="文件名">
-            <el-input 
-              v-model="searchForm.originalName" 
+            <el-input
+              v-model="searchForm.originalName"
               placeholder="请输入文件名"
               clearable
               @keyup.enter="handleSearch"
             />
           </el-form-item>
           <el-form-item label="文件类型">
-            <el-input 
-              v-model="searchForm.mimeType" 
+            <el-input
+              v-model="searchForm.mimeType"
               placeholder="请输入文件类型"
               clearable
               @keyup.enter="handleSearch"
             />
           </el-form-item>
           <el-form-item label="存储类型">
-            <el-select v-model="searchForm.storageType" placeholder="请选择存储类型" clearable style="width: 120px">
+            <el-select
+              v-model="searchForm.storageType"
+              placeholder="请选择存储类型"
+              clearable
+              style="width: 120px"
+            >
               <el-option label="本地存储" value="LOCAL" />
               <el-option label="阿里云OSS" value="ALIYUN" />
               <el-option label="腾讯云COS" value="TENCENT" />
@@ -69,14 +83,19 @@
       <div v-if="viewMode === 'table'" class="table-view">
         <el-divider content-position="left">文件列表</el-divider>
         <div v-loading="loading">
-          <el-table 
-            :data="tableData" 
-            style="width: 100%" 
+          <el-table
+            :data="tableData"
+            style="width: 100%"
             @selection-change="handleSelectionChange"
             row-key="id"
           >
             <el-table-column type="selection" width="55" />
-            <el-table-column prop="originalName" label="文件名" min-width="200" show-overflow-tooltip>
+            <el-table-column
+              prop="originalName"
+              label="文件名"
+              min-width="200"
+              show-overflow-tooltip
+            >
               <template #default="{ row }">
                 <div class="file-name-cell">
                   <el-icon class="file-icon" :size="20">
@@ -91,7 +110,12 @@
               </template>
             </el-table-column>
             <!-- fileKey -->
-            <el-table-column prop="fileKey" label="文件Key" min-width="120" show-overflow-tooltip>
+            <el-table-column
+              prop="fileKey"
+              label="文件Key"
+              min-width="120"
+              show-overflow-tooltip
+            >
               <template #default="{ row }">
                 {{ row.fileKey }}
               </template>
@@ -101,15 +125,28 @@
                 {{ formatFileSize(row.size) }}
               </template>
             </el-table-column>
-            <el-table-column prop="mimeType" label="文件类型" width="180" show-overflow-tooltip />
+            <el-table-column
+              prop="mimeType"
+              label="文件类型"
+              width="180"
+              show-overflow-tooltip
+            />
             <el-table-column prop="storageType" label="存储类型" width="100">
               <template #default="{ row }">
-                <el-tag size="small" :type="getStorageTypeColor(row.storageType)">
+                <el-tag
+                  size="small"
+                  :type="getStorageTypeColor(row.storageType)"
+                >
                   {{ getStorageTypeName(row.storageType) }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="createdTime" label="上传时间" width="180" sortable>
+            <el-table-column
+              prop="createdTime"
+              label="上传时间"
+              width="180"
+              sortable
+            >
               <template #default="{ row }">
                 {{ formatDateTime(row.createdTime) }}
               </template>
@@ -117,36 +154,43 @@
             <el-table-column label="操作" width="300" fixed="right">
               <template #default="{ row }">
                 <el-button-group size="small">
-                  <el-button @click.stop="handleCopyDownloadUrl(row)">下载地址</el-button>
+                  <el-button @click.stop="handleCopyDownloadUrl(row)"
+                    >下载地址</el-button
+                  >
                   <el-button @click="handlePreview(row)">预览</el-button>
                   <el-button @click="handleDownload(row)">下载</el-button>
-                  <el-button @click="handleDelete(row)" type="danger">删除</el-button>
+                  <el-button @click="handleDelete(row)" type="danger"
+                    >删除</el-button
+                  >
                 </el-button-group>
               </template>
             </el-table-column>
           </el-table>
         </div>
-        
+
         <!-- 空状态 -->
-        <el-empty v-if="!loading && tableData.length === 0" description="暂无文件" />
+        <el-empty
+          v-if="!loading && tableData.length === 0"
+          description="暂无文件"
+        />
       </div>
 
       <!-- 网格视图 -->
       <div v-else class="grid-view">
         <el-divider content-position="left">文件预览</el-divider>
-        
+
         <div v-loading="loading" class="file-grid">
-          <div 
-            v-for="file in tableData" 
-            :key="file.id" 
+          <div
+            v-for="file in tableData"
+            :key="file.id"
             class="file-card"
             @click="handleFileSelect(file)"
-            :class="{ selected: selectedFiles.some(f => f.id === file.id) }"
+            :class="{ selected: selectedFiles.some((f) => f.id === file.id) }"
           >
             <div class="file-preview">
-              <img 
-                v-if="isImage(file.mimeType)" 
-                :src="getPreviewUrl(file)" 
+              <img
+                v-if="isImage(file.mimeType)"
+                :src="getPreviewUrl(file)"
                 :alt="file.originalName"
                 @error="handleImageError"
               />
@@ -158,10 +202,15 @@
               </el-icon>
             </div>
             <div class="file-info">
-              <div class="file-name" :title="file.originalName">{{ file.originalName }}</div>
+              <div class="file-name" :title="file.originalName">
+                {{ file.originalName }}
+              </div>
               <div class="file-meta">
                 <span>{{ formatFileSize(file.size) }}</span>
-                <el-tag size="small" :type="getStorageTypeColor(file.storageType)">
+                <el-tag
+                  size="small"
+                  :type="getStorageTypeColor(file.storageType)"
+                >
                   {{ getStorageTypeName(file.storageType) }}
                 </el-tag>
               </div>
@@ -169,15 +218,20 @@
                 <el-button-group size="small">
                   <el-button @click.stop="handlePreview(file)">预览</el-button>
                   <el-button @click.stop="handleDownload(file)">下载</el-button>
-                  <el-button @click.stop="handleDelete(file)" type="danger">删除</el-button>
+                  <el-button @click.stop="handleDelete(file)" type="danger"
+                    >删除</el-button
+                  >
                 </el-button-group>
               </div>
             </div>
           </div>
         </div>
-        
+
         <!-- 空状态 -->
-        <el-empty v-if="!loading && tableData.length === 0" description="暂无文件" />
+        <el-empty
+          v-if="!loading && tableData.length === 0"
+          description="暂无文件"
+        />
       </div>
 
       <!-- 分页 -->
@@ -185,7 +239,9 @@
         <el-pagination
           v-model:current-page="pagination.currentPage"
           v-model:page-size="pagination.pageSize"
-          :page-sizes="viewMode === 'table' ? [10, 20, 50, 100] : [12, 24, 48, 96]"
+          :page-sizes="
+            viewMode === 'table' ? [10, 20, 50, 100] : [12, 24, 48, 96]
+          "
           :total="pagination.total"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="handleSizeChange"
@@ -217,11 +273,19 @@
             </div>
           </template>
         </el-upload>
-        
+
         <!-- 上传文件列表 -->
         <div class="upload-file-list" v-if="uploadFileList.length > 0">
-          <el-table :data="uploadFileList" style="width: 100%; margin-top: 15px;">
-            <el-table-column prop="name" label="文件名" min-width="200" show-overflow-tooltip />
+          <el-table
+            :data="uploadFileList"
+            style="width: 100%; margin-top: 15px"
+          >
+            <el-table-column
+              prop="name"
+              label="文件名"
+              min-width="200"
+              show-overflow-tooltip
+            />
             <el-table-column prop="size" label="文件大小" width="120">
               <template #default="{ row }">
                 {{ formatFileSize(row.size) }}
@@ -229,15 +293,23 @@
             </el-table-column>
             <el-table-column label="上传状态" width="120">
               <template #default="{ row }">
-                <el-tag v-if="row.status === 'ready'" type="info">待上传</el-tag>
-                <el-tag v-else-if="row.status === 'uploading'" type="warning">上传中</el-tag>
-                <el-tag v-else-if="row.status === 'success'" type="success">已上传</el-tag>
-                <el-tag v-else-if="row.status === 'fail'" type="danger">上传失败</el-tag>
+                <el-tag v-if="row.status === 'ready'" type="info"
+                  >待上传</el-tag
+                >
+                <el-tag v-else-if="row.status === 'uploading'" type="warning"
+                  >上传中</el-tag
+                >
+                <el-tag v-else-if="row.status === 'success'" type="success"
+                  >已上传</el-tag
+                >
+                <el-tag v-else-if="row.status === 'fail'" type="danger"
+                  >上传失败</el-tag
+                >
               </template>
             </el-table-column>
             <el-table-column label="进度" width="150">
               <template #default="{ row }">
-                <el-progress 
+                <el-progress
                   v-if="row.status === 'uploading' || row.status === 'success'"
                   :percentage="row.percentage || 0"
                   :status="row.status === 'success' ? 'success' : undefined"
@@ -246,8 +318,8 @@
             </el-table-column>
             <el-table-column label="操作" width="100" fixed="right">
               <template #default="{ row, $index }">
-                <el-button 
-                  type="danger" 
+                <el-button
+                  type="danger"
                   size="small"
                   @click="handleRemoveUploadFile($index)"
                   :disabled="row.status === 'uploading'"
@@ -262,32 +334,39 @@
     </el-card>
 
     <!-- 预览对话框 -->
-    <el-dialog 
-      title="文件预览" 
-      v-model="previewVisible" 
-      width="80%" 
+    <el-dialog
+      title="文件预览"
+      v-model="previewVisible"
+      width="80%"
       :before-close="handlePreviewClose"
     >
       <div v-if="previewFile" class="preview-content">
         <!-- 图片预览 -->
         <div v-if="isImage(previewFile.mimeType)" class="image-preview">
-          <img :src="getPreviewUrl(previewFile)" :alt="previewFile.originalName" />
+          <img
+            :src="getPreviewUrl(previewFile)"
+            :alt="previewFile.originalName"
+          />
         </div>
-        
+
         <!-- 视频预览 -->
         <div v-else-if="isVideo(previewFile.mimeType)" class="video-preview">
-          <video controls :src="getPreviewUrl(previewFile)" style="max-width: 100%; max-height: 500px;">
+          <video
+            controls
+            :src="getPreviewUrl(previewFile)"
+            style="max-width: 100%; max-height: 500px"
+          >
             您的浏览器不支持视频播放。
           </video>
         </div>
-        
+
         <!-- 音频预览 -->
         <div v-else-if="isAudio(previewFile.mimeType)" class="audio-preview">
-          <audio controls :src="getPreviewUrl(previewFile)" style="width: 100%;">
+          <audio controls :src="getPreviewUrl(previewFile)" style="width: 100%">
             您的浏览器不支持音频播放。
           </audio>
         </div>
-        
+
         <!-- 文本文件预览 -->
         <div v-else-if="isText(previewFile.mimeType)" class="text-preview">
           <el-input
@@ -298,11 +377,14 @@
             style="width: 100%"
           />
         </div>
-        
+
         <!-- 其他文件类型 -->
         <div v-else class="other-preview">
           <el-empty description="此文件类型不支持预览">
-            <el-button type="primary" @click="previewFile && handleDownload(previewFile)">
+            <el-button
+              type="primary"
+              @click="previewFile && handleDownload(previewFile)"
+            >
               下载查看
             </el-button>
           </el-empty>
@@ -311,12 +393,24 @@
         <!-- 文件信息 -->
         <el-divider />
         <el-descriptions :column="2" border>
-          <el-descriptions-item label="文件名">{{ previewFile.originalName }}</el-descriptions-item>
-          <el-descriptions-item label="文件Key">{{ previewFile.fileKey }}</el-descriptions-item>
-          <el-descriptions-item label="文件大小">{{ formatFileSize(previewFile.size) }}</el-descriptions-item>
-          <el-descriptions-item label="文件类型">{{ previewFile.mimeType }}</el-descriptions-item>
-          <el-descriptions-item label="存储类型">{{ getStorageTypeName(previewFile.storageType) }}</el-descriptions-item>
-          <el-descriptions-item label="上传时间" span="2">{{ formatDateTime(previewFile.createdTime) }}</el-descriptions-item>
+          <el-descriptions-item label="文件名">{{
+            previewFile.originalName
+          }}</el-descriptions-item>
+          <el-descriptions-item label="文件Key">{{
+            previewFile.fileKey
+          }}</el-descriptions-item>
+          <el-descriptions-item label="文件大小">{{
+            formatFileSize(previewFile.size)
+          }}</el-descriptions-item>
+          <el-descriptions-item label="文件类型">{{
+            previewFile.mimeType
+          }}</el-descriptions-item>
+          <el-descriptions-item label="存储类型">{{
+            getStorageTypeName(previewFile.storageType)
+          }}</el-descriptions-item>
+          <el-descriptions-item label="上传时间" span="2">{{
+            formatDateTime(previewFile.createdTime)
+          }}</el-descriptions-item>
         </el-descriptions>
       </div>
     </el-dialog>
@@ -324,8 +418,13 @@
 </template>
 
 <script setup lang="ts">
-import {nextTick, onMounted, reactive, ref, watch} from 'vue'
-import {ElMessage, ElMessageBox, type UploadFile, type UploadFiles} from 'element-plus'
+import { nextTick, onMounted, reactive, ref, watch } from "vue";
+import {
+  ElMessage,
+  ElMessageBox,
+  type UploadFile,
+  type UploadFiles,
+} from "element-plus";
 import {
   Delete,
   Document,
@@ -337,338 +436,342 @@ import {
   Refresh,
   Search,
   UploadFilled,
-  VideoPlay
-} from '@element-plus/icons-vue'
-import {fileApi} from '../../api/file'
-import type {FileInfoListDTO, FileInfoSpecification} from '../../types/api'
+  VideoPlay,
+} from "@element-plus/icons-vue";
+import { fileApi } from "../../api/file";
+import type { FileInfoListDTO, FileInfoSpecification } from "../../types/api";
 
 // 响应式数据
-const loading = ref(false)
-const tableData = ref<FileInfoListDTO[]>([])
-const selectedFiles = ref<FileInfoListDTO[]>([])
-const previewVisible = ref(false)
-const previewFile = ref<FileInfoListDTO | null>(null)
-const textContent = ref('')
+const loading = ref(false);
+const tableData = ref<FileInfoListDTO[]>([]);
+const selectedFiles = ref<FileInfoListDTO[]>([]);
+const previewVisible = ref(false);
+const previewFile = ref<FileInfoListDTO | null>(null);
+const textContent = ref("");
 
 // 上传相关
-const uploadRef = ref()
-const uploadFileList = ref<UploadFile[]>([])
+const uploadRef = ref();
+const uploadFileList = ref<UploadFile[]>([]);
 
 // 搜索表单
 const searchForm = reactive<FileInfoSpecification>({
-  originalName: '',
-  mimeType: '',
-  storageType: undefined
-})
+  originalName: "",
+  mimeType: "",
+  storageType: undefined,
+});
 
 // 分页
 const pagination = reactive({
   currentPage: 1,
   pageSize: 20, // 默认为表格模式的页面大小
-  total: 0
-})
+  total: 0,
+});
 
 // 视图模式
-const viewMode = ref<'table' | 'grid'>('table')
+const viewMode = ref<"table" | "grid">("table");
 
 // 当视图模式改变时，调整页面大小
 const handleViewModeChange = () => {
-  if (viewMode.value === 'table') {
-    pagination.pageSize = 20
+  if (viewMode.value === "table") {
+    pagination.pageSize = 20;
   } else {
-    pagination.pageSize = 24
+    pagination.pageSize = 24;
   }
-  pagination.currentPage = 1
-  fetchFiles()
-}
+  pagination.currentPage = 1;
+  fetchFiles();
+};
 
 // 方法
 const formatFileSize = (size: number): string => {
-  if (size === 0) return '0 B'
-  const k = 1024
-  const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
-  const i = Math.floor(Math.log(size) / Math.log(k))
-  return parseFloat((size / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-}
+  if (size === 0) return "0 B";
+  const k = 1024;
+  const sizes = ["B", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(size) / Math.log(k));
+  return parseFloat((size / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+};
 
 const formatDateTime = (dateTime: string) => {
-  return new Date(dateTime).toLocaleString('zh-CN')
-}
+  return new Date(dateTime).toLocaleString("zh-CN");
+};
 
-const isImage = (mimeType: string) => mimeType.startsWith('image/')
-const isVideo = (mimeType: string) => mimeType.startsWith('video/')
-const isAudio = (mimeType: string) => mimeType.startsWith('audio/')
-const isDocument = (mimeType: string) => 
-  mimeType.includes('pdf') || 
-  mimeType.includes('document') || 
-  mimeType.includes('text') ||
-  mimeType.includes('sheet') ||
-  mimeType.includes('presentation')
-const isText = (mimeType: string) => mimeType.startsWith('text/')
+const isImage = (mimeType: string) => mimeType.startsWith("image/");
+const isVideo = (mimeType: string) => mimeType.startsWith("video/");
+const isAudio = (mimeType: string) => mimeType.startsWith("audio/");
+const isDocument = (mimeType: string) =>
+  mimeType.includes("pdf") ||
+  mimeType.includes("document") ||
+  mimeType.includes("text") ||
+  mimeType.includes("sheet") ||
+  mimeType.includes("presentation");
+const isText = (mimeType: string) => mimeType.startsWith("text/");
 
 const getStorageTypeColor = (storageType: string) => {
   const colorMap: Record<string, string> = {
-    'LOCAL': 'info',
-    'ALIYUN': 'primary',
-    'TENCENT': 'success',
-    'MINIO': 'warning'
-  }
-  return colorMap[storageType] || 'info'
-}
+    LOCAL: "info",
+    ALIYUN: "primary",
+    TENCENT: "success",
+    MINIO: "warning",
+  };
+  return colorMap[storageType] || "info";
+};
 
 const getStorageTypeName = (storageType: string) => {
   const nameMap: Record<string, string> = {
-    'LOCAL': '本地',
-    'ALIYUN': '阿里云',
-    'TENCENT': '腾讯云',
-    'MINIO': 'MinIO'
-  }
-  return nameMap[storageType] || storageType
-}
+    LOCAL: "本地",
+    ALIYUN: "阿里云",
+    TENCENT: "腾讯云",
+    MINIO: "MinIO",
+  };
+  return nameMap[storageType] || storageType;
+};
 
 const getPreviewUrl = (file: FileInfoListDTO) => {
-  console.log('file', JSON.stringify(file))
+  console.log("file", JSON.stringify(file));
   // 这里需要根据实际的API来构建预览URL
-  return `/api/v1/file/preview/${file.fileKey}`
-}
+  return `/api/v1/file/preview/${file.fileKey}`;
+};
 
 // 表格视图的选择处理
 const handleSelectionChange = (selection: FileInfoListDTO[]) => {
-  selectedFiles.value = selection
-}
+  selectedFiles.value = selection;
+};
 
 const fetchFiles = async () => {
   try {
-    loading.value = true
-    console.log('正在获取文件列表...', { 
-      currentPage: pagination.currentPage, 
-      pageSize: pagination.pageSize, 
-      searchForm: searchForm 
-    })
-    
-    const response = await fileApi.findPage(pagination.currentPage, pagination.pageSize, searchForm)
-    console.log('文件列表响应:', response)
-    
-    tableData.value = response.data.content
-    pagination.total = response.data.totalElements
-    
-    console.log('文件数据:', tableData.value)
+    loading.value = true;
+    console.log("正在获取文件列表...", {
+      currentPage: pagination.currentPage,
+      pageSize: pagination.pageSize,
+      searchForm: searchForm,
+    });
+
+    const response = await fileApi.findPage(
+      pagination.currentPage,
+      pagination.pageSize,
+      searchForm
+    );
+    console.log("文件列表响应:", response);
+
+    tableData.value = response.data.content;
+    pagination.total = response.data.totalElements;
+
+    console.log("文件数据:", tableData.value);
   } catch (error) {
-    console.error('获取文件列表失败:', error)
-    ElMessage.error('获取文件列表失败')
+    console.error("获取文件列表失败:", error);
+    ElMessage.error("获取文件列表失败");
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const handleSearch = () => {
-  pagination.currentPage = 1
-  fetchFiles()
-}
+  pagination.currentPage = 1;
+  fetchFiles();
+};
 
 const handleReset = () => {
   Object.assign(searchForm, {
-    originalName: '',
-    mimeType: '',
-    storageType: undefined
-  })
-  handleSearch()
-}
+    originalName: "",
+    mimeType: "",
+    storageType: undefined,
+  });
+  handleSearch();
+};
 
 const handleSizeChange = (size: number) => {
-  pagination.pageSize = size
-  fetchFiles()
-}
+  pagination.pageSize = size;
+  fetchFiles();
+};
 
 const handleCurrentChange = (page: number) => {
-  pagination.currentPage = page
-  fetchFiles()
-}
+  pagination.currentPage = page;
+  fetchFiles();
+};
 
 const handleFileSelect = (file: FileInfoListDTO) => {
-  const index = selectedFiles.value.findIndex(f => f.id === file.id)
+  const index = selectedFiles.value.findIndex((f) => f.id === file.id);
   if (index > -1) {
-    selectedFiles.value.splice(index, 1)
+    selectedFiles.value.splice(index, 1);
   } else {
-    selectedFiles.value.push(file)
+    selectedFiles.value.push(file);
   }
-}
+};
 
 const handlePreview = async (file: FileInfoListDTO) => {
-  previewFile.value = file
-  
+  previewFile.value = file;
+
   // 如果是文本文件，加载内容
   if (isText(file.mimeType)) {
     try {
-      const blob = await fileApi.download(file.fileKey)
-      const text = await blob.text()
-      textContent.value = text
+      const blob = await fileApi.download(file.fileKey);
+      const text = await blob.text();
+      textContent.value = text;
     } catch (error) {
-      console.error('加载文本内容失败:', error)
-      textContent.value = '加载失败'
+      console.error("加载文本内容失败:", error);
+      textContent.value = "加载失败";
     }
   }
-  
-  previewVisible.value = true
-}
+
+  previewVisible.value = true;
+};
 
 const handlePreviewClose = () => {
-  previewVisible.value = false
-  previewFile.value = null
-  textContent.value = ''
-}
+  previewVisible.value = false;
+  previewFile.value = null;
+  textContent.value = "";
+};
 
 const handleDownload = async (file: FileInfoListDTO) => {
   try {
-    const blob = await fileApi.download(file.fileKey)
-    
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = file.originalName
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    window.URL.revokeObjectURL(url)
-    
-    ElMessage.success('文件下载成功')
+    const blob = await fileApi.download(file.fileKey);
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = file.originalName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    ElMessage.success("文件下载成功");
   } catch (error) {
-    console.error('文件下载失败:', error)
-    ElMessage.error('文件下载失败')
+    console.error("文件下载失败:", error);
+    ElMessage.error("文件下载失败");
   }
-}
+};
 
 const handleCopyDownloadUrl = (file: FileInfoListDTO) => {
-  navigator.clipboard.writeText(file.downloadUrl)
-  ElMessage.success('下载地址已复制到剪贴板')
-}
+  navigator.clipboard.writeText(file.downloadUrl);
+  ElMessage.success("下载地址已复制到剪贴板");
+};
 
 const handleDelete = async (file: FileInfoListDTO) => {
   try {
     await ElMessageBox.confirm(
       `确定要删除文件 "${file.originalName}" 吗？`,
-      '删除确认',
+      "删除确认",
       {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
       }
-    )
-    
-    await fileApi.deleteById(file.id)
-    ElMessage.success('删除成功')
-    fetchFiles()
+    );
+
+    await fileApi.deleteById(file.id);
+    ElMessage.success("删除成功");
+    fetchFiles();
   } catch (error) {
-    if (error !== 'cancel') {
-      console.error('删除文件失败:', error)
-      ElMessage.error('删除文件失败')
+    if (error !== "cancel") {
+      console.error("删除文件失败:", error);
+      ElMessage.error("删除文件失败");
     }
   }
-}
+};
 
 const handleBatchDelete = async () => {
   try {
     await ElMessageBox.confirm(
       `确定要删除选中的 ${selectedFiles.value.length} 个文件吗？`,
-      '批量删除确认',
+      "批量删除确认",
       {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
       }
-    )
-    
-    const ids = selectedFiles.value.map(f => f.id)
-    await fileApi.batchDelete(ids)
-    
-    ElMessage.success(`成功删除 ${ids.length} 个文件`)
-    selectedFiles.value = []
-    fetchFiles()
+    );
+
+    const ids = selectedFiles.value.map((f) => f.id);
+    await fileApi.batchDelete(ids);
+
+    ElMessage.success(`成功删除 ${ids.length} 个文件`);
+    selectedFiles.value = [];
+    fetchFiles();
   } catch (error) {
-    if (error !== 'cancel') {
-      console.error('批量删除失败:', error)
-      ElMessage.error('批量删除失败')
+    if (error !== "cancel") {
+      console.error("批量删除失败:", error);
+      ElMessage.error("批量删除失败");
     }
   }
-}
+};
 
 const handleImageError = (event: Event) => {
-  const img = event.target as HTMLImageElement
-  img.style.display = 'none'
+  const img = event.target as HTMLImageElement;
+  img.style.display = "none";
   // 显示默认图标
-  const parent = img.parentElement
+  const parent = img.parentElement;
   if (parent) {
-    parent.innerHTML = '<el-icon class="file-type-icon" size="60"><Picture /></el-icon>'
+    parent.innerHTML =
+      '<el-icon class="file-type-icon" size="60"><Picture /></el-icon>';
   }
-}
+};
 
 // 上传相关方法
 const handleFileChange = (file: UploadFile, fileList: UploadFiles) => {
-  file.status = 'ready'
-  file.percentage = 0
-  
+  file.status = "ready";
+  file.percentage = 0;
+
   // 自动上传
   nextTick(() => {
-    handleUploadSingle(file)
-  })
-}
+    handleUploadSingle(file);
+  });
+};
 
 const handleFileRemove = (file: UploadFile, fileList: UploadFiles) => {
   // Element Plus 会自动处理文件列表更新
-}
+};
 
 const handleRemoveUploadFile = (index: number) => {
-  uploadFileList.value.splice(index, 1)
-}
+  uploadFileList.value.splice(index, 1);
+};
 
 const handleUploadSingle = async (file: UploadFile) => {
-  if (!file.raw) return
-  
+  if (!file.raw) return;
+
   try {
-    file.status = 'uploading'
-    file.percentage = 0
-    
+    file.status = "uploading";
+    file.percentage = 0;
+
     // 模拟上传进度
     const progressInterval = setInterval(() => {
       if (file.percentage! < 90) {
-        file.percentage! += Math.random() * 30
+        file.percentage! += Math.random() * 30;
       }
-    }, 200)
-    
-    const response = await fileApi.upload(file.raw)
-    
-    clearInterval(progressInterval)
-    file.status = 'success'
-    file.percentage = 100
-    
-    ElMessage.success(`文件 "${file.name}" 上传成功`)
-    
+    }, 200);
+
+    const response = await fileApi.upload(file.raw);
+
+    clearInterval(progressInterval);
+    file.status = "success";
+    file.percentage = 100;
+
+    ElMessage.success(`文件 "${file.name}" 上传成功`);
+
     // 上传成功后刷新文件列表
     setTimeout(() => {
-      fetchFiles()
+      fetchFiles();
       // 移除成功的文件
-      const index = uploadFileList.value.findIndex(f => f.uid === file.uid)
+      const index = uploadFileList.value.findIndex((f) => f.uid === file.uid);
       if (index > -1) {
-        uploadFileList.value.splice(index, 1)
+        uploadFileList.value.splice(index, 1);
       }
-    }, 1000)
-    
+    }, 1000);
   } catch (error) {
-    file.status = 'fail'
-    file.percentage = 0
-    console.error('文件上传失败:', error)
-    ElMessage.error(`文件 "${file.name}" 上传失败`)
+    file.status = "fail";
+    file.percentage = 0;
+    console.error("文件上传失败:", error);
+    ElMessage.error(`文件 "${file.name}" 上传失败`);
   }
-}
+};
 
 // 生命周期
 onMounted(() => {
-  console.log('文件管理页面已挂载，开始获取数据')
-  fetchFiles()
-})
+  console.log("文件管理页面已挂载，开始获取数据");
+  fetchFiles();
+});
 
 // 监听视图模式变化
-watch(viewMode, handleViewModeChange)
+watch(viewMode, handleViewModeChange);
 </script>
 
 <style scoped>

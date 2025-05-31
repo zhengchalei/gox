@@ -468,15 +468,6 @@ const handleDelete = async (row: RoleListDTO) => {
   }
 };
 
-const handlePermissionCheck = () => {
-  if (permissionTreeRef.value) {
-    const checkedKeys = permissionTreeRef.value.getCheckedKeys() as number[];
-    const halfCheckedKeys =
-      permissionTreeRef.value.getHalfCheckedKeys() as number[];
-    formData.permissionIds = [...checkedKeys, ...halfCheckedKeys];
-  }
-};
-
 const handleAssignPermissionCheck = () => {
   if (assignPermissionTreeRef.value) {
     const checkedKeys =
@@ -502,8 +493,6 @@ const handleSubmit = async () => {
   if (!formRef.value) return;
 
   try {
-    // 获取最新的权限选择
-    handlePermissionCheck();
 
     await formRef.value.validate();
     submitLoading.value = true;

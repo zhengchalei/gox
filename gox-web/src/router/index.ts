@@ -3,12 +3,24 @@ import type { RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/login',
+    path: '/auth/login',
     name: 'Login',
-    component: () => import('../views/Login.vue'),
+    component: () => import('../views/auth/Login.vue'),
     meta: {
       requiresAuth: false
     }
+  },
+  {
+    path: '/auth/register',
+    name: 'Register',
+    component: () => import('../views/auth/Register.vue'),
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/login',
+    redirect: '/auth/login'
   },
   {
     path: '/',
@@ -121,8 +133,8 @@ router.beforeEach((to, from, next) => {
   
   if (to.meta.requiresAuth && !token) {
     // 需要认证但没有token，跳转到登录页
-    next('/login')
-  } else if (to.path === '/login' && token) {
+    next('/auth/login')
+  } else if ((to.path === '/auth/login' || to.path === '/login') && token) {
     // 已登录状态访问登录页，跳转到首页
     next('/')
   } else {
