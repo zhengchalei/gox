@@ -8,5 +8,6 @@ include(
     "gox-modules:gox-system",
     "gox-modules:gox-generator",
     "gox-modules:gox-auth",
-    "gox-modules:gox-file"
+    "gox-modules:gox-file",
+    "gox-modules:gox-iot"
 )

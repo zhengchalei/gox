@@ -21,6 +21,7 @@ dependencyManagement {
 dependencies {
     implementation(project(":gox-util"))
 
+    ksp("org.babyfish.jimmer:jimmer-ksp:${rootProject.extra["jimmerVersion"]}")
     api("org.springframework.boot:spring-boot-starter-web")
     api("org.springframework.boot:spring-boot-starter-data-jdbc")
     api("org.springframework.boot:spring-boot-starter-data-redis")

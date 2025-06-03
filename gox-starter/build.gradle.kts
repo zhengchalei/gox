@@ -24,6 +24,8 @@ dependencies {
     implementation(project(":gox-modules:gox-system"))
     implementation(project(":gox-modules:gox-file"))
     implementation(project(":gox-modules:gox-auth"))
+    implementation(project(":gox-modules:gox-iot"))
+
 
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.liquibase:liquibase-core")
