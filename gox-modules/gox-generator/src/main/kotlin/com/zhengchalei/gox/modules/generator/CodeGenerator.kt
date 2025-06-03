@@ -158,5 +158,6 @@ class CodeGenerator(
 data class FieldDefinition(
     val name: String,
     val type: String,
-    val nullable: Boolean = false
+    val nullable: Boolean = false,
+    val comment: String? = null
 )

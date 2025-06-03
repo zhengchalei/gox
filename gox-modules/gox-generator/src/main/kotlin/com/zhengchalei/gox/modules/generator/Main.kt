@@ -5,15 +5,19 @@ fun main(args: Array<String>) {
     val generator = CodeGenerator(
         projectRoot = projectRoot,
         moduleName = "system",
-        packageName = "com.zhengchalei.gox.modules.system",
-        entityName = "LoginLog",
-        tableName = "sys_login_log",
+        packageName = "com.zhengchalei.gox.modules.iot.device",
+        entityName = "Device",
+        tableName = "iot_device",
         fields = listOf(
-            FieldDefinition("username", "String"),
-            FieldDefinition("password", "String"),
-            FieldDefinition("status", "Integer"),
-            FieldDefinition("ip", "String"),
-            FieldDefinition("remark", "String")
+            // code
+            FieldDefinition("code", "String", false, "设备编号"),
+            // name
+            FieldDefinition("name", "String", false, "设备名称"),
+            // description
+            FieldDefinition("description", "String", true, "设备描述"),
+            // status
+            FieldDefinition("status", "Integer", false, "设备状态"),
+            // online
         )
     )
     generator.generate()
