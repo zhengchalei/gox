@@ -1,7 +1,7 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/system.xml
+      file: db/changelog/v1/sys_base.xml
   - include:
-      file: db/changelog/iot_device.xml
+      file: db/changelog/v1/iot_device.xml
   - include:
-      file: db/changelog/iot_product.xml
+      file: db/changelog/v1/iot_product.xml

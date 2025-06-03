@@ -5,7 +5,7 @@
 
 
     <changeSet id="创建${entityName}表" author="zhengchalei">
-        <createTable tableName="sys_user" remarks="系统${entityName}表">
+        <createTable tableName="${tableName}" remarks="系统${entityName}表">
             <column name="id" type="BIGSERIAL" autoIncrement="true" remarks="主键">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
