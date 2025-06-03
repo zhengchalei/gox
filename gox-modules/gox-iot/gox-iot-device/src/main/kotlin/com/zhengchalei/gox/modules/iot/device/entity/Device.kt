@@ -22,5 +22,5 @@ interface Device : BaseEntity {
     /**
      * 设备状态
      */
-    val status: Integer
+    val online: Boolean
 }
