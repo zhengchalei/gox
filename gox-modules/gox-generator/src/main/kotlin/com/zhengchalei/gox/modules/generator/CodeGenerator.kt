@@ -127,6 +127,21 @@ class RepositoryFileGenerator(
     }
 }
 
+// 生成 SQL
+class SQLFileGenerator(
+    cfg: Configuration,
+    entityName: String,
+    tableName: String,
+    fields: List<FieldDefinition>,
+    packageName: String
+) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName) {
+    override fun generate(outputDir: String, packagePath: String) {
+        val template = getTemplate("sql/liquibase.xml.ftl")
+        val outputFile = File("$outputDir/resources/db/changelog/${tableName}.xml")
+        processTemplate(template, outputFile)
+    }
+}
+
 // 代码生成协调器
 class CodeGenerator(
     private val projectRoot: String,
@@ -145,7 +160,8 @@ class CodeGenerator(
         DtoFileGenerator(cfg, entityName, tableName, fields, packageName),
         ServiceFileGenerator(cfg, entityName, tableName, fields, packageName),
         ControllerFileGenerator(cfg, entityName, tableName, fields, packageName),
-        RepositoryFileGenerator(cfg, entityName, tableName, fields, packageName)
+        RepositoryFileGenerator(cfg, entityName, tableName, fields, packageName),
+        SQLFileGenerator(cfg, entityName, tableName, fields, packageName),
     )
 
     fun generate() {
