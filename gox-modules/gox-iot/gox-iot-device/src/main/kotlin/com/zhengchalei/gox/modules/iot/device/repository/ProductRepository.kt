@@ -15,8 +15,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ProductRepository : KRepository<Product, Long> {
 
-    private val log = LoggerFactory.getLogger(this::class.java)
-
     fun findPage(
         pageRequest: PageRequest,
         specification: ProductSpecification
@@ -28,11 +26,6 @@ interface ProductRepository : KRepository<Product, Long> {
                     select(table.fetch(ProductListDTO::class))
                 }
                 .fetchSpringPage(pageRequest.pageNumber, pageRequest.pageSize)
-    }
-
-    fun save(dto: ProductCreateDTO): Product {
-        val saveResult = this.save(dto)
-        return saveResult.modifiedEntity
     }
 
 }

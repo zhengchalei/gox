@@ -2,20 +2,16 @@ package ${packageName}.repository
 
 import ${packageName}.entity.*
 import ${packageName}.entity.dto.*
+import com.zhengchalei.gox.modules.system.entity.id
 import org.babyfish.jimmer.spring.repository.KRepository
 import org.babyfish.jimmer.spring.repository.fetchSpringPage
-import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.asc
-import org.babyfish.jimmer.sql.kt.ast.expression.eq
-import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Repository
 
 @Repository
 interface ${entityName}Repository : KRepository<${entityName}, Long> {
-
-    private val log = LoggerFactory.getLogger(this::class.java)
 
     fun findPage(
         pageRequest: PageRequest,
@@ -28,11 +24,6 @@ interface ${entityName}Repository : KRepository<${entityName}, Long> {
                     select(table.fetch(${entityName}ListDTO::class))
                 }
                 .fetchSpringPage(pageRequest.pageNumber, pageRequest.pageSize)
-    }
-
-    fun save(dto: ${entityName}CreateDTO): ${entityName} {
-        val saveResult = this.save(dto)
-        return saveResult.modifiedEntity
     }
 
 }
