@@ -1,5 +1,6 @@
 package com.zhengchalei.gox.modules.file.entity
 
+import com.zhengchalei.gox.framework.jimmer.entity.BaseEntity
 import org.babyfish.jimmer.sql.*
 import java.time.LocalDateTime
 
@@ -8,13 +9,7 @@ import java.time.LocalDateTime
  */
 @Entity
 @Table(name = "extra_file_info")
-interface FileInfo {
-    /**
-     * 主键ID
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long
+interface FileInfo : BaseEntity {
 
     /**
      * 原始文件名
@@ -57,15 +52,6 @@ interface FileInfo {
      */
     val storageType: StorageType
 
-    /**
-     * 创建时间
-     */
-    val createdTime: LocalDateTime
-
-    /**
-     * 更新时间
-     */
-    val updatedTime: LocalDateTime
 }
 
 /**

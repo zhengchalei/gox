@@ -1,7 +1,9 @@
 package com.zhengchalei.gox.modules.iot.device.entity
-import org.babyfish.jimmer.sql.*
-import java.time.LocalDateTime
-import com.zhengchalei.gox.modules.iot.device.entity.BaseEntity
+
+import com.zhengchalei.gox.framework.jimmer.entity.BaseEntity
+import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.Table
+
 /**
  * 产品
  *

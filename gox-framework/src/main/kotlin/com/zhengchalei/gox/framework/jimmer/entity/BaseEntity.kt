@@ -14,11 +14,15 @@ interface BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long
 
+    // 创建时间
     val createdTime: LocalDateTime
 
-    val updatedTime: LocalDateTime
+    // 最后修改时间
+    val modifiedTime: LocalDateTime?
 
-    val createdBy: String?
+    // 创建人-可为空
+    val createdBy: Long?
 
-    val modifiedBy: String?
+    // 最后修改人-可为空
+    val modifiedBy: Long?
 }

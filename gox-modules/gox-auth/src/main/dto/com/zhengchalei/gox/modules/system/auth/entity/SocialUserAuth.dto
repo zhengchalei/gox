@@ -36,6 +36,7 @@ input SocialUserAuthCreateDTO {
 
 // 社会化用户关系查询规格
 specification SocialUserAuthSpecification {
+    #allScalars
     user {
         id
     }
@@ -44,6 +45,4 @@ specification SocialUserAuthSpecification {
         uuid
         source
     }
-    createdTime
-    updatedTime
 } 

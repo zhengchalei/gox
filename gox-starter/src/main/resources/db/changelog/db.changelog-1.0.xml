@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
 
-    <changeSet id="0" author="zhengchalei">
+    <changeSet id="创建用户表" author="zhengchalei">
         <createTable tableName="sys_user" remarks="系统用户表">
             <column name="id" type="BIGSERIAL" autoIncrement="true" remarks="主键">
                 <constraints primaryKey="true" nullable="false"/>
@@ -31,11 +31,11 @@
                     remarks="创建时间">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_time" type="TIMESTAMP WITH TIME ZONE"
+            <column name="modified_time" type="TIMESTAMP WITH TIME ZONE"
                     defaultValueComputed="CURRENT_TIMESTAMP"
-                    remarks="更新时间">
-                <constraints nullable="false"/>
-            </column>
+                    remarks="更新时间" />
+            <column name="created_by" type="BIGINT" remarks="创建人" />
+            <column name="modified_by" type="BIGINT" remarks="更新人" />
         </createTable>
         <createIndex indexName="idx_username" tableName="sys_user" unique="true">
             <column name="username"/>
@@ -61,7 +61,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="1" author="zhengchalei">
+    <changeSet id="创建系统角色表" author="zhengchalei">
         <createTable tableName="sys_role" remarks="系统角色表">
             <column name="id" type="BIGSERIAL" autoIncrement="true" remarks="主键">
                 <constraints primaryKey="true" nullable="false"/>
@@ -81,11 +81,11 @@
                     remarks="创建时间">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_time" type="TIMESTAMP WITH TIME ZONE"
+            <column name="modified_time" type="TIMESTAMP WITH TIME ZONE"
                     defaultValueComputed="CURRENT_TIMESTAMP"
-                    remarks="更新时间">
-                <constraints nullable="false"/>
-            </column>
+                    remarks="更新时间" />
+            <column name="created_by" type="BIGINT" remarks="创建人" />
+            <column name="modified_by" type="BIGINT" remarks="更新人" />
         </createTable>
         <createIndex indexName="idx_role_code" tableName="sys_role" unique="true">
             <column name="code"/>
@@ -113,7 +113,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="2" author="zhengchalei">
+    <changeSet id="创建系统权限表" author="zhengchalei">
         <createTable tableName="sys_permission" remarks="系统权限表">
             <column name="id" type="BIGSERIAL" autoIncrement="true" remarks="主键">
                 <constraints primaryKey="true" nullable="false"/>
@@ -130,11 +130,11 @@
                     remarks="创建时间">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_time" type="TIMESTAMP WITH TIME ZONE"
+            <column name="modified_time" type="TIMESTAMP WITH TIME ZONE"
                     defaultValueComputed="CURRENT_TIMESTAMP"
-                    remarks="更新时间">
-                <constraints nullable="false"/>
-            </column>
+                    remarks="更新时间" />
+            <column name="created_by" type="BIGINT" remarks="创建人" />
+            <column name="modified_by" type="BIGINT" remarks="更新人" />
         </createTable>
         <createIndex indexName="idx_permission_code" tableName="sys_permission" unique="true">
             <column name="code"/>
@@ -172,7 +172,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="3" author="zhengchalei">
+    <changeSet id="创建系统用户角色关联表" author="zhengchalei">
         <createTable tableName="sys_user_role" remarks="用户角色关联表">
             <column name="user_id" type="BIGINT" remarks="用户ID">
                 <constraints nullable="false"/>
@@ -201,7 +201,7 @@
 
     </changeSet>
 
-    <changeSet id="4" author="zhengchalei">
+    <changeSet id="创建系统角色权限关联表" author="zhengchalei">
         <createTable tableName="sys_role_permission" remarks="角色权限关联表">
             <column name="role_id" type="BIGINT" remarks="角色ID">
                 <constraints nullable="false"/>
@@ -242,7 +242,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="5" author="zhengchalei">
+    <changeSet id="创建文件信息表" author="zhengchalei">
         <createTable tableName="extra_file_info" remarks="文件信息表">
             <column name="id" type="BIGSERIAL" autoIncrement="true" remarks="主键ID">
                 <constraints primaryKey="true" nullable="false"/>
@@ -277,11 +277,11 @@
                     remarks="创建时间">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_time" type="TIMESTAMP WITH TIME ZONE"
+            <column name="modified_time" type="TIMESTAMP WITH TIME ZONE"
                     defaultValueComputed="CURRENT_TIMESTAMP"
-                    remarks="更新时间">
-                <constraints nullable="false"/>
-            </column>
+                    remarks="更新时间" />
+            <column name="created_by" type="BIGINT" remarks="创建人" />
+            <column name="modified_by" type="BIGINT" remarks="更新人" />
         </createTable>
         <createIndex indexName="idx_original_name" tableName="extra_file_info">
             <column name="original_name"/>
@@ -294,7 +294,7 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="6" author="zhengchalei">
+    <changeSet id="创建社会化用户表" author="zhengchalei">
         <createTable tableName="sys_social_user" remarks="社会化用户表">
             <column name="id" type="BIGSERIAL" autoIncrement="true" remarks="主键ID">
                 <constraints primaryKey="true" nullable="false"/>
@@ -341,11 +341,11 @@
                     remarks="创建时间">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_time" type="TIMESTAMP WITH TIME ZONE"
+            <column name="modified_time" type="TIMESTAMP WITH TIME ZONE"
                     defaultValueComputed="CURRENT_TIMESTAMP"
-                    remarks="更新时间">
-                <constraints nullable="false"/>
-            </column>
+                    remarks="更新时间" />
+            <column name="created_by" type="BIGINT" remarks="创建人" />
+            <column name="modified_by" type="BIGINT" remarks="更新人" />
         </createTable>
         <createIndex indexName="uk_uuid_source" tableName="sys_social_user">
             <column name="uuid"/>
@@ -354,7 +354,7 @@
     </changeSet>
 
 
-    <changeSet id="7" author="zhengchalei">
+    <changeSet id="创建社会化用户与系统用户关系表" author="zhengchalei">
         <createTable tableName="sys_social_user_auth" remarks="社会化用户与系统用户关系表">
             <column name="id" type="BIGSERIAL" autoIncrement="true" remarks="主键ID">
                 <constraints primaryKey="true" nullable="false"/>
@@ -370,11 +370,11 @@
                     remarks="创建时间">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_time" type="TIMESTAMP WITH TIME ZONE"
+            <column name="modified_time" type="TIMESTAMP WITH TIME ZONE"
                     defaultValueComputed="CURRENT_TIMESTAMP"
-                    remarks="更新时间">
-                <constraints nullable="false"/>
-            </column>
+                    remarks="更新时间" />
+            <column name="created_by" type="BIGINT" remarks="创建人" />
+            <column name="modified_by" type="BIGINT" remarks="更新人" />
         </createTable>
         <createIndex indexName="idx_social_user_id" tableName="sys_social_user_auth">
             <column name="social_user_id"/>

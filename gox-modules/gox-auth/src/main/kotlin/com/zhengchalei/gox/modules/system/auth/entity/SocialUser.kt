@@ -104,16 +104,6 @@ interface SocialUser {
     val oauthTokenSecret: String?
 
     /**
-     * 创建时间
-     */
-    val createdTime: LocalDateTime
-
-    /**
-     * 更新时间
-     */
-    val updatedTime: LocalDateTime
-
-    /**
      * 社会化用户与系统用户的关系
      */
     @OneToMany(mappedBy = "socialUser")

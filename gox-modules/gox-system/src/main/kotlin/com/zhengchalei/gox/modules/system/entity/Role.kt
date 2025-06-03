@@ -1,8 +1,7 @@
 package com.zhengchalei.gox.modules.system.entity
 
+import com.zhengchalei.gox.framework.jimmer.entity.BaseEntity
 import org.babyfish.jimmer.sql.*
-import java.time.LocalDateTime
-import com.zhengchalei.gox.modules.system.entity.BaseEntity
 
 /**
  * 系统角色
@@ -12,10 +11,6 @@ import com.zhengchalei.gox.modules.system.entity.BaseEntity
 @Entity
 @Table(name = "sys_role")
 interface Role : BaseEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long
 
     @Key
     val name: String
