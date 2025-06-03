@@ -33,16 +33,6 @@ interface SocialUserAuth {
     @JoinColumn(name = "social_user_id")
     val socialUser: SocialUser
 
-    /**
-     * 创建时间
-     */
-    val createdTime: LocalDateTime
-
-    /**
-     * 更新时间
-     */
-    val updatedTime: LocalDateTime
-
     @IdView("user")
     val userId: Long
 

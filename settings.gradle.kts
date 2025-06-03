@@ -9,5 +9,6 @@ include(
     "gox-modules:gox-generator",
     "gox-modules:gox-auth",
     "gox-modules:gox-file",
-    "gox-modules:gox-iot"
+    "gox-modules:gox-iot",
+    "gox-modules:gox-iot:gox-iot-device",
 )

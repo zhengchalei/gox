@@ -6,76 +6,20 @@ import jakarta.validation.constraints.NotNull
 
 // 社会化用户列表DTO
 SocialUserDTO {
-    id
-    uuid
-    source
-    accessToken
-    expireIn
-    refreshToken
-    openId
-    uid
-    unionId
-    createdTime
-    updatedTime
+    #allScalars
 }
 
 // 社会化用户详情DTO
 SocialUserDetailDTO {
-    id
-    uuid
-    source
-    accessToken
-    expireIn
-    refreshToken
-    openId
-    uid
-    accessCode
-    unionId
-    scope
-    tokenType
-    idToken
-    macAlgorithm
-    macKey
-    code
-    oauthToken
-    oauthTokenSecret
-    createdTime
-    updatedTime
+    #allScalars
 }
 
 // 社会化用户创建DTO
 input SocialUserCreateDTO {
-    @NotBlank(message = "UUID不能为空")
-    uuid
-    @NotBlank(message = "来源不能为空")
-    source
-    @NotBlank(message = "授权令牌不能为空")
-    accessToken
-    expireIn
-    refreshToken
-    openId
-    uid
-    accessCode
-    unionId
-    scope
-    tokenType
-    idToken
-    macAlgorithm
-    macKey
-    code
-    oauthToken
-    oauthTokenSecret
+    #allScalars(this)
 }
 
 // 社会化用户查询规格
 specification SocialUserSpecification {
-    id
-    uuid
-    source
-    accessToken
-    openId
-    uid
-    unionId
-    createdTime
-    updatedTime
+    #allScalars
 } 

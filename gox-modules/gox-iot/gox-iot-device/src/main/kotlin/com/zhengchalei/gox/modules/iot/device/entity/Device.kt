@@ -1,6 +1,9 @@
 package com.zhengchalei.gox.modules.iot.device.entity
 
-import com.zhengchalei.gox.modules.iot.device.entity.BaseEntity
+import com.zhengchalei.gox.framework.jimmer.entity.BaseEntity
+import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.EnumType
+import org.babyfish.jimmer.sql.Table
 
 
 /**
@@ -34,11 +37,13 @@ interface Device : BaseEntity {
 
 }
 
+@EnumType(value = EnumType.Strategy.NAME)
 enum class DeviceStatus {
     /**
      * 在线
      */
     ONLINE,
+
     /**
      * 离线
      */

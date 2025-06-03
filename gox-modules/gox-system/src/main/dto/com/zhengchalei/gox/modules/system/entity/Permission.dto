@@ -5,22 +5,12 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 
 PermissionListDTO {
-    id
-    name
-    code
-    description
-    createdTime
-    updatedTime
+    #allScalars
     roleIds
 }
 
 PermissionDetailDTO {
-    id
-    name
-    code
-    description
-    createdTime
-    updatedTime
+    #allScalars
     roleIds
     roles {
         #allScalars
@@ -28,33 +18,15 @@ PermissionDetailDTO {
 }
 
 input PermissionCreateDTO {
-    @NotBlank(message = "名称不能为空")
-    name
-    @NotBlank(message = "编码不能为空")
-    code
-    description
-    @NotNull(message = "角色不能为空")
-    roleIds
+    #allScalars(this)
 }
 
 input PermissionUpdateDTO {
-    @NotNull(message = "ID不能为空")
-    id
-    @NotBlank(message = "名称不能为空")
-    name
-    @NotBlank(message = "编码不能为空")
-    code
-    description
-    @NotNull(message = "角色不能为空")
-    roleIds
+    #allScalars(this)
+    id!
 }
 
 specification PermissionSpecification {
-    id
-    name
-    code
-    description
-    createdTime
-    updatedTime
+    #allScalars
     associatedIdIn(roles) as roleIds
 }

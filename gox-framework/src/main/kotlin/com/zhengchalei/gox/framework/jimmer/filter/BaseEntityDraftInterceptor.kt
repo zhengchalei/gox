@@ -1,16 +1,16 @@
 package com.zhengchalei.gox.framework.jimmer.filter
 
 
+import cn.dev33.satoken.stp.StpUtil
 import com.zhengchalei.gox.framework.jimmer.entity.BaseEntity
 import com.zhengchalei.gox.framework.jimmer.entity.BaseEntityDraft
-import com.zhengchalei.gox.framework.jimmer.entity.modifiedBy
-import com.zhengchalei.gox.framework.jimmer.entity.modifiedTime
-import com.zhengchalei.gox.framework.jimmer.service.UserService
+import org.babyfish.jimmer.kt.isLoaded
+import org.babyfish.jimmer.sql.DraftInterceptor
+import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 
 @Component
-class BaseEntityDraftInterceptor(
-    private val userService: UserService
-) : DraftInterceptor<BaseEntity, BaseEntityDraft> {
+class BaseEntityDraftInterceptor() : DraftInterceptor<BaseEntity, BaseEntityDraft> {
 
     override fun beforeSave(draft: BaseEntityDraft, original: BaseEntity?) {
         if (!isLoaded(draft, BaseEntity::modifiedTime)) {
@@ -18,9 +18,8 @@ class BaseEntityDraftInterceptor(
         }
 
         if (!isLoaded(draft, BaseEntity::modifiedBy)) {
-            draft.modifiedBy {
-                id = userService.currentUserId
-            }
+            draft.modifiedBy = if (StpUtil.isLogin()) StpUtil.getLoginIdAsLong() else null
+
         }
 
         if (original === null) {
@@ -29,9 +28,7 @@ class BaseEntityDraftInterceptor(
             }
 
             if (!isLoaded(draft, BaseEntity::createdBy)) {
-                draft.createdBy {
-                    id = userService.currentUserId
-                }
+                draft.createdBy = if (StpUtil.isLogin()) StpUtil.getLoginIdAsLong() else null
             }
         }
     }

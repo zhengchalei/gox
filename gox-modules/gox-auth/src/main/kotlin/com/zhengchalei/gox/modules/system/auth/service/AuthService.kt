@@ -192,8 +192,6 @@ class AuthService(
             code = authUser.token.code
             oauthToken = authUser.token.oauthToken
             oauthTokenSecret = authUser.token.oauthTokenSecret
-            createdTime = LocalDateTime.now()
-            updatedTime = LocalDateTime.now()
         }
         val savedSocialUser = socialUserRepository.save(socialUserDraft)
 
@@ -204,8 +202,6 @@ class AuthService(
             this.nickname = authUser.nickname
             this.password = PasswordUtil.encode(UUID.randomUUID().toString())
             this.enabled = true
-            this.createdTime = LocalDateTime.now()
-            this.updatedTime = LocalDateTime.now()
             // 在User接口中没有nickname, avatar和email字段，需要确认实际字段名或添加这些字段
         })
 
