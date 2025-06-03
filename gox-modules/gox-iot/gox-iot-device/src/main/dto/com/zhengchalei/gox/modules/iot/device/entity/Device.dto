@@ -1,0 +1,26 @@
+export com.zhengchalei.gox.modules.iot.device.entity.Device
+    -> package com.zhengchalei.gox.modules.iot.device.entity.dto
+
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
+
+DeviceListDTO {
+    #allScalars
+}
+
+DeviceDetailDTO {
+    #allScalars
+}
+
+input DeviceCreateDTO {
+    #allScalars(this)
+    id!
+}
+
+input DeviceUpdateDTO {
+    #allScalars(this)
+}
+
+specification DeviceSpecification {
+    #allScalars
+}
