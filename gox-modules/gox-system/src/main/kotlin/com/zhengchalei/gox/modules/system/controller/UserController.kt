@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "用户管理", description = "用户相关操作")
 @Validated
 @RestController
-@RequestMapping("/api/v1/sys/user")
+@RequestMapping("/api/sys/user")
 class UserController(private val userService: UserService) {
 
     @Operation(summary = "根据用户名查询用户", description = "通过用户名获取用户详细信息")

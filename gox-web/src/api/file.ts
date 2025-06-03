@@ -16,7 +16,7 @@ export const fileApi = {
     const formData = new FormData()
     formData.append('file', file)
     
-    return api.post('/api/v1/file/upload', formData, {
+    return api.post('/api/file/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -30,7 +30,7 @@ export const fileApi = {
       formData.append('files', file)
     })
     
-    return api.post('/api/v1/file/batch-upload', formData, {
+    return api.post('/api/file/batch-upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -39,22 +39,22 @@ export const fileApi = {
 
   // 根据ID查询文件详情
   findById: (id: number): Promise<RFileInfoDetailDTO> => {
-    return api.get(`/api/v1/file/${id}`)
+    return api.get(`/api/file/${id}`)
   },
 
   // 根据存储名称查询文件详情
   findByfileKey: (fileKey: string): Promise<RFileInfoDetailDTO> => {
-    return api.get(`/api/v1/file/storage/${fileKey}`)
+    return api.get(`/api/file/storage/${fileKey}`)
   },
 
   // 按存储类型查询文件
   findByStorageType: (storageType: StorageType): Promise<RListFileInfoListDTO> => {
-    return api.get(`/api/v1/file/type/${storageType}`)
+    return api.get(`/api/file/type/${storageType}`)
   },
 
   // 按原始名称搜索文件
   search: (name: string): Promise<RListFileInfoListDTO> => {
-    return api.get(`/api/v1/file/search?name=${encodeURIComponent(name)}`)
+    return api.get(`/api/file/search?name=${encodeURIComponent(name)}`)
   },
 
   // 分页查询文件
@@ -71,34 +71,34 @@ export const fileApi = {
           ])
       )
     })
-    return api.get(`/api/v1/file/page?${params}`)
+    return api.get(`/api/file/page?${params}`)
   },
 
   // 获取文件下载URL
   getDownloadUrl: (id: number): Promise<RMapStringString> => {
-    return api.get(`/api/v1/file/url/${id}`)
+    return api.get(`/api/file/url/${id}`)
   },
 
   // 获取文件临时访问URL
   getTemporaryUrl: (id: number, minutes: number = 5): Promise<RMapStringString> => {
-    return api.get(`/api/v1/file/temp-url/${id}?minutes=${minutes}`)
+    return api.get(`/api/file/temp-url/${id}?minutes=${minutes}`)
   },
 
   // 下载文件
   download: (fileKey: string): Promise<Blob> => {
-    return api.get(`/api/v1/file/download/${fileKey}`, {
+    return api.get(`/api/file/download/${fileKey}`, {
       responseType: 'blob'
     })
   },
 
   // 删除文件
   deleteById: (id: number): Promise<RVoid> => {
-    return api.delete(`/api/v1/file/${id}`)
+    return api.delete(`/api/file/${id}`)
   },
 
   // 批量删除文件
   batchDelete: (ids: number[]): Promise<RVoid> => {
-    return api.delete('/api/v1/file/batch', {
+    return api.delete('/api/file/batch', {
       data: ids
     })
   }

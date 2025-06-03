@@ -12,22 +12,22 @@ import type {
 export const roleApi = {
   // 创建角色
   create: (data: RoleCreateDTO): Promise<RVoid> => {
-    return api.post('/api/v1/sys/role', data)
+    return api.post('/api/sys/role', data)
   },
 
   // 更新角色
   update: (data: RoleUpdateDTO): Promise<RVoid> => {
-    return api.put('/api/v1/sys/role', data)
+    return api.put('/api/sys/role', data)
   },
 
   // 分配角色权限
   assignRolePermission: (data: RolePermissionUpdateDTO): Promise<RVoid> => {
-    return api.post('/api/v1/sys/role/assign-permission', data)
+    return api.post('/api/sys/role/assign-permission', data)
   },
 
   // 根据ID查询角色
   findById: (id: number): Promise<RRoleDetailDTO> => {
-    return api.get(`/api/v1/sys/role/${id}`)
+    return api.get(`/api/sys/role/${id}`)
   },
 
   // 分页查询角色
@@ -44,11 +44,11 @@ export const roleApi = {
           ])
       )
     })
-    return api.get(`/api/v1/sys/role/page?${params}`)
+    return api.get(`/api/sys/role/page?${params}`)
   },
 
   // 删除角色
   deleteById: (id: number): Promise<RVoid> => {
-    return api.delete(`/api/v1/sys/role/${id}`)
+    return api.delete(`/api/sys/role/${id}`)
   }
 } 

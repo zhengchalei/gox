@@ -81,7 +81,7 @@ abstract class AbstractFileStorageService : FileStorageService {
             size = size,
             mimeType = mimeType,
             storageType = getStorageType(),
-            downloadUrl = fileProperties.domain + "/api/v1/file/download/" + fileKey,
+            downloadUrl = fileProperties.domain + "/api/file/download/" + fileKey,
         )
         // 保存到数据库
         return fileInfoRepository.save(fileInfoCreateDTO)

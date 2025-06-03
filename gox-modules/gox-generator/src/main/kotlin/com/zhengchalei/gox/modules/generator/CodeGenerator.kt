@@ -136,7 +136,7 @@ class CodeGenerator(
     private val tableName: String,
     private val fields: List<FieldDefinition>,
 ) {
-    private val outputDir: String = "$projectRoot/gox-modules/gox-$moduleName/src/main"
+    private val outputDir: String = "$projectRoot/gox-modules/$moduleName/src/main"
     private val packagePath: String = packageName.replace('.', '/')
     private val cfg = TemplateConfigFactory.createConfig()
 

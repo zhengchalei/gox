@@ -528,7 +528,7 @@ const getStorageTypeName = (storageType: string) => {
 const getPreviewUrl = (file: FileInfoListDTO) => {
   console.log("file", JSON.stringify(file));
   // 这里需要根据实际的API来构建预览URL
-  return `/api/v1/file/preview/${file.fileKey}`;
+  return `/api/file/preview/${file.fileKey}`;
 };
 
 // 表格视图的选择处理

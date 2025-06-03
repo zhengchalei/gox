@@ -1,6 +1,6 @@
 package ${packageName}.entity
 
-import com.zhengchalei.gox.modules.iot.device.entity.BaseEntity
+import com.zhengchalei.gox.framework.jimmer.entity.BaseEntity
 import org.babyfish.jimmer.sql.*
 import java.time.LocalDateTime
 

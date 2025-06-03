@@ -330,7 +330,7 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "模块名称", description = "模块相关操作")
 @Validated
 @RestController
-@RequestMapping("/api/v1/模块路径")
+@RequestMapping("/api/模块路径")
 class 实体名Controller(private val 实体名Service: 实体名Service) {
 
     @Operation(summary = "根据ID查询", description = "通过ID获取详细信息")

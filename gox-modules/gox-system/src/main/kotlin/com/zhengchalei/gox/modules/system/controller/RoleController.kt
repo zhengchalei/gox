@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "角色管理", description = "角色相关操作")
 @Validated
 @RestController
-@RequestMapping("/api/v1/sys/role")
+@RequestMapping("/api/sys/role")
 class RoleController(private val roleService: RoleService) {
 
     @Operation(summary = "根据ID查询角色", description = "通过角色ID获取角色详细信息")

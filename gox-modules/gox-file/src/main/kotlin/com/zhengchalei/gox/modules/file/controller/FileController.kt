@@ -29,7 +29,7 @@ import java.time.Duration
 @Tag(name = "文件管理", description = "文件上传、下载、查询等操作")
 @Validated
 @RestController
-@RequestMapping("/api/v1/file")
+@RequestMapping("/api/file")
 class FileController(
     private val fileService: FileService, private val localFileStorageService: LocalFileStorageServiceImpl
 ) {

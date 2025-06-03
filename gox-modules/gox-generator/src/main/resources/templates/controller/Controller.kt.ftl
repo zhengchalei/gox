@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "${entityName}管理", description = "${entityName}相关操作")
 @Validated
 @RestController
-@RequestMapping("/api/v1/sys/${entityName?lower_case}")
+@RequestMapping("/api/sys/${entityName?lower_case}")
 class ${entityName}Controller(private val service: ${entityName}Service) {
 
     @Operation(summary = "根据ID查询${entityName}", description = "通过${entityName}ID获取${entityName}详细信息")

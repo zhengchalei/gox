@@ -11,17 +11,17 @@ import type {
 export const permissionApi = {
   // 创建权限
   create: (data: PermissionCreateDTO): Promise<RVoid> => {
-    return api.post('/api/v1/sys/permission', data)
+    return api.post('/api/sys/permission', data)
   },
 
   // 更新权限
   update: (data: PermissionUpdateDTO): Promise<RVoid> => {
-    return api.put('/api/v1/sys/permission', data)
+    return api.put('/api/sys/permission', data)
   },
 
   // 根据ID查询权限
   findById: (id: number): Promise<RPermissionDetailDTO> => {
-    return api.get(`/api/v1/sys/permission/${id}`)
+    return api.get(`/api/sys/permission/${id}`)
   },
 
   // 分页查询权限
@@ -38,11 +38,11 @@ export const permissionApi = {
           ])
       )
     })
-    return api.get(`/api/v1/sys/permission/page?${params}`)
+    return api.get(`/api/sys/permission/page?${params}`)
   },
 
   // 删除权限
   deleteById: (id: number): Promise<RVoid> => {
-    return api.delete(`/api/v1/sys/permission/${id}`)
+    return api.delete(`/api/sys/permission/${id}`)
   }
 } 

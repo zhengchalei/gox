@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "权限管理", description = "权限相关操作")
 @Validated
 @RestController
-@RequestMapping("/api/v1/sys/permission")
+@RequestMapping("/api/sys/permission")
 class PermissionController(private val permissionService: PermissionService) {
 
     @Operation(summary = "根据ID查询权限", description = "通过权限ID获取权限详细信息")

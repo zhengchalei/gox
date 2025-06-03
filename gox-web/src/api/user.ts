@@ -12,27 +12,27 @@ import type {
 export const userApi = {
   // 创建用户
   create: (data: UserCreateDTO): Promise<RVoid> => {
-    return api.post('/api/v1/sys/user', data)
+    return api.post('/api/sys/user', data)
   },
 
   // 更新用户
   update: (data: UserUpdateDTO): Promise<RVoid> => {
-    return api.put('/api/v1/sys/user', data)
+    return api.put('/api/sys/user', data)
   },
 
   // 根据ID查询用户
   findById: (id: number): Promise<RUserDetailDTO> => {
-    return api.get(`/api/v1/sys/user/${id}`)
+    return api.get(`/api/sys/user/${id}`)
   },
 
   // 根据用户名查询用户
   findByUsername: (username: string): Promise<RUserDetailDTO> => {
-    return api.get(`/api/v1/sys/user/username/${username}`)
+    return api.get(`/api/sys/user/username/${username}`)
   },
 
   // 修改用户角色
   assignUserRole: (data: UserRoleUpdateDTO): Promise<RVoid> => {
-    return api.post('/api/v1/sys/user/assign-role', data)
+    return api.post('/api/sys/user/assign-role', data)
   },
 
   // 分页查询用户
@@ -49,11 +49,11 @@ export const userApi = {
           ])
       )
     })
-    return api.get(`/api/v1/sys/user/page?${params}`)
+    return api.get(`/api/sys/user/page?${params}`)
   },
 
   // 删除用户
   deleteById: (id: number): Promise<RVoid> => {
-    return api.delete(`/api/v1/sys/user/${id}`)
+    return api.delete(`/api/sys/user/${id}`)
   }
 } 
