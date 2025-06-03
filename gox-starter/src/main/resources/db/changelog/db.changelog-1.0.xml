@@ -43,6 +43,8 @@
         <insert tableName="sys_user">
             <column name="username" value="admin"/>
             <column name="enabled" value="true"/>
+            <column name="email" value="admin@gox.com"/>
+            <column name="phone" value="13800138000"/>
             <column name="password"
                     value="$2a$10$aewa/XxpIRpidDfHxb9OsOfXpJRBYKDsHrQr8aMTtMO7r5ETWP3q."/>
             <column name="nickname" value="管理员"/>
@@ -51,6 +53,8 @@
         <insert tableName="sys_user">
             <column name="username" value="test"/>
             <column name="enabled" value="true"/>
+            <column name="email" value="test@gox.com"/>
+            <column name="phone" value="13800138001"/>
             <column name="password"
                     value="$2a$10$aewa/XxpIRpidDfHxb9OsOfXpJRBYKDsHrQr8aMTtMO7r5ETWP3q."/>
             <column name="nickname" value="测试用户"/>
