@@ -29,7 +29,9 @@ abstract class AbstractFileGenerator(
     val entityName: String,
     val tableName: String,
     val fields: List<FieldDefinition>,
-    val packageName: String
+    val packageName: String,
+    val entityComment: String,
+    val moduleName: String,
 ) : FileGenerator {
 
     private val templateProcessor = TemplateProcessor()
@@ -43,7 +45,9 @@ abstract class AbstractFileGenerator(
             "packageName" to packageName,
             "entityName" to entityName,
             "tableName" to tableName,
-            "fields" to fields
+            "fields" to fields,
+            "entityComment" to entityComment,
+            "moduleName" to moduleName,
         )
     }
 
@@ -58,8 +62,10 @@ class EntityFileGenerator(
     entityName: String,
     tableName: String,
     fields: List<FieldDefinition>,
-    packageName: String
-) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName) {
+    packageName: String,
+    entityComment: String,
+    moduleName: String,
+) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName) {
     override fun generate(outputDir: String, packagePath: String) {
         val template = getTemplate("entity/Entity.kt.ftl")
         val outputFile = File("$outputDir/kotlin/$packagePath/entity/$entityName.kt")
@@ -73,8 +79,10 @@ class DtoFileGenerator(
     entityName: String,
     tableName: String,
     fields: List<FieldDefinition>,
-    packageName: String
-) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName) {
+    packageName: String,
+    entityComment: String,
+    moduleName: String,
+) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName) {
     override fun generate(outputDir: String, packagePath: String) {
         val template = getTemplate("dto/Entity.dto.ftl")
         val outputFile = File("$outputDir/dto/$packagePath/entity/$entityName.dto")
@@ -88,8 +96,10 @@ class ServiceFileGenerator(
     entityName: String,
     tableName: String,
     fields: List<FieldDefinition>,
-    packageName: String
-) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName) {
+    packageName: String,
+    entityComment: String,
+    moduleName: String,
+) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName) {
     override fun generate(outputDir: String, packagePath: String) {
         val template = getTemplate("service/Service.kt.ftl")
         val outputFile = File("$outputDir/kotlin/$packagePath/service/${entityName}Service.kt")
@@ -103,8 +113,10 @@ class ControllerFileGenerator(
     entityName: String,
     tableName: String,
     fields: List<FieldDefinition>,
-    packageName: String
-) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName) {
+    packageName: String,
+    entityComment: String,
+    moduleName: String,
+) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName) {
     override fun generate(outputDir: String, packagePath: String) {
         val template = getTemplate("controller/Controller.kt.ftl")
         val outputFile = File("$outputDir/kotlin/$packagePath/controller/${entityName}Controller.kt")
@@ -118,8 +130,10 @@ class RepositoryFileGenerator(
     entityName: String,
     tableName: String,
     fields: List<FieldDefinition>,
-    packageName: String
-) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName) {
+    packageName: String,
+    entityComment: String,
+    moduleName: String,
+) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName) {
     override fun generate(outputDir: String, packagePath: String) {
         val template = getTemplate("repository/Repository.kt.ftl")
         val outputFile = File("$outputDir/kotlin/$packagePath/repository/${entityName}Repository.kt")
@@ -133,8 +147,10 @@ class SQLFileGenerator(
     entityName: String,
     tableName: String,
     fields: List<FieldDefinition>,
-    packageName: String
-) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName) {
+    packageName: String,
+    entityComment: String,
+    moduleName: String,
+) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName) {
     override fun generate(outputDir: String, packagePath: String) {
         val template = getTemplate("sql/liquibase.xml.ftl")
         val outputFile = File("$outputDir/resources/db/changelog/${tableName}.xml")
@@ -142,26 +158,65 @@ class SQLFileGenerator(
     }
 }
 
+// 生成前端 Vue 文件
+class VueFileGenerator(
+    cfg: Configuration,
+    entityName: String,
+    tableName: String,
+    fields: List<FieldDefinition>,
+    packageName: String,
+    entityComment: String,
+    moduleName: String,
+) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName) {
+
+    override fun generate(outputDir: String, packagePath: String) {
+        val template = getTemplate("view/index.vue.ftl")
+        val outputFile = File("$projectRoot/gox-web/src/views/${moduleName}/${entityName}.vue")
+        processTemplate(template, outputFile)
+    }
+}
+
+// 生成前端 API 文件
+class ApiFileGenerator(
+    cfg: Configuration,
+    entityName: String,
+    tableName: String,
+    fields: List<FieldDefinition>,
+    packageName: String,
+    entityComment: String,
+    moduleName: String,
+) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName) {
+    override fun generate(outputDir: String, packagePath: String) {
+        val template = getTemplate("view/api.ts.ftl")
+        val outputFile = File("$projectRoot/gox-web/src/api/${moduleName}/${entityName}.ts")
+        processTemplate(template, outputFile)
+    }
+}
+
 // 代码生成协调器
 class CodeGenerator(
-    private val projectRoot: String,
-    private val moduleName: String,
-    private val packageName: String,
-    private val entityName: String,
-    private val tableName: String,
-    private val fields: List<FieldDefinition>,
+    projectRoot: String,
+    modulePath: String,
+    moduleName: String,
+    packageName: String,
+    entityName: String,
+    tableName: String,
+    fields: List<FieldDefinition>,
+    entityComment: String,
 ) {
-    private val outputDir: String = "$projectRoot/gox-modules/$moduleName/src/main"
+    private val outputDir: String = "$projectRoot/gox-modules/$modulePath/src/main"
     private val packagePath: String = packageName.replace('.', '/')
     private val cfg = TemplateConfigFactory.createConfig()
 
     private val generators = listOf(
-        EntityFileGenerator(cfg, entityName, tableName, fields, packageName),
-        DtoFileGenerator(cfg, entityName, tableName, fields, packageName),
-        ServiceFileGenerator(cfg, entityName, tableName, fields, packageName),
-        ControllerFileGenerator(cfg, entityName, tableName, fields, packageName),
-        RepositoryFileGenerator(cfg, entityName, tableName, fields, packageName),
-        SQLFileGenerator(cfg, entityName, tableName, fields, packageName),
+        EntityFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName),
+        DtoFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName),
+        ServiceFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName),
+        ControllerFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName),
+        RepositoryFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName),
+        SQLFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName),
+        VueFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName),
+        ApiFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName),
     )
 
     fun generate() {

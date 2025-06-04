@@ -13,7 +13,9 @@ fun main(args: Array<String>) {
 
 val deviceGenerator = CodeGenerator(
     projectRoot = projectRoot,
-    moduleName = "gox-iot/gox-iot-device",
+    entityComment = "设备",
+    moduleName = "iot",
+    modulePath = "gox-iot/gox-iot-device",
     packageName = "com.zhengchalei.gox.modules.iot.device",
     entityName = "Device",
     tableName = "iot_device",
@@ -32,7 +34,9 @@ val deviceGenerator = CodeGenerator(
 
 val productGenerator = CodeGenerator(
     projectRoot = projectRoot,
-    moduleName = "gox-iot/gox-iot-device",
+    entityComment = "产品",
+    moduleName = "iot",
+    modulePath = "gox-iot/gox-iot-device",
     packageName = "com.zhengchalei.gox.modules.iot.device",
     entityName = "Product",
     tableName = "iot_product",

@@ -113,8 +113,7 @@
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { ElForm, ElMessage } from "element-plus";
-import { loginApi } from "../../api";
-import type { LoginRequest } from "../../types/api";
+import { loginApi, type LoginRequest } from "../../api/auth/auth";
 
 const router = useRouter();
 

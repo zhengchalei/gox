@@ -438,8 +438,7 @@ import {
   UploadFilled,
   VideoPlay,
 } from "@element-plus/icons-vue";
-import { fileApi } from "../../api/file";
-import type { FileInfoListDTO, FileInfoSpecification } from "../../types/api";
+import { fileApi, type FileInfoListDTO, type FileInfoSpecification } from "../../api/file/file";
 
 // 响应式数据
 const loading = ref(false);

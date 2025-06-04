@@ -252,16 +252,19 @@ import {
   ElTree,
 } from "element-plus";
 import { Plus, Search, Refresh } from "@element-plus/icons-vue";
-import { roleApi, permissionApi } from "../../api";
-import type {
-  RoleListDTO,
-  RoleDetailDTO,
-  RoleCreateDTO,
-  RoleUpdateDTO,
-  RoleSpecification,
-  PermissionListDTO,
-  RolePermissionUpdateDTO,
-} from "../../types/api";
+import {
+  roleApi,
+  type RoleCreateDTO,
+  type RoleDetailDTO,
+  type RoleListDTO,
+  type RolePermissionUpdateDTO,
+  type RoleSpecification,
+  type RoleUpdateDTO,
+} from "../../api/system/role.ts";
+import {
+  permissionApi,
+  type PermissionListDTO,
+} from "../../api/system/permission.ts";
 
 // 响应式数据
 const loading = ref(false);
@@ -493,7 +496,6 @@ const handleSubmit = async () => {
   if (!formRef.value) return;
 
   try {
-
     await formRef.value.validate();
     submitLoading.value = true;
 

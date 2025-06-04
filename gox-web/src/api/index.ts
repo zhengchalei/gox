@@ -1,14 +1,46 @@
 import axios from 'axios'
-import { ElMessage } from 'element-plus'
+import {ElMessage} from 'element-plus'
 import router from '../router'
-import type { 
-  LoginRequest,
-  RLoginResponse, 
-  RUserDetailDTO, 
-  RBoolean,
-  RVoid,
-  ApiResponse 
-} from '../types/api'
+
+// OpenAPI 标准响应类型
+export interface ApiResponse<T = any> {
+  success: boolean
+  message: string
+  data: T
+  code: number
+  timestamp: number
+}
+
+// 分页对象类型
+export interface PageableObject {
+  offset: number
+  sort: SortObject
+  paged: boolean
+  pageSize: number
+  pageNumber: number
+  unpaged: boolean
+}
+
+export interface SortObject {
+  empty: boolean
+  sorted: boolean
+  unsorted: boolean
+}
+
+export interface PageResponse<T> {
+  totalElements: number
+  totalPages: number
+  first: boolean
+  last: boolean
+  size: number
+  content: T[]
+  number: number
+  sort: SortObject
+  numberOfElements: number
+  pageable: PageableObject
+  empty: boolean
+}
+
 
 // 创建axios实例
 const api = axios.create({
@@ -75,29 +107,5 @@ api.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-
-// 登录API - 根据OpenAPI规范
-export const loginApi = {
-  // 用户名密码登录
-  login: (data: LoginRequest): Promise<RLoginResponse> => {
-    return api.post('/api/auth/login', data)
-  },
-  
-  // 退出登录
-  logout: (): Promise<RBoolean> => {
-    return api.post('/api/logout')
-  },
-  
-  // 获取当前用户信息
-  getUserInfo: (): Promise<RUserDetailDTO> => {
-    return api.get('/api/user/info')
-  }
-}
-
-// 导出其他API模块
-export { userApi } from './user'
-export { roleApi } from './role'
-export { permissionApi } from './permission'
-export { fileApi } from './file'
 
 export default api 

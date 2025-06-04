@@ -295,16 +295,16 @@
 import { ref, reactive, onMounted, computed } from "vue";
 import { ElMessage, ElMessageBox, type FormInstance } from "element-plus";
 import { Plus, Search, Refresh } from "@element-plus/icons-vue";
-import { userApi, roleApi } from "../../api";
-import type {
-  UserListDTO,
-  UserDetailDTO,
-  UserCreateDTO,
-  UserUpdateDTO,
-  UserSpecification,
-  UserRoleUpdateDTO,
-  RoleListDTO,
-} from "../../types/api";
+import {
+  userApi,
+  type UserCreateDTO,
+  type UserListDTO,
+  type UserRoleUpdateDTO,
+  type UserSpecification,
+  type UserUpdateDTO,
+} from "../../api/system/user.ts";
+import type { UserDetailDTO } from "../../api/auth/auth.ts";
+import { roleApi, type RoleListDTO } from "../../api/system/role.ts";
 
 // 响应式数据
 const loading = ref(false);

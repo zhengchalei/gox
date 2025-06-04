@@ -203,16 +203,15 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
-import { Plus, Refresh, Search } from "@element-plus/icons-vue";
-import { permissionApi, roleApi } from "../../api";
+import { permissionApi } from "../../api/system/permission";
 import type {
   PermissionCreateDTO,
   PermissionDetailDTO,
   PermissionListDTO,
   PermissionSpecification,
   PermissionUpdateDTO,
-  RoleListDTO,
-} from "../../types/api";
+} from "../../api/system/permission";
+import { roleApi, type RoleListDTO } from "../../api/system/role";
 
 // 响应式数据
 const loading = ref(false);
