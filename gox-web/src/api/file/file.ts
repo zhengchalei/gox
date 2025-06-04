@@ -1,7 +1,7 @@
-import api, { type ApiResponse, type PageResponse } from '../index'
+import request from "../../utils/request.ts";
+import type { ApiResponse, PageResponse } from "../index.ts";
 
-// 文件相关类型
-export enum StorageType { 
+export enum StorageType {
   LOCAL = 'LOCAL',
   ALIYUN = 'ALIYUN',
   TENCENT = 'TENCENT',
@@ -55,7 +55,7 @@ export const fileApi = {
     const formData = new FormData()
     formData.append('file', file)
 
-    return api.post('/api/file/upload', formData, {
+    return request.post('/api/file/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -69,7 +69,7 @@ export const fileApi = {
       formData.append('files', file)
     })
 
-    return api.post('/api/file/batch-upload', formData, {
+    return request.post('/api/file/batch-upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -78,22 +78,22 @@ export const fileApi = {
 
   // 根据ID查询文件详情
   findById: (id: number): Promise<ApiResponse<FileInfoDetailDTO>> => {
-    return api.get(`/api/file/${id}`)
+    return request.get(`/api/file/${id}`)
   },
 
   // 根据存储名称查询文件详情
   findByfileKey: (fileKey: string): Promise<ApiResponse<FileInfoDetailDTO>> => {
-    return api.get(`/api/file/storage/${fileKey}`)
+    return request.get(`/api/file/storage/${fileKey}`)
   },
 
   // 按存储类型查询文件
   findByStorageType: (storageType: StorageType): Promise<ApiResponse<FileInfoListDTO[]>> => {
-    return api.get(`/api/file/type/${storageType}`)
+    return request.get(`/api/file/type/${storageType}`)
   },
 
   // 按原始名称搜索文件
   search: (name: string): Promise<ApiResponse<FileInfoListDTO[]>> => {
-    return api.get(`/api/file/search?name=${encodeURIComponent(name)}`)
+    return request.get(`/api/file/search?name=${encodeURIComponent(name)}`)
   },
 
   // 分页查询文件
@@ -110,34 +110,34 @@ export const fileApi = {
           ])
       )
     })
-    return api.get(`/api/file/page?${params}`)
+    return request.get(`/api/file/page?${params}`)
   },
 
   // 获取文件下载URL
   getDownloadUrl: (id: number): Promise<ApiResponse<Record<string, string>>> => {
-    return api.get(`/api/file/url/${id}`)
+    return request.get(`/api/file/url/${id}`)
   },
 
   // 获取文件临时访问URL
   getTemporaryUrl: (id: number, minutes: number = 5): Promise<ApiResponse<Record<string, string>>> => {
-    return api.get(`/api/file/temp-url/${id}?minutes=${minutes}`)
+    return request.get(`/api/file/temp-url/${id}?minutes=${minutes}`)
   },
 
   // 下载文件
   download: (fileKey: string): Promise<Blob> => {
-    return api.get(`/api/file/download/${fileKey}`, {
+    return request.get(`/api/file/download/${fileKey}`, {
       responseType: 'blob'
     })
   },
 
   // 删除文件
   deleteById: (id: number): Promise<ApiResponse<void>> => {
-    return api.delete(`/api/file/${id}`)
+    return request.delete(`/api/file/${id}`)
   },
 
   // 批量删除文件
   batchDelete: (ids: number[]): Promise<ApiResponse<void>> => {
-    return api.delete('/api/file/batch', {
+    return request.delete('/api/file/batch', {
       data: ids
     })
   }

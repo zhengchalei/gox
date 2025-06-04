@@ -1,6 +1,6 @@
-
-import api, { type ApiResponse } from "../index.ts";
-import type { UserDetailDTO } from "../system/user.ts";
+import type {UserDetailDTO} from "../system/user.ts";
+import request from "../../utils/request.ts";
+import type { ApiResponse } from "../index.ts";
 
 // 登录请求类型 - 根据 OpenAPI 定义
 export interface LoginRequest {
@@ -18,16 +18,16 @@ export interface LoginResponse {
 export const loginApi = {
     // 用户名密码登录
     login: (data: LoginRequest): Promise<ApiResponse<UserDetailDTO>> => {
-        return api.post('/api/auth/login', data)
+        return request.post('/api/auth/login', data)
     },
 
     // 退出登录
     logout: (): Promise<ApiResponse<void>> => {
-        return api.post('/api/logout')
+        return request.post('/api/logout')
     },
 
     // 获取当前用户信息
     getUserInfo: (): Promise<ApiResponse<UserDetailDTO>> => {
-        return api.get('/api/user/info')
+        return request.get('/api/user/info')
     }
 }

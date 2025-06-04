@@ -1,4 +1,5 @@
-import api, { type ApiResponse, type PageResponse } from "../index";
+import request from "../../utils/request.ts";
+import type { ApiResponse, PageResponse } from "../index.ts";
 
 // 权限相关类型
 export interface ${entityName}DetailDTO {
@@ -46,17 +47,17 @@ export interface ${entityName}Specification {
 export const ${entityName?lower_case}Api = {
   // 创建权限
   create: (data: ${entityName}CreateDTO): Promise<ApiResponse<void>> => {
-    return api.post("/api/${moduleName}/${entityName?lower_case}", data);
+    return request.post("/api/${moduleName}/${entityName?lower_case}", data);
   },
 
   // 更新权限
   update: (data: ${entityName}UpdateDTO): Promise<ApiResponse<void>> => {
-    return api.put("/api/${moduleName}/${entityName?lower_case}", data);
+    return request.put("/api/${moduleName}/${entityName?lower_case}", data);
   },
 
   // 根据ID查询权限
   findById: (id: number): Promise<ApiResponse<${entityName}DetailDTO>> => {
-    return api.get(`/api/${moduleName}/${entityName?lower_case}/<#noparse>${id}</#noparse>`);
+    return request.get(`/api/${moduleName}/${entityName?lower_case}/<#noparse>${id}</#noparse>`);
   },
 
   // 分页查询权限
@@ -77,11 +78,11 @@ export const ${entityName?lower_case}Api = {
           ])
       ),
     });
-    return api.get(`/api/${moduleName}/${entityName?lower_case}/page?<#noparse>${params}</#noparse>`);
+    return request.get(`/api/${moduleName}/${entityName?lower_case}/page?<#noparse>${params}</#noparse>`);
   },
 
   // 删除权限
   deleteById: (id: number): Promise<ApiResponse<void>> => {
-    return api.delete(`/api/${moduleName}/${entityName?lower_case}/<#noparse>${id}</#noparse>`);
+    return request.delete(`/api/${moduleName}/${entityName?lower_case}/<#noparse>${id}</#noparse>`);
   },
 };

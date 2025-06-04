@@ -1,4 +1,5 @@
-import api, { type ApiResponse, type PageResponse } from "../index";
+import request from "../../utils/request.ts";
+import type { ApiResponse, PageResponse } from "../index.ts";
 
 // 权限相关类型
 export interface ProductDetailDTO {
@@ -51,17 +52,17 @@ export interface ProductSpecification {
 export const productApi = {
   // 创建权限
   create: (data: ProductCreateDTO): Promise<ApiResponse<void>> => {
-    return api.post("/api/iot/product", data);
+    return request.post("/api/iot/product", data);
   },
 
   // 更新权限
   update: (data: ProductUpdateDTO): Promise<ApiResponse<void>> => {
-    return api.put("/api/iot/product", data);
+    return request.put("/api/iot/product", data);
   },
 
   // 根据ID查询权限
   findById: (id: number): Promise<ApiResponse<ProductDetailDTO>> => {
-    return api.get(`/api/iot/product/${id}`);
+    return request.get(`/api/iot/product/${id}`);
   },
 
   // 分页查询权限
@@ -82,11 +83,11 @@ export const productApi = {
           ])
       ),
     });
-    return api.get(`/api/iot/product/page?${params}`);
+    return request.get(`/api/iot/product/page?${params}`);
   },
 
   // 删除权限
   deleteById: (id: number): Promise<ApiResponse<void>> => {
-    return api.delete(`/api/iot/product/${id}`);
+    return request.delete(`/api/iot/product/${id}`);
   },
 };

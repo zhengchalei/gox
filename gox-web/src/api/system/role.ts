@@ -1,4 +1,5 @@
-import api, { type ApiResponse, type PageResponse } from '../index'
+import request from "../../utils/request.ts";
+import type { ApiResponse, PageResponse } from "../index.ts";
 import type { PermissionInfo } from './permission.ts';
 
 // 角色相关类型
@@ -70,22 +71,22 @@ export interface RoleInfo {
 export const roleApi = {
   // 创建角色
   create: function (data: RoleCreateDTO): Promise<ApiResponse<void>> {
-    return api.post('/api/sys/role', data)
+    return request.post('/api/sys/role', data)
   },
 
   // 更新角色
   update: (data: RoleUpdateDTO): Promise<ApiResponse<void>> => {
-    return api.put('/api/sys/role', data)
+    return request.put('/api/sys/role', data)
   },
 
   // 分配角色权限
   assignRolePermission: (data: RolePermissionUpdateDTO): Promise<ApiResponse<void>> => {
-    return api.post('/api/sys/role/assign-permission', data)
+    return request.post('/api/sys/role/assign-permission', data)
   },
 
   // 根据ID查询角色
   findById: (id: number): Promise<ApiResponse<RoleDetailDTO>> => {
-    return api.get(`/api/sys/role/${id}`)
+    return request.get(`/api/sys/role/${id}`)
   },
 
   // 分页查询角色
@@ -102,11 +103,11 @@ export const roleApi = {
           ])
       )
     })
-    return api.get(`/api/sys/role/page?${params}`)
+    return request.get(`/api/sys/role/page?${params}`)
   },
 
   // 删除角色
   deleteById: (id: number): Promise<ApiResponse<void>> => {
-    return api.delete(`/api/sys/role/${id}`)
+    return request.delete(`/api/sys/role/${id}`)
   }
 } 

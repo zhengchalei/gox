@@ -1,4 +1,5 @@
-import api, { type ApiResponse, type PageResponse } from "../index";
+import request from "../../utils/request.ts";
+import type { ApiResponse, PageResponse } from "../index.ts";
 import type { RoleInfo } from "./role";
 
 // 权限相关类型
@@ -60,17 +61,17 @@ export interface PermissionInfo {
 export const permissionApi = {
   // 创建权限
   create: (data: PermissionCreateDTO): Promise<ApiResponse<void>> => {
-    return api.post("/api/sys/permission", data);
+    return request.post("/api/sys/permission", data);
   },
 
   // 更新权限
   update: (data: PermissionUpdateDTO): Promise<ApiResponse<void>> => {
-    return api.put("/api/sys/permission", data);
+    return request.put("/api/sys/permission", data);
   },
 
   // 根据ID查询权限
   findById: (id: number): Promise<ApiResponse<PermissionDetailDTO>> => {
-    return api.get(`/api/sys/permission/${id}`);
+    return request.get(`/api/sys/permission/${id}`);
   },
 
   // 分页查询权限
@@ -91,11 +92,11 @@ export const permissionApi = {
           ])
       ),
     });
-    return api.get(`/api/sys/permission/page?${params}`);
+    return request.get(`/api/sys/permission/page?${params}`);
   },
 
   // 删除权限
   deleteById: (id: number): Promise<ApiResponse<void>> => {
-    return api.delete(`/api/sys/permission/${id}`);
+    return request.delete(`/api/sys/permission/${id}`);
   },
 };

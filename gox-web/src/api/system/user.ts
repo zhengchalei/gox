@@ -1,4 +1,5 @@
-import api, { type ApiResponse, type PageResponse } from '../index'
+import request from "../../utils/request.ts";
+import type { ApiResponse, PageResponse } from "../index.ts";
 import type { RoleInfo } from "./role.ts";
 
 
@@ -60,27 +61,27 @@ export interface UserSpecification {
 export const userApi = {
     // 创建用户
     create: (data: UserCreateDTO): Promise<ApiResponse<void>> => {
-        return api.post('/api/sys/user', data)
+        return request.post('/api/sys/user', data)
     },
 
     // 更新用户
     update: (data: UserUpdateDTO): Promise<ApiResponse<void>> => {
-        return api.put('/api/sys/user', data)
+        return request.put('/api/sys/user', data)
     },
 
     // 根据ID查询用户
     findById: (id: number): Promise<ApiResponse<UserDetailDTO>> => {
-        return api.get(`/api/sys/user/${id}`)
+        return request.get(`/api/sys/user/${id}`)
     },
 
     // 根据用户名查询用户
     findByUsername: (username: string): Promise<ApiResponse<UserDetailDTO>> => {
-        return api.get(`/api/sys/user/username/${username}`)
+        return request.get(`/api/sys/user/username/${username}`)
     },
 
     // 修改用户角色
     assignUserRole: (data: UserRoleUpdateDTO): Promise<ApiResponse<void>> => {
-        return api.post('/api/sys/user/assign-role', data)
+        return request.post('/api/sys/user/assign-role', data)
     },
 
     // 分页查询用户
@@ -97,11 +98,11 @@ export const userApi = {
                     ])
             )
         })
-        return api.get(`/api/sys/user/page?${params}`)
+        return request.get(`/api/sys/user/page?${params}`)
     },
 
     // 删除用户
     deleteById: (id: number): Promise<ApiResponse<void>> => {
-        return api.delete(`/api/sys/user/${id}`)
+        return request.delete(`/api/sys/user/${id}`)
     }
 } 
