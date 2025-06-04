@@ -1,7 +1,7 @@
 
-import type { ApiResponse } from "../../types/api.ts";
-import api from "../index.ts";
+import api, { type ApiResponse } from "../index.ts";
 import type { RoleInfo } from "../system/role.ts";
+import type { UserDetailDTO } from "../system/user.ts";
 
 // 登录请求类型 - 根据 OpenAPI 定义
 export interface LoginRequest {
@@ -14,20 +14,6 @@ export interface LoginRequest {
 export interface LoginResponse {
     token: string
     username: string
-}
-
-export interface UserDetailDTO {
-    id: number
-    username: string
-    nickname: string
-    avatar: string
-    email: string
-    phone: string
-    enabled: boolean
-    createdTime: string
-    updatedTime: string
-    roleIds: number[]
-    roles: RoleInfo[]
 }
 
 export const loginApi = {

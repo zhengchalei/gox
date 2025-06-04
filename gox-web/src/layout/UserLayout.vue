@@ -174,8 +174,8 @@
 import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { loginApi } from "../api";
-import type { UserDetailDTO } from "../types/api";
+import { loginApi } from "../api/auth/auth";
+import type { UserDetailDTO } from "../api/system/user";
 
 const route = useRoute();
 const router = useRouter();
