@@ -176,6 +176,7 @@ import { useRoute, useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { loginApi } from "../api/auth/auth";
 import type { UserDetailDTO } from "../api/system/user";
+import { userLayoutRoutes } from '../router/routes.ts'
 
 const route = useRoute();
 const router = useRouter();
@@ -724,19 +725,19 @@ onMounted(() => {
   .layout-header {
     padding: 0 16px;
   }
-  
+
   .content-wrapper {
     padding: 16px;
   }
-  
+
   .search-input {
     width: 180px;
   }
-  
+
   .header-right {
     gap: 8px;
   }
-  
+
   .user-details {
     display: none;
   }
@@ -746,11 +747,11 @@ onMounted(() => {
   .breadcrumb {
     display: none;
   }
-  
+
   .search-wrapper {
     display: none;
   }
-  
+
   .header-right {
     gap: 4px;
   }
@@ -762,33 +763,33 @@ onMounted(() => {
     background: #1f1f1f;
     border-bottom-color: #333;
   }
-  
+
   .collapse-btn {
     color: #ccc;
   }
-  
+
   .collapse-btn:hover {
     background-color: #333;
     color: #409eff;
   }
-  
+
   .header-btn {
     color: #ccc;
   }
-  
+
   .header-btn:hover {
     background-color: #333;
     color: #409eff;
   }
-  
+
   .user-info:hover {
     background-color: #333;
   }
-  
+
   .username {
     color: #ffffff;
   }
-  
+
   .user-role {
     color: #ccc;
   }

@@ -13,13 +13,18 @@ import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
-@Tag(name = "Product管理", description = "Product相关操作")
+/**
+ * 产品Controller
+ *
+ * @author zhengchalei
+ */
+@Tag(name = "产品管理", description = "产品相关操作")
 @Validated
 @RestController
-@RequestMapping("/api/sys/product")
+@RequestMapping("/api/iot/product")
 class ProductController(private val service: ProductService) {
 
-    @Operation(summary = "根据ID查询Product", description = "通过ProductID获取Product详细信息")
+    @Operation(summary = "根据ID查询产品", description = "通过产品ID获取产品详细信息")
     @GetMapping(value = ["/{id}"])
     fun findById(
         @Parameter(description = "ProductID", required = true)
@@ -29,7 +34,7 @@ class ProductController(private val service: ProductService) {
         return ResponseEntity.ok(result)
     }
 
-    @Operation(summary = "删除Product", description = "根据ProductID删除Product")
+    @Operation(summary = "删除产品", description = "根据产品ID删除产品")
     @DeleteMapping(value = ["/{id}"])
     fun deleteById(
         @Parameter(description = "ProductID", required = true)
@@ -39,7 +44,7 @@ class ProductController(private val service: ProductService) {
         return ResponseEntity.ok().build()
     }
 
-    @Operation(summary = "创建Product", description = "创建新Product")
+    @Operation(summary = "创建产品", description = "创建新产品")
     @PostMapping(value = ["/"])
     fun create(
         @Parameter(description = "Product信息", required = true)
@@ -49,7 +54,7 @@ class ProductController(private val service: ProductService) {
         return ResponseEntity.ok().build()
     }
 
-    @Operation(summary = "更新Product", description = "更新Product信息")
+    @Operation(summary = "更新产品", description = "更新产品信息")
     @PutMapping(value = ["/"])
     fun update(
         @Parameter(description = "Product信息", required = true)
@@ -59,7 +64,7 @@ class ProductController(private val service: ProductService) {
         return ResponseEntity.ok().build()
     }
 
-    @Operation(summary = "分页查询Product", description = "分页查询Product列表")
+    @Operation(summary = "分页查询产品", description = "分页查询产品列表")
     @GetMapping(value = ["/page"])
     fun findPage(
         @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") currentPage: Int,

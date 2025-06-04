@@ -1,5 +1,9 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/v1/gox-system.xml
+      file: db/changelog/system/gox-system.xml
   - include:
-      file: db/changelog/v1/gox-iot.xml
+      file: db/changelog/iot/gox-iot.xml
+  - include:
+      file: db/changelog/iot/iot_device.xml
+  - include:
+      file: db/changelog/iot/iot_product.xml

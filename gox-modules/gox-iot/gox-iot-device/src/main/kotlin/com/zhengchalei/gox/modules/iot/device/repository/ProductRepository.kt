@@ -5,15 +5,17 @@ import com.zhengchalei.gox.modules.iot.device.entity.dto.*
 import org.babyfish.jimmer.spring.repository.KRepository
 import org.babyfish.jimmer.spring.repository.fetchSpringPage
 import org.babyfish.jimmer.sql.kt.ast.expression.asc
-import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Repository
 
+/**
+ * 产品Repository
+ *
+ * @author zhengchalei
+ */
 @Repository
 interface ProductRepository : KRepository<Product, Long> {
-
-    private val log = LoggerFactory.getLogger(this::class.java)
 
     fun findPage(
         pageRequest: PageRequest,

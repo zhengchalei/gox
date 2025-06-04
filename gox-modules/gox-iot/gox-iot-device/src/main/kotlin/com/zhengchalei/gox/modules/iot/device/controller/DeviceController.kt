@@ -13,13 +13,18 @@ import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
-@Tag(name = "Device管理", description = "Device相关操作")
+/**
+ * 设备Controller
+ *
+ * @author zhengchalei
+ */
+@Tag(name = "设备管理", description = "设备相关操作")
 @Validated
 @RestController
-@RequestMapping("/api/sys/device")
+@RequestMapping("/api/iot/device")
 class DeviceController(private val service: DeviceService) {
 
-    @Operation(summary = "根据ID查询Device", description = "通过DeviceID获取Device详细信息")
+    @Operation(summary = "根据ID查询设备", description = "通过设备ID获取设备详细信息")
     @GetMapping(value = ["/{id}"])
     fun findById(
         @Parameter(description = "DeviceID", required = true)
@@ -29,7 +34,7 @@ class DeviceController(private val service: DeviceService) {
         return ResponseEntity.ok(result)
     }
 
-    @Operation(summary = "删除Device", description = "根据DeviceID删除Device")
+    @Operation(summary = "删除设备", description = "根据设备ID删除设备")
     @DeleteMapping(value = ["/{id}"])
     fun deleteById(
         @Parameter(description = "DeviceID", required = true)
@@ -39,7 +44,7 @@ class DeviceController(private val service: DeviceService) {
         return ResponseEntity.ok().build()
     }
 
-    @Operation(summary = "创建Device", description = "创建新Device")
+    @Operation(summary = "创建设备", description = "创建新设备")
     @PostMapping(value = ["/"])
     fun create(
         @Parameter(description = "Device信息", required = true)
@@ -49,7 +54,7 @@ class DeviceController(private val service: DeviceService) {
         return ResponseEntity.ok().build()
     }
 
-    @Operation(summary = "更新Device", description = "更新Device信息")
+    @Operation(summary = "更新设备", description = "更新设备信息")
     @PutMapping(value = ["/"])
     fun update(
         @Parameter(description = "Device信息", required = true)
@@ -59,7 +64,7 @@ class DeviceController(private val service: DeviceService) {
         return ResponseEntity.ok().build()
     }
 
-    @Operation(summary = "分页查询Device", description = "分页查询Device列表")
+    @Operation(summary = "分页查询设备", description = "分页查询设备列表")
     @GetMapping(value = ["/page"])
     fun findPage(
         @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") currentPage: Int,

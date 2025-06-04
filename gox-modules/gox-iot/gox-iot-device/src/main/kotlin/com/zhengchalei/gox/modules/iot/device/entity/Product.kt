@@ -4,6 +4,11 @@ import com.zhengchalei.gox.framework.jimmer.entity.BaseEntity
 import org.babyfish.jimmer.sql.*
 import java.time.LocalDateTime
 
+/**
+ * 产品
+ *
+ * @author zhengchalei
+ */
 @Entity
 @Table(name = "iot_product")
 interface Product : BaseEntity {
