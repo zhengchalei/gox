@@ -1,6 +1,5 @@
 
 import api, { type ApiResponse } from "../index.ts";
-import type { RoleInfo } from "../system/role.ts";
 import type { UserDetailDTO } from "../system/user.ts";
 
 // 登录请求类型 - 根据 OpenAPI 定义

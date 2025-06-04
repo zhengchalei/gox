@@ -10,6 +10,11 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Repository
 
+/**
+ * ${entityComment}Repository
+ *
+ * @author zhengchalei
+ */
 @Repository
 interface ${entityName}Repository : KRepository<${entityName}, Long> {
 

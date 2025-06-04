@@ -13,13 +13,18 @@ import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
-@Tag(name = "${entityName}管理", description = "${entityName}相关操作")
+/**
+ * ${entityComment}Controller
+ *
+ * @author zhengchalei
+ */
+@Tag(name = "${entityComment}管理", description = "${entityComment}相关操作")
 @Validated
 @RestController
-@RequestMapping("/api/sys/${entityName?lower_case}")
+@RequestMapping("/api/${moduleName}/${entityName?lower_case}")
 class ${entityName}Controller(private val service: ${entityName}Service) {
 
-    @Operation(summary = "根据ID查询${entityName}", description = "通过${entityName}ID获取${entityName}详细信息")
+    @Operation(summary = "根据ID查询${entityComment}", description = "通过${entityComment}ID获取${entityComment}详细信息")
     @GetMapping(value = ["/{id}"])
     fun findById(
         @Parameter(description = "${entityName}ID", required = true)
@@ -29,7 +34,7 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
         return ResponseEntity.ok(result)
     }
 
-    @Operation(summary = "删除${entityName}", description = "根据${entityName}ID删除${entityName}")
+    @Operation(summary = "删除${entityComment}", description = "根据${entityComment}ID删除${entityComment}")
     @DeleteMapping(value = ["/{id}"])
     fun deleteById(
         @Parameter(description = "${entityName}ID", required = true)
@@ -39,7 +44,7 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
         return ResponseEntity.ok().build()
     }
 
-    @Operation(summary = "创建${entityName}", description = "创建新${entityName}")
+    @Operation(summary = "创建${entityComment}", description = "创建新${entityComment}")
     @PostMapping(value = ["/"])
     fun create(
         @Parameter(description = "${entityName}信息", required = true)
@@ -49,7 +54,7 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
         return ResponseEntity.ok().build()
     }
 
-    @Operation(summary = "更新${entityName}", description = "更新${entityName}信息")
+    @Operation(summary = "更新${entityComment}", description = "更新${entityComment}信息")
     @PutMapping(value = ["/"])
     fun update(
         @Parameter(description = "${entityName}信息", required = true)
@@ -59,7 +64,7 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
         return ResponseEntity.ok().build()
     }
 
-    @Operation(summary = "分页查询${entityName}", description = "分页查询${entityName}列表")
+    @Operation(summary = "分页查询${entityComment}", description = "分页查询${entityComment}列表")
     @GetMapping(value = ["/page"])
     fun findPage(
         @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") currentPage: Int,

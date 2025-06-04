@@ -4,8 +4,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
 
-    <changeSet id="创建${entityName}表" author="zhengchalei">
-        <createTable tableName="${tableName}" remarks="系统${entityName}表">
+    <changeSet id="创建${entityComment}表" author="zhengchalei">
+        <createTable tableName="${tableName}" remarks="系统${entityComment}表">
             <column name="id" type="BIGSERIAL" autoIncrement="true" remarks="主键">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
