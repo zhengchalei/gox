@@ -25,39 +25,48 @@
             mode="vertical"
             router
           >
-            <el-menu-item index="/" class="menu-item">
-              <el-icon><Grid /></el-icon>
-              <template #title>仪表盘</template>
-            </el-menu-item>
-
-            <el-sub-menu index="system" class="sub-menu">
-              <template #title>
-                <el-icon><Setting /></el-icon>
-                <span>系统管理</span>
-              </template>
-              <el-menu-item index="/system/user" class="menu-item">
-                <el-icon><User /></el-icon>
-                <template #title>用户管理</template>
+            <!-- 动态渲染菜单 -->
+            <template v-for="route in menuRoutes" :key="route.path">
+              <!-- 没有子菜单的路由 -->
+              <el-menu-item 
+                v-if="!route.children || route.children.length === 0" 
+                :index="'/' + route.path" 
+                class="menu-item"
+              >
+                <el-icon v-if="route.meta?.icon">
+                  <component :is="route.meta.icon" />
+                </el-icon>
+                <template #title>{{ route.meta?.title }}</template>
               </el-menu-item>
-              <el-menu-item index="/system/role" class="menu-item">
-                <el-icon><UserFilled /></el-icon>
-                <template #title>角色管理</template>
-              </el-menu-item>
-              <el-menu-item index="/system/permission" class="menu-item">
-                <el-icon><Lock /></el-icon>
-                <template #title>权限管理</template>
-              </el-menu-item>
-            </el-sub-menu>
-
-            <el-menu-item index="/file" class="menu-item">
-              <el-icon><FolderOpened /></el-icon>
-              <template #title>文件管理</template>
-            </el-menu-item>
-
-            <el-menu-item index="/profile" class="menu-item">
-              <el-icon><User /></el-icon>
-              <template #title>个人设置</template>
-            </el-menu-item>
+              
+              <!-- 有子菜单的路由 -->
+              <el-sub-menu 
+                v-else 
+                :index="route.path" 
+                class="sub-menu"
+              >
+                <template #title>
+                  <el-icon v-if="route.meta?.icon">
+                    <component :is="route.meta.icon" />
+                  </el-icon>
+                  <span>{{ route.meta?.title }}</span>
+                </template>
+                
+                <!-- 递归渲染子菜单 -->
+                <template v-for="child in route.children" :key="child.path">
+                  <el-menu-item 
+                    v-if="!child.redirect" 
+                    :index="'/' + route.path + '/' + child.path" 
+                    class="menu-item"
+                  >
+                    <el-icon v-if="child.meta?.icon">
+                      <component :is="child.meta.icon" />
+                    </el-icon>
+                    <template #title>{{ child.meta?.title }}</template>
+                  </el-menu-item>
+                </template>
+              </el-sub-menu>
+            </template>
           </el-menu>
         </el-scrollbar>
       </el-aside>
@@ -177,6 +186,22 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { loginApi } from "../api/auth/auth";
 import type { UserDetailDTO } from "../api/system/user";
 import { userLayoutRoutes } from '../router/routes.ts'
+// 导入所有需要的图标组件
+import {
+  Grid,
+  Setting,
+  User,
+  UserFilled,
+  Lock,
+  FolderOpened,
+  Fold,
+  Expand,
+  Search,
+  FullScreen,
+  Bell,
+  ArrowDown,
+  SwitchButton
+} from '@element-plus/icons-vue'
 
 const route = useRoute();
 const router = useRouter();
@@ -201,6 +226,17 @@ const userInfo = ref<UserDetailDTO>({
 
 // 计算属性
 const activeMenu = computed(() => route.path);
+
+/**
+ * 处理菜单路由数据
+ * 过滤掉不需要显示在菜单中的路由
+ */
+const menuRoutes = computed(() => {
+  return userLayoutRoutes.filter(route => {
+    // 过滤掉没有 meta 或 meta.title 的路由
+    return route.meta && route.meta.title;
+  });
+});
 
 const breadcrumbList = computed(() => {
   const matched = route.matched.filter((item) => item.meta && item.meta.title);
@@ -827,4 +863,4 @@ onMounted(() => {
 .layout-content {
   animation: fadeIn 0.5s ease-out;
 }
-</style> 
+</style>

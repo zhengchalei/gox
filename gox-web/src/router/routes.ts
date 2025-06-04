@@ -7,16 +7,8 @@ export const userLayoutRoutes = [
         component: () => import('../views/Dashboard.vue'),
         meta: {
             requiresAuth: true,
-            title: '仪表盘'
-        }
-    },
-    {
-        path: 'profile',
-        name: 'Profile',
-        component: () => import('../views/Profile.vue'),
-        meta: {
-            requiresAuth: true,
-            title: '个人设置'
+            title: '仪表盘',
+            icon: 'Grid'
         }
     },
     // 系统管理路由
@@ -25,7 +17,8 @@ export const userLayoutRoutes = [
         name: 'System',
         meta: {
             requiresAuth: true,
-            title: '系统管理'
+            title: '系统管理',
+            icon: 'Setting'
         },
         children: [
             {
@@ -34,7 +27,8 @@ export const userLayoutRoutes = [
                 component: () => import('../views/system/User.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: '用户管理'
+                    title: '用户管理',
+                    icon: 'User'
                 }
             },
             {
@@ -43,7 +37,8 @@ export const userLayoutRoutes = [
                 component: () => import('../views/system/Role.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: '角色管理'
+                    title: '角色管理',
+                    icon: 'UserFilled'
                 }
             },
             {
@@ -52,7 +47,8 @@ export const userLayoutRoutes = [
                 component: () => import('../views/system/Permission.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: '权限管理'
+                    title: '权限管理',
+                    icon: 'Lock'
                 }
             },
         ]
@@ -63,7 +59,8 @@ export const userLayoutRoutes = [
         name: 'File',
         meta: {
             requiresAuth: true,
-            title: '文件管理'
+            title: '文件管理',
+            icon: 'FolderOpened'
         },
         children: [
             {
@@ -72,7 +69,8 @@ export const userLayoutRoutes = [
                 component: () => import('../views/file/List.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: '文件管理'
+                    title: '文件管理',
+                    icon: 'FolderOpened'
                 }
             },
             {
@@ -84,6 +82,16 @@ export const userLayoutRoutes = [
                 redirect: '/file'
             }
         ]
+    },
+    {
+        path: 'profile',
+        name: 'Profile',
+        component: () => import('../views/Profile.vue'),
+        meta: {
+            requiresAuth: true,
+            title: '个人设置',
+            icon: 'User'
+        }
     },
 ];
 
