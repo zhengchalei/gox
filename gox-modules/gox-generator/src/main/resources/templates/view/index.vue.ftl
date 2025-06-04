@@ -137,7 +137,7 @@
             formatDateTime(viewData.createdTime)
           }}</el-descriptions-item>
           <el-descriptions-item label="更新时间">{{
-            formatDateTime(viewData.updatedTime)
+            formatDateTime(viewData.modifiedTime)
           }}</el-descriptions-item>
         </el-descriptions>
       </div>
@@ -148,25 +148,23 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
-import { Plus, Refresh, Search } from "@element-plus/icons-vue";
-import { ${entityName?lower_case}Api } from "../../api";
-import type {
-  ${entityName}CreateDTO,
-  ${entityName}DetailDTO,
-  ${entityName}ListDTO,
-  ${entityName}Specification,
-  ${entityName}UpdateDTO,
-} from "../../types/api";
+import {
+  ${entityName?lower_case}Api,
+  type ${entityName}CreateDTO,
+  type ${entityName}DetailDTO,
+  type ${entityName}ListDTO,
+  type ${entityName}Specification,
+  type ${entityName}UpdateDTO,
+} from "../../api/${moduleName}/${entityName?lower_case}";
 
 // 响应式数据
 const loading = ref(false);
 const tableData = ref<${entityName}ListDTO[]>([]);
-const selectedPermissions = ref<${entityName}ListDTO[]>([]);
 
 // 搜索表单
 const searchForm = reactive<${entityName}Specification>({
   <#list fields as field>
-  ${field.name}: "",
+  ${field.name}: <#if field.type=="String"> ''</#if><#if field.type=="Boolean"> true</#if>,
   </#list>
 });
 
@@ -188,25 +186,15 @@ const dialogTitle = computed(() => (isEdit.value ? "编辑${entityComment}" : "�
 const formRef = ref<FormInstance>();
 const formData = reactive<${entityName}CreateDTO & Partial<${entityName}UpdateDTO>>({
   <#list fields as field>
-  ${field.name}: "",
+  ${field.name}:<#if field.type=="String"> ''</#if><#if field.type=="Boolean"> true</#if>,
   </#list>
 });
 const formRules = {
   <#list fields as field>
     <#if field.nullable>
-  ${field.name}?: [
-    { required: true, message: "请输入${field.comment}", trigger: "blur" },
-    {
-      min: 2,
-      max: 50,
-      message: "${field.comment}长度在 2 到 50 个字符",
-      trigger: "blur",
-    },
-  ],
+  ${field.name}: [{ required: true, message: "请输入${field.comment}", trigger: "blur" }],
   <#else>
-  ${field.name}: [
-    { required: true, message: "请输入${field.comment}", trigger: "blur" },
-  ],
+  ${field.name}: [{ required: true, message: "请输入${field.comment}", trigger: "blur" }],
   </#if>
   </#list>
 };
@@ -219,7 +207,7 @@ const formatDateTime = (dateTime: string) => {
   return new Date(dateTime).toLocaleString("zh-CN");
 };
 
-const fetchPermissions = async () => {
+const fetch${entityName} = async () => {
   try {
     loading.value = true;
     const response = await ${entityName?lower_case}Api.findPage(
@@ -249,10 +237,6 @@ const handleReset = () => {
     </#list>
   });
   handleSearch();
-};
-
-const handleSelectionChange = (selection: ${entityName}ListDTO[]) => {
-  selected${entityName}.value = selection;
 };
 
 const handleSizeChange = (size: number) => {

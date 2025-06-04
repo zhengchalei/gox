@@ -21,13 +21,13 @@ val deviceGenerator = CodeGenerator(
     tableName = "iot_device",
     fields = listOf(
         // code
-        FieldDefinition("code", "String", false, "设备编号"),
+        FieldDefinition("code", FieldType.STRING.type, false, "设备编号"),
         // name
-        FieldDefinition("name", "String", false, "设备名称"),
+        FieldDefinition("name", FieldType.STRING.type, false, "设备名称"),
         // description
-        FieldDefinition("description", "String", true, "设备描述"),
+        FieldDefinition("description", FieldType.STRING.type, true, "设备描述"),
         // status
-        FieldDefinition("online", "Boolean", false, "设备状态"),
+        FieldDefinition("online", FieldType.BOOLEAN.type, false, "设备状态"),
         // online
     )
 )
@@ -42,12 +42,12 @@ val productGenerator = CodeGenerator(
     tableName = "iot_product",
     fields = listOf(
         // code
-        FieldDefinition("code", "String", false, "产品编号"),
+        FieldDefinition("code", FieldType.STRING.type, false, "产品编号"),
         // name
-        FieldDefinition("name", "String", false, "产品名称"),
+        FieldDefinition("name", FieldType.STRING.type, false, "产品名称"),
         // description
-        FieldDefinition("description", "String", true, "产品描述"),
+        FieldDefinition("description", FieldType.STRING.type, true, "产品描述"),
         // status
-        FieldDefinition("status", "Boolean", false, "产品状态"),
+        FieldDefinition("status", FieldType.BOOLEAN.type, false, "产品状态"),
     )
 )

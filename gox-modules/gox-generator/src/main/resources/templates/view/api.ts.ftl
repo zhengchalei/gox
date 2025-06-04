@@ -2,27 +2,37 @@ import api, { type ApiResponse, type PageResponse } from "../index";
 
 // 权限相关类型
 export interface ${entityName}DetailDTO {
+  id: number
   <#list fields as field>
   ${field.name}<#if field.nullable>?</#if>: ${field.type}
   </#list>
+  createdTime: string
+  modifiedTime?: string
+  createdBy?: number
+  modifiedBy?: number
 }
 
 export interface ${entityName}ListDTO {
+  id: number
   <#list fields as field>
   ${field.name}<#if field.nullable>?</#if>: ${field.type}
   </#list>
+  createdTime: string
+  modifiedTime?: string
+  createdBy?: number
+  modifiedBy?: number
 }
 
 export interface ${entityName}CreateDTO {
   <#list fields as field>
-  ${field.name}<#if field.nullable>?</#if>: ${field.type}
+  ${field.name}<#if field.nullable==false>?</#if>: ${field.type}
   </#list>
 }
 
 export interface ${entityName}UpdateDTO {
   id: number
   <#list fields as field>
-  ${field.name}<#if field.nullable>?</#if>: ${field.type}
+  ${field.name}<#if field.nullable==false>?</#if>: ${field.type}
   </#list>
 }
 
@@ -30,13 +40,6 @@ export interface ${entityName}Specification {
   id?: number
   <#list fields as field>
   ${field.name}?: ${field.type}
-  </#list>
-}
-
-export interface ${entityName}Info {
-  id: number
-  <#list fields as field>
-  ${field.name}<#if field.nullable>?</#if>: ${field.type}
   </#list>
 }
 
@@ -53,7 +56,7 @@ export const ${entityName?lower_case}Api = {
 
   // 根据ID查询权限
   findById: (id: number): Promise<ApiResponse<${entityName}DetailDTO>> => {
-    return api.get(`/api/${moduleName}/${entityName?lower_case}/${id}`);
+    return api.get(`/api/${moduleName}/${entityName?lower_case}/<#noparse>${id}</#noparse>`);
   },
 
   // 分页查询权限
@@ -74,11 +77,11 @@ export const ${entityName?lower_case}Api = {
           ])
       ),
     });
-    return api.get(`/api/${moduleName}/${entityName?lower_case}/page?${params}`);
+    return api.get(`/api/${moduleName}/${entityName?lower_case}/page?<#noparse>${params}</#noparse>`);
   },
 
   // 删除权限
   deleteById: (id: number): Promise<ApiResponse<void>> => {
-    return api.delete(`/api/${moduleName}/${entityName?lower_case}/${id}`);
+    return api.delete(`/api/${moduleName}/${entityName?lower_case}/<#noparse>${id}</#noparse>`);
   },
 };

@@ -153,7 +153,7 @@ class SQLFileGenerator(
 ) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName) {
     override fun generate(outputDir: String, packagePath: String) {
         val template = getTemplate("sql/liquibase.xml.ftl")
-        val outputFile = File("$outputDir/resources/db/changelog/${tableName}.xml")
+        val outputFile = File("$projectRoot/gox-starter/src/main/resources/db/changelog/${moduleName}/${tableName}.xml")
         processTemplate(template, outputFile)
     }
 }
@@ -188,7 +188,7 @@ class ApiFileGenerator(
 ) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName) {
     override fun generate(outputDir: String, packagePath: String) {
         val template = getTemplate("view/api.ts.ftl")
-        val outputFile = File("$projectRoot/gox-web/src/api/${moduleName}/${entityName}.ts")
+        val outputFile = File("$projectRoot/gox-web/src/api/${moduleName}/${entityName.lowercase()}.ts")
         processTemplate(template, outputFile)
     }
 }
@@ -232,3 +232,27 @@ data class FieldDefinition(
     val nullable: Boolean = false,
     val comment: String? = null
 )
+
+enum class FieldType(val type: String) {
+    STRING("String"),
+    INTEGER("Integer"),
+    LONG("Long"),
+    DOUBLE("Double"),
+    FLOAT("Float"),
+    BOOLEAN("Boolean"),
+    DATE("Date"),
+    TIMESTAMP("Timestamp"),
+    BLOB("Blob"),
+    CLOB("Clob"),
+    ARRAY("Array"),
+    STRUCT("Struct"),
+    REF("Ref"),
+    OTHER("Other"),
+    ;
+
+    companion object {
+        fun fromType(type: String): FieldType? {
+            return entries.find { it.type == type }
+        }
+    }
+}
