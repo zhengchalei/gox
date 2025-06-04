@@ -438,7 +438,12 @@ import {
   UploadFilled,
   VideoPlay,
 } from "@element-plus/icons-vue";
-import { fileApi, type FileInfoListDTO, type FileInfoSpecification } from "../../api/file/file";
+import {
+  fileApi,
+  type FileInfoListDTO,
+  type FileInfoSpecification,
+} from "../../api/file/file";
+import { formatDateTime } from "../../utils/dateUtil";
 
 // 响应式数据
 const loading = ref(false);
@@ -487,10 +492,6 @@ const formatFileSize = (size: number): string => {
   const sizes = ["B", "KB", "MB", "GB", "TB"];
   const i = Math.floor(Math.log(size) / Math.log(k));
   return parseFloat((size / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-};
-
-const formatDateTime = (dateTime: string) => {
-  return new Date(dateTime).toLocaleString("zh-CN");
 };
 
 const isImage = (mimeType: string) => mimeType.startsWith("image/");
@@ -940,4 +941,4 @@ watch(viewMode, handleViewModeChange);
 .el-divider {
   margin: 20px 0;
 }
-</style> 
+</style>

@@ -565,4 +565,4 @@ const goToLogin = () => {
 :deep(.el-link) {
   font-size: 14px;
 }
-</style> 
+</style>

@@ -13,7 +13,6 @@
 
       <!-- 搜索栏 -->
       <el-form :model="searchForm" :inline="true">
-
         <el-form-item label="设备编号">
           <el-input
             v-model="searchForm.code"
@@ -63,15 +62,34 @@
         v-loading="loading"
         :data="tableData"
         style="width: 100%"
-        @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" width="80" />
 
-        <el-table-column prop="code" label="设备编号" min-width="120" show-overflow-tooltip />
-        <el-table-column prop="name" label="设备名称" min-width="120" show-overflow-tooltip />
-        <el-table-column prop="description" label="设备描述" min-width="120" show-overflow-tooltip />
-        <el-table-column prop="online" label="设备状态" min-width="120" show-overflow-tooltip />
+        <el-table-column
+          prop="code"
+          label="设备编号"
+          min-width="120"
+          show-overflow-tooltip
+        />
+        <el-table-column
+          prop="name"
+          label="设备名称"
+          min-width="120"
+          show-overflow-tooltip
+        />
+        <el-table-column
+          prop="description"
+          label="设备描述"
+          min-width="120"
+          show-overflow-tooltip
+        />
+        <el-table-column
+          prop="online"
+          label="设备状态"
+          min-width="120"
+          show-overflow-tooltip
+        />
 
         <el-table-column prop="createdTime" label="创建时间" width="180">
           <template #default="{ row }">
@@ -133,7 +151,10 @@
           <el-input v-model="formData.name" placeholder="请输入设备名称" />
         </el-form-item>
         <el-form-item label="设备描述" prop="description">
-          <el-input v-model="formData.description" placeholder="请输入设备描述" />
+          <el-input
+            v-model="formData.description"
+            placeholder="请输入设备描述"
+          />
         </el-form-item>
         <el-form-item label="设备状态" prop="online">
           <el-input v-model="formData.online" placeholder="请输入设备状态" />
@@ -184,7 +205,8 @@
 
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
-import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
+import type { FormInstance } from "element-plus";
 import {
   deviceApi,
   type DeviceCreateDTO,
@@ -193,6 +215,7 @@ import {
   type DeviceSpecification,
   type DeviceUpdateDTO,
 } from "../../api/iot/device";
+import { formatDateTime } from "../../utils/dateUtil";
 
 // 响应式数据
 const loading = ref(false);
@@ -200,10 +223,10 @@ const tableData = ref<DeviceListDTO[]>([]);
 
 // 搜索表单
 const searchForm = reactive<DeviceSpecification>({
-  code:  '',
-  name:  '',
-  description:  '',
-  online:  true,
+  code: "",
+  name: "",
+  description: "",
+  online: true,
 });
 
 // 分页
@@ -223,9 +246,9 @@ const dialogTitle = computed(() => (isEdit.value ? "编辑设备" : "新增设�
 // 表单
 const formRef = ref<FormInstance>();
 const formData = reactive<DeviceCreateDTO & Partial<DeviceUpdateDTO>>({
-  code: '',
-  name: '',
-  description: '',
+  code: "",
+  name: "",
+  description: "",
   online: true,
 });
 const formRules = {
@@ -237,11 +260,6 @@ const formRules = {
 
 // 查看详情数据
 const viewData = ref<DeviceDetailDTO | null>(null);
-
-// 方法
-const formatDateTime = (dateTime: string) => {
-  return new Date(dateTime).toLocaleString("zh-CN");
-};
 
 const fetchDevice = async () => {
   try {
@@ -392,4 +410,4 @@ onMounted(() => {
 .detail-content {
   padding: 20px 0;
 }
-</style> 
+</style>

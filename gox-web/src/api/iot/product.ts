@@ -3,50 +3,50 @@ import type { ApiResponse, PageResponse } from "../index.ts";
 
 // 权限相关类型
 export interface ProductDetailDTO {
-  id: number
-  code: String
-  name: String
-  description?: String
-  status: Boolean
-  createdTime: string
-  modifiedTime?: string
-  createdBy?: number
-  modifiedBy?: number
+  id: number;
+  code: String;
+  name: String;
+  description?: String;
+  status: Boolean;
+  createdTime: string;
+  modifiedTime?: string;
+  createdBy?: number;
+  modifiedBy?: number;
 }
 
 export interface ProductListDTO {
-  id: number
-  code: String
-  name: String
-  description?: String
-  status: Boolean
-  createdTime: string
-  modifiedTime?: string
-  createdBy?: number
-  modifiedBy?: number
+  id: number;
+  code: String;
+  name: String;
+  description?: String;
+  status: Boolean;
+  createdTime: string;
+  modifiedTime?: string;
+  createdBy?: number;
+  modifiedBy?: number;
 }
 
 export interface ProductCreateDTO {
-  code?: String
-  name?: String
-  description: String
-  status?: Boolean
+  code?: String;
+  name?: String;
+  description: String;
+  status?: Boolean;
 }
 
 export interface ProductUpdateDTO {
-  id: number
-  code?: String
-  name?: String
-  description: String
-  status?: Boolean
+  id: number;
+  code?: String;
+  name?: String;
+  description: String;
+  status?: Boolean;
 }
 
 export interface ProductSpecification {
-  id?: number
-  code?: String
-  name?: String
-  description?: String
-  status?: Boolean
+  id?: number;
+  code?: String;
+  name?: String;
+  description?: String;
+  status?: Boolean;
 }
 
 export const productApi = {

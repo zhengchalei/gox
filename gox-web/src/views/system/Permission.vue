@@ -202,7 +202,8 @@
 
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
-import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
+import type { FormInstance } from "element-plus";
 import { permissionApi } from "../../api/system/permission";
 import type {
   PermissionCreateDTO,
@@ -212,6 +213,7 @@ import type {
   PermissionUpdateDTO,
 } from "../../api/system/permission";
 import { roleApi, type RoleListDTO } from "../../api/system/role";
+import { formatDateTime } from "../../utils/dateUtil";
 
 // 响应式数据
 const loading = ref(false);
@@ -278,11 +280,6 @@ const viewData = ref<PermissionDetailDTO | null>(null);
 
 // 角色选项
 const roleOptions = ref<RoleListDTO[]>([]);
-
-// 方法
-const formatDateTime = (dateTime: string) => {
-  return new Date(dateTime).toLocaleString("zh-CN");
-};
 
 const fetchPermissions = async () => {
   try {
@@ -445,4 +442,4 @@ onMounted(() => {
 .detail-content {
   padding: 20px 0;
 }
-</style> 
+</style>

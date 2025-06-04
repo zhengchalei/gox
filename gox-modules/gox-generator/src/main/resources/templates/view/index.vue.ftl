@@ -41,7 +41,6 @@
         v-loading="loading"
         :data="tableData"
         style="width: 100%"
-        @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" width="80" />
@@ -147,7 +146,8 @@
 
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
-import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
+import type { FormInstance } from "element-plus";
 import {
   ${entityName?lower_case}Api,
   type ${entityName}CreateDTO,
@@ -201,11 +201,6 @@ const formRules = {
 
 // 查看详情数据
 const viewData = ref<${entityName}DetailDTO | null>(null);
-
-// 方法
-const formatDateTime = (dateTime: string) => {
-  return new Date(dateTime).toLocaleString("zh-CN");
-};
 
 const fetch${entityName} = async () => {
   try {

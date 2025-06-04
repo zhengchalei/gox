@@ -3,50 +3,50 @@ import type { ApiResponse, PageResponse } from "../index.ts";
 
 // 权限相关类型
 export interface DeviceDetailDTO {
-  id: number
-  code: String
-  name: String
-  description?: String
-  online: Boolean
-  createdTime: string
-  modifiedTime?: string
-  createdBy?: number
-  modifiedBy?: number
+  id: number;
+  code: String;
+  name: String;
+  description?: String;
+  online: Boolean;
+  createdTime: string;
+  modifiedTime?: string;
+  createdBy?: number;
+  modifiedBy?: number;
 }
 
 export interface DeviceListDTO {
-  id: number
-  code: String
-  name: String
-  description?: String
-  online: Boolean
-  createdTime: string
-  modifiedTime?: string
-  createdBy?: number
-  modifiedBy?: number
+  id: number;
+  code: String;
+  name: String;
+  description?: String;
+  online: Boolean;
+  createdTime: string;
+  modifiedTime?: string;
+  createdBy?: number;
+  modifiedBy?: number;
 }
 
 export interface DeviceCreateDTO {
-  code?: String
-  name?: String
-  description: String
-  online?: Boolean
+  code?: String;
+  name?: String;
+  description: String;
+  online?: Boolean;
 }
 
 export interface DeviceUpdateDTO {
-  id: number
-  code?: String
-  name?: String
-  description: String
-  online?: Boolean
+  id: number;
+  code?: String;
+  name?: String;
+  description: String;
+  online?: Boolean;
 }
 
 export interface DeviceSpecification {
-  id?: number
-  code?: String
-  name?: String
-  description?: String
-  online?: Boolean
+  id?: number;
+  code?: String;
+  name?: String;
+  description?: String;
+  online?: Boolean;
 }
 
 export const deviceApi = {

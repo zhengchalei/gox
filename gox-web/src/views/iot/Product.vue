@@ -63,7 +63,6 @@
         v-loading="loading"
         :data="tableData"
         style="width: 100%"
-        @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" width="80" />
@@ -174,7 +173,7 @@
             formatDateTime(viewData.createdTime)
           }}</el-descriptions-item>
           <el-descriptions-item label="更新时间">{{
-            formatDateTime(viewData.modifiedTime)
+            formatDateTime(viewData.modifiedTime ?? '')
           }}</el-descriptions-item>
         </el-descriptions>
       </div>
@@ -184,7 +183,8 @@
 
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
-import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
+import type { FormInstance } from "element-plus";
 import {
   productApi,
   type ProductCreateDTO,
@@ -193,6 +193,7 @@ import {
   type ProductSpecification,
   type ProductUpdateDTO,
 } from "../../api/iot/product";
+import { formatDateTime } from "../../utils/dateUtil";
 
 // 响应式数据
 const loading = ref(false);
@@ -237,11 +238,6 @@ const formRules = {
 
 // 查看详情数据
 const viewData = ref<ProductDetailDTO | null>(null);
-
-// 方法
-const formatDateTime = (dateTime: string) => {
-  return new Date(dateTime).toLocaleString("zh-CN");
-};
 
 const fetchProduct = async () => {
   try {

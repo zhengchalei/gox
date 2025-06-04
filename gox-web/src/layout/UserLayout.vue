@@ -28,9 +28,9 @@
             <!-- 动态渲染菜单 -->
             <template v-for="route in menuRoutes" :key="route.path">
               <!-- 没有子菜单的路由 -->
-              <el-menu-item 
-                v-if="!route.children || route.children.length === 0" 
-                :index="'/' + route.path" 
+              <el-menu-item
+                v-if="!route.children || route.children.length === 0"
+                :index="'/' + route.path"
                 class="menu-item"
               >
                 <el-icon v-if="route.meta?.icon">
@@ -38,25 +38,21 @@
                 </el-icon>
                 <template #title>{{ route.meta?.title }}</template>
               </el-menu-item>
-              
+
               <!-- 有子菜单的路由 -->
-              <el-sub-menu 
-                v-else 
-                :index="route.path" 
-                class="sub-menu"
-              >
+              <el-sub-menu v-else :index="route.path" class="sub-menu">
                 <template #title>
                   <el-icon v-if="route.meta?.icon">
                     <component :is="route.meta.icon" />
                   </el-icon>
                   <span>{{ route.meta?.title }}</span>
                 </template>
-                
+
                 <!-- 递归渲染子菜单 -->
                 <template v-for="child in route.children" :key="child.path">
-                  <el-menu-item 
-                    v-if="!child.redirect" 
-                    :index="'/' + route.path + '/' + child.path" 
+                  <el-menu-item
+                    v-if="!child.redirect"
+                    :index="'/' + route.path + '/' + child.path"
                     class="menu-item"
                   >
                     <el-icon v-if="child.meta?.icon">
@@ -185,23 +181,20 @@ import { useRoute, useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { loginApi } from "../api/auth/auth";
 import type { UserDetailDTO } from "../api/system/user";
-import { userLayoutRoutes } from '../router/routes.ts'
+import { userLayoutRoutes } from "../router/routes.ts";
 // 导入所有需要的图标组件
 import {
   Grid,
-  Setting,
   User,
-  UserFilled,
   Lock,
-  FolderOpened,
   Fold,
   Expand,
   Search,
   FullScreen,
   Bell,
   ArrowDown,
-  SwitchButton
-} from '@element-plus/icons-vue'
+  SwitchButton,
+} from "@element-plus/icons-vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -212,16 +205,16 @@ const searchValue = ref("");
 const notificationCount = ref(0);
 const userInfo = ref<UserDetailDTO>({
   id: 0,
-  username: '',
-  nickname: '加载中...',
-  avatar: '',
-  email: '',
-  phone: '',
+  username: "",
+  nickname: "加载中...",
+  avatar: "",
+  email: "",
+  phone: "",
   enabled: true,
-  createdTime: '',
-  updatedTime: '',
+  createdTime: "",
+  updatedTime: "",
   roleIds: [],
-  roles: []
+  roles: [],
 });
 
 // 计算属性
@@ -232,7 +225,7 @@ const activeMenu = computed(() => route.path);
  * 过滤掉不需要显示在菜单中的路由
  */
 const menuRoutes = computed(() => {
-  return userLayoutRoutes.filter(route => {
+  return userLayoutRoutes.filter((route) => {
     // 过滤掉没有 meta 或 meta.title 的路由
     return route.meta && route.meta.title;
   });
@@ -615,7 +608,7 @@ onMounted(() => {
 }
 
 :deep(.el-menu-item.is-active::before) {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;

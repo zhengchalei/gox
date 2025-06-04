@@ -265,6 +265,7 @@ import {
   permissionApi,
   type PermissionListDTO,
 } from "../../api/system/permission.ts";
+import { formatDateTime } from "../../utils/dateUtil.ts";
 
 // 响应式数据
 const loading = ref(false);
@@ -338,11 +339,6 @@ const assignPermissionIds = ref<number[]>([]);
 
 // 权限树数据
 const permissionTreeData = ref<PermissionListDTO[]>([]);
-
-// 方法
-const formatDateTime = (dateTime: string) => {
-  return new Date(dateTime).toLocaleString("zh-CN");
-};
 
 const fetchRoles = async () => {
   try {
@@ -566,4 +562,4 @@ onMounted(() => {
 .detail-content {
   padding: 20px 0;
 }
-</style> 
+</style>

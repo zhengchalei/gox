@@ -87,7 +87,7 @@
             <div ref="userTrendChart" class="chart-container"></div>
           </el-card>
         </el-col>
-        
+
         <!-- 文件类型分布图 -->
         <el-col :xs="24" :lg="12">
           <el-card class="chart-card" header="文件类型分布">
@@ -96,14 +96,14 @@
         </el-col>
       </el-row>
 
-      <el-row :gutter="24" style="margin-top: 20px;">
+      <el-row :gutter="24" style="margin-top: 20px">
         <!-- 系统访问量统计 -->
         <el-col :xs="24" :lg="16">
           <el-card class="chart-card" header="系统访问量统计">
             <div ref="accessChart" class="chart-container"></div>
           </el-card>
         </el-col>
-        
+
         <!-- 角色权限分布 -->
         <el-col :xs="24" :lg="8">
           <el-card class="chart-card" header="角色权限分布">
@@ -116,246 +116,246 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, nextTick } from 'vue'
-import { Document, Lock, User, UserFilled } from '@element-plus/icons-vue'
-import * as echarts from 'echarts'
-import type { UserDetailDTO } from '../types/api'
+import { onMounted, ref, nextTick } from "vue";
+import { Document, Lock, User, UserFilled } from "@element-plus/icons-vue";
+import * as echarts from "echarts";
+import type { UserDetailDTO } from "../api/system/user";
 
 // 图表引用
-const userTrendChart = ref<HTMLDivElement>()
-const fileTypeChart = ref<HTMLDivElement>()
-const accessChart = ref<HTMLDivElement>()
-const roleChart = ref<HTMLDivElement>()
+const userTrendChart = ref<HTMLDivElement>();
+const fileTypeChart = ref<HTMLDivElement>();
+const accessChart = ref<HTMLDivElement>();
+const roleChart = ref<HTMLDivElement>();
 
 // 响应式数据
 const userInfo = ref<UserDetailDTO>({
   id: 0,
-  username: '用户',
-  nickname: '',
-  avatar: '',
-  email: '',
-  phone: '',
+  username: "用户",
+  nickname: "",
+  avatar: "",
+  email: "",
+  phone: "",
   enabled: true,
-  createdTime: '',
-  updatedTime: '',
+  createdTime: "",
+  updatedTime: "",
   roleIds: [],
-  roles: []
-})
+  roles: [],
+});
 
 const loadUserInfo = () => {
-  const storedUserInfo = localStorage.getItem('userInfo')
+  const storedUserInfo = localStorage.getItem("userInfo");
   if (storedUserInfo) {
     try {
-      userInfo.value = JSON.parse(storedUserInfo)
+      userInfo.value = JSON.parse(storedUserInfo);
     } catch (error) {
-      console.error('解析用户信息失败:', error)
+      console.error("解析用户信息失败:", error);
     }
   }
-}
+};
 
 // 初始化用户增长趋势图
 const initUserTrendChart = () => {
-  if (!userTrendChart.value) return
-  
-  const chart = echarts.init(userTrendChart.value)
+  if (!userTrendChart.value) return;
+
+  const chart = echarts.init(userTrendChart.value);
   const option = {
     tooltip: {
-      trigger: 'axis'
+      trigger: "axis",
     },
     grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      containLabel: true,
     },
     xAxis: {
-      type: 'category',
+      type: "category",
       boundaryGap: false,
-      data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月']
+      data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月"],
     },
     yAxis: {
-      type: 'value'
+      type: "value",
     },
     series: [
       {
-        name: '新增用户',
-        type: 'line',
-        stack: 'Total',
+        name: "新增用户",
+        type: "line",
+        stack: "Total",
         smooth: true,
         data: [120, 132, 101, 134, 90, 230, 210],
         itemStyle: {
-          color: '#667eea'
+          color: "#667eea",
         },
         areaStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: 'rgba(102, 126, 234, 0.3)' },
-            { offset: 1, color: 'rgba(102, 126, 234, 0.1)' }
-          ])
-        }
+            { offset: 0, color: "rgba(102, 126, 234, 0.3)" },
+            { offset: 1, color: "rgba(102, 126, 234, 0.1)" },
+          ]),
+        },
       },
       {
-        name: '活跃用户',
-        type: 'line',
-        stack: 'Total',
+        name: "活跃用户",
+        type: "line",
+        stack: "Total",
         smooth: true,
         data: [220, 182, 191, 234, 290, 330, 310],
         itemStyle: {
-          color: '#4facfe'
+          color: "#4facfe",
         },
         areaStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: 'rgba(79, 172, 254, 0.3)' },
-            { offset: 1, color: 'rgba(79, 172, 254, 0.1)' }
-          ])
-        }
-      }
-    ]
-  }
-  chart.setOption(option)
-}
+            { offset: 0, color: "rgba(79, 172, 254, 0.3)" },
+            { offset: 1, color: "rgba(79, 172, 254, 0.1)" },
+          ]),
+        },
+      },
+    ],
+  };
+  chart.setOption(option);
+};
 
 // 初始化文件类型分布图
 const initFileTypeChart = () => {
-  if (!fileTypeChart.value) return
-  
-  const chart = echarts.init(fileTypeChart.value)
+  if (!fileTypeChart.value) return;
+
+  const chart = echarts.init(fileTypeChart.value);
   const option = {
     tooltip: {
-      trigger: 'item',
-      formatter: '{a} <br/>{b}: {c} ({d}%)'
+      trigger: "item",
+      formatter: "{a} <br/>{b}: {c} ({d}%)",
     },
     legend: {
-      orient: 'vertical',
-      left: 'left'
+      orient: "vertical",
+      left: "left",
     },
     series: [
       {
-        name: '文件类型',
-        type: 'pie',
-        radius: '50%',
+        name: "文件类型",
+        type: "pie",
+        radius: "50%",
         data: [
-          { value: 335, name: 'PDF' },
-          { value: 310, name: '图片' },
-          { value: 234, name: 'Word' },
-          { value: 135, name: 'Excel' },
-          { value: 148, name: '其他' }
+          { value: 335, name: "PDF" },
+          { value: 310, name: "图片" },
+          { value: 234, name: "Word" },
+          { value: 135, name: "Excel" },
+          { value: 148, name: "其他" },
         ],
         emphasis: {
           itemStyle: {
             shadowBlur: 10,
             shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
-          }
-        }
-      }
-    ]
-  }
-  chart.setOption(option)
-}
+            shadowColor: "rgba(0, 0, 0, 0.5)",
+          },
+        },
+      },
+    ],
+  };
+  chart.setOption(option);
+};
 
 // 初始化系统访问量统计图
 const initAccessChart = () => {
-  if (!accessChart.value) return
-  
-  const chart = echarts.init(accessChart.value)
+  if (!accessChart.value) return;
+
+  const chart = echarts.init(accessChart.value);
   const option = {
     tooltip: {
-      trigger: 'axis',
+      trigger: "axis",
       axisPointer: {
-        type: 'shadow'
-      }
+        type: "shadow",
+      },
     },
     grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      containLabel: true,
     },
     xAxis: [
       {
-        type: 'category',
-        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+        type: "category",
+        data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
         axisTick: {
-          alignWithLabel: true
-        }
-      }
+          alignWithLabel: true,
+        },
+      },
     ],
     yAxis: [
       {
-        type: 'value'
-      }
+        type: "value",
+      },
     ],
     series: [
       {
-        name: '访问量',
-        type: 'bar',
-        barWidth: '60%',
+        name: "访问量",
+        type: "bar",
+        barWidth: "60%",
         data: [320, 332, 301, 334, 390, 330, 320],
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: '#f093fb' },
-            { offset: 1, color: '#f5576c' }
-          ])
-        }
-      }
-    ]
-  }
-  chart.setOption(option)
-}
+            { offset: 0, color: "#f093fb" },
+            { offset: 1, color: "#f5576c" },
+          ]),
+        },
+      },
+    ],
+  };
+  chart.setOption(option);
+};
 
 // 初始化角色权限分布图
 const initRoleChart = () => {
-  if (!roleChart.value) return
-  
-  const chart = echarts.init(roleChart.value)
+  if (!roleChart.value) return;
+
+  const chart = echarts.init(roleChart.value);
   const option = {
     tooltip: {
-      trigger: 'item'
+      trigger: "item",
     },
     series: [
       {
-        name: '角色分布',
-        type: 'pie',
-        radius: ['40%', '70%'],
+        name: "角色分布",
+        type: "pie",
+        radius: ["40%", "70%"],
         avoidLabelOverlap: false,
         label: {
           show: false,
-          position: 'center'
+          position: "center",
         },
         emphasis: {
           label: {
             show: true,
-            fontSize: '20',
-            fontWeight: 'bold'
-          }
+            fontSize: "20",
+            fontWeight: "bold",
+          },
         },
         labelLine: {
-          show: false
+          show: false,
         },
         data: [
-          { value: 40, name: '管理员' },
-          { value: 25, name: '编辑者' },
-          { value: 20, name: '查看者' },
-          { value: 15, name: '游客' }
-        ]
-      }
-    ]
-  }
-  chart.setOption(option)
-}
+          { value: 40, name: "管理员" },
+          { value: 25, name: "编辑者" },
+          { value: 20, name: "查看者" },
+          { value: 15, name: "游客" },
+        ],
+      },
+    ],
+  };
+  chart.setOption(option);
+};
 
 // 生命周期
 onMounted(async () => {
-  loadUserInfo()
-  
-  await nextTick()
-  
+  loadUserInfo();
+
+  await nextTick();
+
   // 初始化所有图表
-  initUserTrendChart()
-  initFileTypeChart()
-  initAccessChart()
-  initRoleChart()
-})
+  initUserTrendChart();
+  initFileTypeChart();
+  initAccessChart();
+  initRoleChart();
+});
 </script>
 
 <style scoped>

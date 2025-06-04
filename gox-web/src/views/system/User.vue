@@ -298,13 +298,14 @@ import { Plus, Search, Refresh } from "@element-plus/icons-vue";
 import {
   userApi,
   type UserCreateDTO,
+  type UserDetailDTO,
   type UserListDTO,
   type UserRoleUpdateDTO,
   type UserSpecification,
   type UserUpdateDTO,
 } from "../../api/system/user.ts";
-import type { UserDetailDTO } from "../../api/auth/auth.ts";
 import { roleApi, type RoleListDTO } from "../../api/system/role.ts";
+import { formatDateTime } from "../../utils/dateUtil.ts";
 
 // 响应式数据
 const loading = ref(false);
@@ -371,11 +372,6 @@ const viewData = ref<UserDetailDTO | null>(null);
 const assignUserData = ref<UserListDTO | null>(null);
 const assignRoleIds = ref<number[]>([]);
 const roleList = ref<RoleListDTO[]>([]);
-
-// 方法
-const formatDateTime = (dateTime: string) => {
-  return new Date(dateTime).toLocaleString("zh-CN");
-};
 
 const fetchUsers = async () => {
   try {
@@ -621,4 +617,4 @@ onMounted(() => {
   font-size: 14px;
   color: #606266;
 }
-</style> 
+</style>
