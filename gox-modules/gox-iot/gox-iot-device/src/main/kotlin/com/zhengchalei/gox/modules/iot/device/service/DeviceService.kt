@@ -29,7 +29,7 @@ class DeviceService(private val repository: DeviceRepository) {
 
     fun create(dto: DeviceCreateDTO) {
         logger.info("创建Device，数据: {}", dto)
-        repository.save(dto)
+        repository.save(dto, SaveMode.INSERT_ONLY)
         logger.info("创建Device成功，数据: {}", dto)
     }
 

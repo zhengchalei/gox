@@ -29,7 +29,7 @@ class ${entityName}Service(private val repository: ${entityName}Repository) {
 
     fun create(dto: ${entityName}CreateDTO) {
         logger.info("创建${entityName}，数据: {}", dto)
-        repository.save(dto)
+        repository.save(dto, SaveMode.INSERT_ONLY)
         logger.info("创建${entityName}成功，数据: {}", dto)
     }
 

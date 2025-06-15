@@ -29,7 +29,7 @@ class ProductService(private val repository: ProductRepository) {
 
     fun create(dto: ProductCreateDTO) {
         logger.info("创建Product，数据: {}", dto)
-        repository.save(dto)
+        repository.save(dto, SaveMode.INSERT_ONLY)
         logger.info("创建Product成功，数据: {}", dto)
     }
 
