@@ -553,7 +553,7 @@ const fetchFiles = async () => {
     console.log("文件列表响应:", response);
 
     tableData.value = response.data.content;
-    pagination.total = response.data.totalElements;
+    pagination.total = response.data.pageable.totalElements;
 
     console.log("文件数据:", tableData.value);
   } catch (error) {

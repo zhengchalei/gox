@@ -271,7 +271,7 @@ const fetchDevice = async () => {
     );
 
     tableData.value = response.data.content;
-    pagination.total = response.data.totalElements;
+    pagination.total = response.data.pageable.totalElements;
   } catch (error) {
     console.error("获取Device列表失败:", error);
   } finally {
