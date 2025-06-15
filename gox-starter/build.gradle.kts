@@ -25,6 +25,7 @@ dependencies {
     implementation(project(":gox-modules:gox-file"))
     implementation(project(":gox-modules:gox-auth"))
     implementation(project(":gox-modules:gox-iot"))
+    implementation(project(":gox-modules:gox-iot:gox-iot-device"))
 
 
     implementation("org.springframework.boot:spring-boot-starter")

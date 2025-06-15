@@ -2,6 +2,7 @@ package ${packageName}.service
 
 import ${packageName}.entity.dto.*
 import ${packageName}.repository.${entityName}Repository
+import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
