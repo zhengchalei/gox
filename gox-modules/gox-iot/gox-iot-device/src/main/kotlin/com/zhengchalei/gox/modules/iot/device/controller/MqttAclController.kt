@@ -1,10 +1,9 @@
-<#assign entityNameKebab = "entityNameKebab"?lower_case?replace("([a-z])([A-Z]+)", "$1-$2", "r")?replace("_", "-")>
 
-package ${packageName}.controller
+package com.zhengchalei.gox.modules.iot.device.controller
 
 import com.zhengchalei.gox.framework.config.oneIndex
-import ${packageName}.entity.dto.*
-import ${packageName}.service.${entityName}Service
+import com.zhengchalei.gox.modules.iot.device.entity.dto.*
+import com.zhengchalei.gox.modules.iot.device.service.MqttAclService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -16,63 +15,63 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 /**
- * ${entityComment}Controller
+ * MQTT访问控制Controller
  *
  * @author zhengchalei
  */
-@Tag(name = "${entityComment}管理", description = "${entityComment}相关操作")
+@Tag(name = "MQTT访问控制管理", description = "MQTT访问控制相关操作")
 @Validated
 @RestController
-@RequestMapping("/api/${moduleName}/${entityNameKebab}")
-class ${entityName}Controller(private val service: ${entityName}Service) {
+@RequestMapping("/api/iot/userprofile")
+class MqttAclController(private val service: MqttAclService) {
 
-    @Operation(summary = "根据ID查询${entityComment}", description = "通过${entityComment}ID获取${entityComment}详细信息")
+    @Operation(summary = "根据ID查询MQTT访问控制", description = "通过MQTT访问控制ID获取MQTT访问控制详细信息")
     @GetMapping(value = ["/{id}"])
     fun findById(
-        @Parameter(description = "${entityName}ID", required = true)
+        @Parameter(description = "MqttAclID", required = true)
         @PathVariable id: Long
-    ): ResponseEntity<${entityName}DetailDTO> {
+    ): ResponseEntity<MqttAclDetailDTO> {
         val result = service.findById(id)
         return ResponseEntity.ok(result)
     }
 
-    @Operation(summary = "删除${entityComment}", description = "根据${entityComment}ID删除${entityComment}")
+    @Operation(summary = "删除MQTT访问控制", description = "根据MQTT访问控制ID删除MQTT访问控制")
     @DeleteMapping(value = ["/{id}"])
     fun deleteById(
-        @Parameter(description = "${entityName}ID", required = true)
+        @Parameter(description = "MqttAclID", required = true)
         @PathVariable id: Long
     ): ResponseEntity<Void> {
         service.deleteById(id)
         return ResponseEntity.ok().build()
     }
 
-    @Operation(summary = "创建${entityComment}", description = "创建新${entityComment}")
+    @Operation(summary = "创建MQTT访问控制", description = "创建新MQTT访问控制")
     @PostMapping(value = [""])
     fun create(
-        @Parameter(description = "${entityName}信息", required = true)
-        @Valid @RequestBody dto: ${entityName}CreateDTO
+        @Parameter(description = "MqttAcl信息", required = true)
+        @Valid @RequestBody dto: MqttAclCreateDTO
     ): ResponseEntity<Void> {
         service.create(dto)
         return ResponseEntity.ok().build()
     }
 
-    @Operation(summary = "更新${entityComment}", description = "更新${entityComment}信息")
+    @Operation(summary = "更新MQTT访问控制", description = "更新MQTT访问控制信息")
     @PutMapping(value = [""])
     fun update(
-        @Parameter(description = "${entityName}信息", required = true)
-        @Valid @RequestBody dto: ${entityName}UpdateDTO
+        @Parameter(description = "MqttAcl信息", required = true)
+        @Valid @RequestBody dto: MqttAclUpdateDTO
     ): ResponseEntity<Void> {
         service.update(dto)
         return ResponseEntity.ok().build()
     }
 
-    @Operation(summary = "分页查询${entityComment}", description = "分页查询${entityComment}列表")
+    @Operation(summary = "分页查询MQTT访问控制", description = "分页查询MQTT访问控制列表")
     @GetMapping(value = ["/page"])
     fun findPage(
         @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") currentPage: Int,
         @Parameter(description = "每页数量", required = false) @RequestParam(defaultValue = "10") pageSize: Int,
-        specification: ${entityName}Specification
-    ): ResponseEntity<Page<${entityName}ListDTO>> {
+        specification: MqttAclSpecification
+    ): ResponseEntity<Page<MqttAclListDTO>> {
         val pageRequest = PageRequest.of(currentPage, pageSize).oneIndex()
         val pageResult = service.findPage(pageRequest, specification)
         return ResponseEntity.ok(pageResult)

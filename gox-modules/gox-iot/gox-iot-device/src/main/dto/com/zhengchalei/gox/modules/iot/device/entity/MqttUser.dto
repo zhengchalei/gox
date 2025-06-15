@@ -1,0 +1,26 @@
+export com.zhengchalei.gox.modules.iot.device.entity.MqttUser
+    -> package com.zhengchalei.gox.modules.iot.device.entity.dto
+
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
+
+MqttUserListDTO {
+    #allScalars
+}
+
+MqttUserDetailDTO {
+    #allScalars
+}
+
+input MqttUserCreateDTO {
+    #allScalars(this)
+}
+
+input MqttUserUpdateDTO {
+    #allScalars(this)
+    id!
+}
+
+specification MqttUserSpecification {
+    #allScalars
+}

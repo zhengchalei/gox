@@ -4,12 +4,46 @@ val projectRoot = System.getProperty("user.dir")
 
 fun main(args: Array<String>) {
     listOf(
-        deviceGenerator,
-        productGenerator,
+        mqttUserGenerator,
+        mqttAclGenerator
     ).forEach {
         it.generate()
     }
 }
+
+val mqttUserGenerator = CodeGenerator(
+    projectRoot = projectRoot,
+    entityComment = "MQTT用户",
+    moduleName = "iot",
+    modulePath = "gox-iot/gox-iot-device",
+    packageName = "com.zhengchalei.gox.modules.iot.device",
+    entityName = "MqttUser",
+    tableName = "iot_mqtt_user",
+    fields = listOf(
+        FieldDefinition("isSuperuser", FieldType.BOOLEAN.type, false, "是否超级用户"),
+        FieldDefinition("username", FieldType.STRING.type, false, "用户名"),
+        FieldDefinition("passwordHash", FieldType.STRING.type, false, "密码"),
+        FieldDefinition("salt", FieldType.STRING.type, false, "盐"),
+    )
+)
+
+// mqtt_acl
+val mqttAclGenerator = CodeGenerator(
+    projectRoot = projectRoot,
+    entityComment = "MQTT访问控制",
+    moduleName = "iot",
+    modulePath = "gox-iot/gox-iot-device",
+    packageName = "com.zhengchalei.gox.modules.iot.device",
+    entityName = "MqttAcl",
+    tableName = "iot_mqtt_acl",
+    fields = listOf(
+        FieldDefinition("ipaddress", FieldType.STRING.type, false, "IP地址"),
+        FieldDefinition("username", FieldType.STRING.type, false, "用户名"),
+        FieldDefinition("clientId", FieldType.STRING.type, false, "客户端ID"),
+        FieldDefinition("action", FieldType.STRING.type, false, "操作"),
+        FieldDefinition("permission", FieldType.STRING.type, false, "权限"),
+    )
+)
 
 val deviceGenerator = CodeGenerator(
     projectRoot = projectRoot,

@@ -1,0 +1,26 @@
+export com.zhengchalei.gox.modules.iot.device.entity.MqttAcl
+    -> package com.zhengchalei.gox.modules.iot.device.entity.dto
+
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
+
+MqttAclListDTO {
+    #allScalars
+}
+
+MqttAclDetailDTO {
+    #allScalars
+}
+
+input MqttAclCreateDTO {
+    #allScalars(this)
+}
+
+input MqttAclUpdateDTO {
+    #allScalars(this)
+    id!
+}
+
+specification MqttAclSpecification {
+    #allScalars
+}
