@@ -1,5 +1,5 @@
 <template>
-  <div class="permission-management">
+  <div>
     <el-card>
       <template #header>
         <div class="card-header">
@@ -72,16 +72,6 @@
         <el-table-column prop="description" label="产品描述" min-width="120" show-overflow-tooltip />
         <el-table-column prop="status" label="产品状态" min-width="120" show-overflow-tooltip />
 
-        <el-table-column prop="createdTime" label="创建时间" width="180">
-          <template #default="{ row }">
-            {{ formatDateTime(row.createdTime) }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="updatedTime" label="更新时间" width="180">
-          <template #default="{ row }">
-            {{ formatDateTime(row.updatedTime) }}
-          </template>
-        </el-table-column>
         <el-table-column label="操作" width="300" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" @click="handleView(row)">
@@ -169,12 +159,6 @@
           <el-descriptions-item label="产品状态">
             {{ viewData.status }}
           </el-descriptions-item>
-          <el-descriptions-item label="创建时间">{{
-            formatDateTime(viewData.createdTime)
-          }}</el-descriptions-item>
-          <el-descriptions-item label="更新时间">{{
-            formatDateTime(viewData.modifiedTime ?? '')
-          }}</el-descriptions-item>
         </el-descriptions>
       </div>
     </el-dialog>
@@ -193,7 +177,6 @@ import {
   type ProductSpecification,
   type ProductUpdateDTO,
 } from "../../api/iot/product";
-import { formatDateTime } from "../../utils/dateUtil";
 
 // 响应式数据
 const loading = ref(false);

@@ -29,7 +29,7 @@ class MqttAclService(private val repository: MqttAclRepository) {
 
     fun create(dto: MqttAclCreateDTO) {
         logger.info("创建MqttAcl，数据: {}", dto)
-        repository.save(dto)
+        repository.save(dto, SaveMode.INSERT_ONLY)
         logger.info("创建MqttAcl成功，数据: {}", dto)
     }
 

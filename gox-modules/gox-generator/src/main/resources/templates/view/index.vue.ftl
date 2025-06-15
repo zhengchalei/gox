@@ -1,5 +1,5 @@
 <template>
-  <div class="permission-management">
+  <div>
     <el-card>
       <template #header>
         <div class="card-header">

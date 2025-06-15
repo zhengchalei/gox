@@ -34,10 +34,23 @@ interface MqttAcl {
     /**
      * 操作
      */
-    val action: String
+    val action: MqttAclAction?
 
     /**
      * 权限
      */
-    val permission: String
+    val permission: MqttAclPermission?
+}
+
+@EnumType(value = EnumType.Strategy.NAME)
+enum class MqttAclAction {
+    publish,
+    subscribe,
+    all
+}
+
+@EnumType(value = EnumType.Strategy.NAME)
+enum class MqttAclPermission {
+    allow,
+    deny
 }

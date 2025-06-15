@@ -26,7 +26,7 @@ class UserController(private val userService: UserService) {
         @PathVariable username: String
     ): R<UserDetailDTO> {
         val user = userService.findByUsername(username)
-        return R.data(user)
+        return R.success(user)
     }
 
     @Operation(summary = "根据ID查询用户", description = "通过用户ID获取用户详细信息")
@@ -36,7 +36,7 @@ class UserController(private val userService: UserService) {
         @PathVariable id: Long
     ): R<UserDetailDTO> {
         val user = userService.findById(id)
-        return R.data(user)
+        return R.success(user)
     }
 
     @Operation(summary = "删除用户", description = "根据用户ID删除用户")
@@ -88,6 +88,6 @@ class UserController(private val userService: UserService) {
     ): R<Page<UserListDTO>> {
         val pageRequest: PageRequest = PageRequest.of(currentPage, pageSize).oneIndex()
         val pageResult = userService.findPage(pageRequest, userSpecification)
-        return R.data(pageResult)
+        return R.success(pageResult)
     }
 }

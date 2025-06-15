@@ -1,5 +1,6 @@
 package com.zhengchalei.gox.modules.iot.device.controller
 
+import com.zhengchalei.gox.R
 import com.zhengchalei.gox.framework.config.oneIndex
 import com.zhengchalei.gox.modules.iot.device.entity.dto.*
 import com.zhengchalei.gox.modules.iot.device.service.DeviceService
@@ -9,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -29,9 +29,9 @@ class DeviceController(private val service: DeviceService) {
     fun findById(
         @Parameter(description = "DeviceID", required = true)
         @PathVariable id: Long
-    ): ResponseEntity<DeviceDetailDTO> {
+    ): R<DeviceDetailDTO> {
         val result = service.findById(id)
-        return ResponseEntity.ok(result)
+        return R.success(result)
     }
 
     @Operation(summary = "删除设备", description = "根据设备ID删除设备")
@@ -39,9 +39,9 @@ class DeviceController(private val service: DeviceService) {
     fun deleteById(
         @Parameter(description = "DeviceID", required = true)
         @PathVariable id: Long
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         service.deleteById(id)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "创建设备", description = "创建新设备")
@@ -49,9 +49,9 @@ class DeviceController(private val service: DeviceService) {
     fun create(
         @Parameter(description = "Device信息", required = true)
         @Valid @RequestBody dto: DeviceCreateDTO
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         service.create(dto)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "更新设备", description = "更新设备信息")
@@ -59,9 +59,9 @@ class DeviceController(private val service: DeviceService) {
     fun update(
         @Parameter(description = "Device信息", required = true)
         @Valid @RequestBody dto: DeviceUpdateDTO
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         service.update(dto)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "分页查询设备", description = "分页查询设备列表")
@@ -70,9 +70,9 @@ class DeviceController(private val service: DeviceService) {
         @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") currentPage: Int,
         @Parameter(description = "每页数量", required = false) @RequestParam(defaultValue = "10") pageSize: Int,
         specification: DeviceSpecification
-    ): ResponseEntity<Page<DeviceListDTO>> {
+    ): R<Page<DeviceListDTO>> {
         val pageRequest = PageRequest.of(currentPage, pageSize).oneIndex()
-        val pageResult = service.findPage(pageRequest, specification)
-        return ResponseEntity.ok(pageResult)
+        val result = service.findPage(pageRequest, specification)
+        return R.success(result)
     }
 }

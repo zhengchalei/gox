@@ -25,7 +25,7 @@ class PermissionController(private val permissionService: PermissionService) {
         @Parameter(description = "权限ID", required = true) @PathVariable id: Long
     ): R<PermissionDetailDTO> {
         val permission = permissionService.findById(id)
-        return R.data(permission)
+        return R.success(permission)
     }
 
     @Operation(summary = "删除权限", description = "根据权限ID删除权限")
@@ -70,6 +70,6 @@ class PermissionController(private val permissionService: PermissionService) {
     ): R<Page<PermissionListDTO>> {
         val pageRequest: PageRequest = PageRequest.of(currentPage, pageSize).oneIndex()
         val pageResult = permissionService.findPage(pageRequest, permissionSpecification)
-        return R.data(pageResult)
+        return R.success(pageResult)
     }
 }

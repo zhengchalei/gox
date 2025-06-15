@@ -5,18 +5,16 @@
 
     <changeSet id="创建EMQX的认证和授权表" author="zhengchalei">
         <sql>
-            drop type ACTION;
-            drop type PERMISSION;
             CREATE TYPE ACTION AS ENUM ('publish','subscribe','all');
             CREATE TYPE PERMISSION AS ENUM ('allow','deny');
 
             CREATE TABLE if not exists mqtt_user
             (
                 id            SERIAL primary key,
-                is_superuser  boolean,
-                username      character varying(100),
-                password_hash character varying(100),
-                salt          character varying(40)
+                is_superuser  boolean NOT NULL DEFAULT false,
+                username      character varying(100) NOT NULL UNIQUE,
+                password_hash character varying(100) NOT NULL,
+                salt          character varying(40) NOT NULL
             );
 
             CREATE TABLE if not exists mqtt_acl

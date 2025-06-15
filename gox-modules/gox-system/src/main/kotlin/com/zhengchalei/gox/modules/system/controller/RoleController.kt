@@ -26,7 +26,7 @@ class RoleController(private val roleService: RoleService) {
         @PathVariable id: Long
     ): R<RoleDetailDTO> {
         val role = roleService.findById(id)
-        return R.data(role)
+        return R.success(role)
     }
 
     @Operation(summary = "删除角色", description = "根据角色ID删除角色")
@@ -78,6 +78,6 @@ class RoleController(private val roleService: RoleService) {
     ): R<Page<RoleListDTO>> {
         val pageRequest: PageRequest = PageRequest.of(currentPage, pageSize).oneIndex()
         val pageResult = roleService.findPage(pageRequest, roleSpecification)
-        return R.data(pageResult)
+        return R.success(pageResult)
     }
 }

@@ -1,5 +1,6 @@
 package com.zhengchalei.gox.modules.iot.device.controller
 
+import com.zhengchalei.gox.R
 import com.zhengchalei.gox.framework.config.oneIndex
 import com.zhengchalei.gox.modules.iot.device.entity.dto.*
 import com.zhengchalei.gox.modules.iot.device.service.MqttUserService
@@ -9,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -29,9 +29,9 @@ class MqttUserController(private val service: MqttUserService) {
     fun findById(
         @Parameter(description = "MqttUserID", required = true)
         @PathVariable id: Long
-    ): ResponseEntity<MqttUserDetailDTO> {
+    ): R<MqttUserDetailDTO> {
         val result = service.findById(id)
-        return ResponseEntity.ok(result)
+        return R.success(result)
     }
 
     @Operation(summary = "删除MQTT用户", description = "根据MQTT用户ID删除MQTT用户")
@@ -39,9 +39,9 @@ class MqttUserController(private val service: MqttUserService) {
     fun deleteById(
         @Parameter(description = "MqttUserID", required = true)
         @PathVariable id: Long
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         service.deleteById(id)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "创建MQTT用户", description = "创建新MQTT用户")
@@ -49,9 +49,9 @@ class MqttUserController(private val service: MqttUserService) {
     fun create(
         @Parameter(description = "MqttUser信息", required = true)
         @Valid @RequestBody dto: MqttUserCreateDTO
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         service.create(dto)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "更新MQTT用户", description = "更新MQTT用户信息")
@@ -59,9 +59,9 @@ class MqttUserController(private val service: MqttUserService) {
     fun update(
         @Parameter(description = "MqttUser信息", required = true)
         @Valid @RequestBody dto: MqttUserUpdateDTO
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         service.update(dto)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "分页查询MQTT用户", description = "分页查询MQTT用户列表")
@@ -70,9 +70,9 @@ class MqttUserController(private val service: MqttUserService) {
         @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") currentPage: Int,
         @Parameter(description = "每页数量", required = false) @RequestParam(defaultValue = "10") pageSize: Int,
         specification: MqttUserSpecification
-    ): ResponseEntity<Page<MqttUserListDTO>> {
+    ): R<Page<MqttUserListDTO>> {
         val pageRequest = PageRequest.of(currentPage, pageSize).oneIndex()
         val pageResult = service.findPage(pageRequest, specification)
-        return ResponseEntity.ok(pageResult)
+        return R.success(pageResult)
     }
 }

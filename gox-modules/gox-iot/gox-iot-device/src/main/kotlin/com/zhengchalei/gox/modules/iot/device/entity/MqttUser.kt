@@ -16,12 +16,9 @@ interface MqttUser {
     val id: Long
 
     /**
-     * 是否超级用户
-     */
-    val isSuperuser: Boolean
-    /**
      * 用户名
      */
+    @Key
     val username: String
     /**
      * 密码
@@ -31,4 +28,9 @@ interface MqttUser {
      * 盐
      */
     val salt: String
+
+    /**
+     * 是否超级用户
+     */
+    val isSuperuser: Boolean
 }

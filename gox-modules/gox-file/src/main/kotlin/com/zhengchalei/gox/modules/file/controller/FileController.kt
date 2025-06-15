@@ -41,7 +41,7 @@ class FileController(
         @Parameter(description = "文件", required = true) @RequestParam("file") file: MultipartFile
     ): R<FileInfoDetailDTO> {
         val fileInfo = fileService.upload(file)
-        return R.data(fileInfo)
+        return R.success(fileInfo)
     }
 
     /** 批量上传文件 */
@@ -51,7 +51,7 @@ class FileController(
         @Parameter(description = "文件列表", required = true) @RequestParam("files") files: List<MultipartFile>
     ): R<List<FileInfoDetailDTO>> {
         val fileInfos = fileService.batchUpload(files)
-        return R.data(fileInfos)
+        return R.success(fileInfos)
     }
 
     /** 分页查询文件 */
@@ -64,7 +64,7 @@ class FileController(
     ): R<Page<FileInfoListDTO>> {
         val pageRequest = PageRequest.of(currentPage, pageSize).oneIndex()
         val pageResult = fileService.findPage(pageRequest, fileInfoSpecification)
-        return R.data(pageResult)
+        return R.success(pageResult)
     }
 
     /** 根据ID查询文件详情 */
@@ -74,7 +74,7 @@ class FileController(
         @Parameter(description = "文件ID", required = true) @PathVariable id: Long
     ): R<FileInfoDetailDTO> {
         val fileInfo = fileService.findById(id)
-        return R.data(fileInfo)
+        return R.success(fileInfo)
     }
 
     /** 根据存储名称查询文件详情 */
@@ -84,7 +84,7 @@ class FileController(
         @Parameter(description = "文件存储名称", required = true) @PathVariable fileKey: String
     ): R<FileInfoDetailDTO> {
         val fileInfo = fileService.findByFileKey(fileKey)
-        return R.data(fileInfo)
+        return R.success(fileInfo)
     }
 
     /** 根据原始名称查询文件信息 */
@@ -94,7 +94,7 @@ class FileController(
         @Parameter(description = "文件原始名称", required = true) @RequestParam("name") originalName: String
     ): R<List<FileInfoListDTO>> {
         val fileInfos = fileService.findByOriginalName(originalName)
-        return R.data(fileInfos)
+        return R.success(fileInfos)
     }
 
     /** 获取文件下载URL */
@@ -105,7 +105,7 @@ class FileController(
     ): R<Map<String, String>> {
         val fileInfo = fileService.findByFileKey(fileKey)
         val url = fileService.getDownloadUrl(fileInfo)
-        return R.data(mapOf("url" to url))
+        return R.success(mapOf("url" to url))
     }
 
     /** 获取文件临时访问URL */
@@ -121,7 +121,7 @@ class FileController(
         val fileInfo = fileService.findByFileKey(fileKey)
         val duration = Duration.ofMinutes(minutes)
         val url = fileService.getTemporaryUrl(fileInfo, duration)
-        return R.data(mapOf("url" to url, "expiresIn" to "${minutes}分钟"))
+        return R.success(mapOf("url" to url, "expiresIn" to "${minutes}分钟"))
     }
 
     /** 下载文件 */

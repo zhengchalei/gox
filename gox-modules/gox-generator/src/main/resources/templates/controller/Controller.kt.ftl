@@ -1,5 +1,6 @@
 package ${packageName}.controller
 
+import com.zhengchalei.gox.R
 import com.zhengchalei.gox.framework.config.oneIndex
 import ${packageName}.entity.dto.*
 import ${packageName}.service.${entityName}Service
@@ -29,9 +30,9 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
     fun findById(
         @Parameter(description = "${entityName}ID", required = true)
         @PathVariable id: Long
-    ): ResponseEntity<${entityName}DetailDTO> {
+    ): R<${entityName}DetailDTO> {
         val result = service.findById(id)
-        return ResponseEntity.ok(result)
+        return R.success(result)
     }
 
     @Operation(summary = "删除${entityComment}", description = "根据${entityComment}ID删除${entityComment}")
@@ -39,9 +40,9 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
     fun deleteById(
         @Parameter(description = "${entityName}ID", required = true)
         @PathVariable id: Long
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         service.deleteById(id)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "创建${entityComment}", description = "创建新${entityComment}")
@@ -49,9 +50,9 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
     fun create(
         @Parameter(description = "${entityName}信息", required = true)
         @Valid @RequestBody dto: ${entityName}CreateDTO
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         service.create(dto)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "更新${entityComment}", description = "更新${entityComment}信息")
@@ -59,9 +60,9 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
     fun update(
         @Parameter(description = "${entityName}信息", required = true)
         @Valid @RequestBody dto: ${entityName}UpdateDTO
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         service.update(dto)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "分页查询${entityComment}", description = "分页查询${entityComment}列表")
@@ -70,9 +71,9 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
         @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") currentPage: Int,
         @Parameter(description = "每页数量", required = false) @RequestParam(defaultValue = "10") pageSize: Int,
         specification: ${entityName}Specification
-    ): ResponseEntity<Page<${entityName}ListDTO>> {
+    ): R<Page<${entityName}ListDTO>> {
         val pageRequest = PageRequest.of(currentPage, pageSize).oneIndex()
-        val pageResult = service.findPage(pageRequest, specification)
-        return ResponseEntity.ok(pageResult)
+        val result = service.findPage(pageRequest, specification)
+        return R.success(result)
     }
 }

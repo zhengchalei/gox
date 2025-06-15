@@ -12,7 +12,7 @@ data class R<T>(
             return R(success = true, message = "操作成功", data = null, code = 0)
         }
 
-        fun <T> data(data: T): R<T> {
+        fun <T> success(data: T): R<T> {
             return R(success = true, message = "操作成功", data = data, code = 0)
         }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="file-management">
+  <div>
     <el-card>
       <template #header>
         <div class="card-header">

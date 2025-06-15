@@ -1,5 +1,5 @@
 <template>
-  <div class="permission-management">
+  <div>
     <el-card>
       <template #header>
         <div class="card-header">
@@ -72,16 +72,6 @@
         <el-table-column prop="passwordHash" label="密码" min-width="120" show-overflow-tooltip />
         <el-table-column prop="salt" label="盐" min-width="120" show-overflow-tooltip />
 
-        <el-table-column prop="createdTime" label="创建时间" width="180">
-          <template #default="{ row }">
-            {{ formatDateTime(row.createdTime) }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="updatedTime" label="更新时间" width="180">
-          <template #default="{ row }">
-            {{ formatDateTime(row.updatedTime) }}
-          </template>
-        </el-table-column>
         <el-table-column label="操作" width="300" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" @click="handleView(row)">
@@ -125,9 +115,6 @@
         label-width="80px"
         @submit.prevent
       >
-        <el-form-item label="是否超级用户" prop="isSuperuser">
-          <el-input v-model="formData.isSuperuser" placeholder="请输入是否超级用户" />
-        </el-form-item>
         <el-form-item label="用户名" prop="username">
           <el-input v-model="formData.username" placeholder="请输入用户名" />
         </el-form-item>
@@ -136,6 +123,9 @@
         </el-form-item>
         <el-form-item label="盐" prop="salt">
           <el-input v-model="formData.salt" placeholder="请输入盐" />
+        </el-form-item>
+        <el-form-item label="是否超级用户" prop="isSuperuser">
+          <el-input v-model="formData.isSuperuser" placeholder="请输入是否超级用户" />
         </el-form-item>
       </el-form>
 
@@ -157,11 +147,11 @@
     <el-dialog title="权限详情" v-model="viewDialogVisible" width="600px">
       <div v-if="viewData" class="detail-content">
         <el-descriptions :column="2" border>
-          <el-descriptions-item label="是否超级用户">
-            {{ viewData.isSuperuser }}
-          </el-descriptions-item>
           <el-descriptions-item label="用户名">
             {{ viewData.username }}
+          </el-descriptions-item>
+          <el-descriptions-item label="是否超级用户">
+            {{ viewData.isSuperuser }}
           </el-descriptions-item>
           <el-descriptions-item label="密码">
             {{ viewData.passwordHash }}
@@ -169,12 +159,6 @@
           <el-descriptions-item label="盐">
             {{ viewData.salt }}
           </el-descriptions-item>
-          <el-descriptions-item label="创建时间">{{
-            formatDateTime(viewData.createdTime)
-          }}</el-descriptions-item>
-          <el-descriptions-item label="更新时间">{{
-            formatDateTime(viewData.modifiedTime)
-          }}</el-descriptions-item>
         </el-descriptions>
       </div>
     </el-dialog>
@@ -185,7 +169,6 @@
 import { computed, onMounted, reactive, ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import type { FormInstance } from "element-plus";
-import { formatDateTime } from "../../utils/dateUtil";
 import {
   mqttUserApi,
   type MqttUserCreateDTO,
@@ -201,7 +184,6 @@ const tableData = ref<MqttUserListDTO[]>([]);
 
 // 搜索表单
 const searchForm = reactive<MqttUserSpecification>({
-  isSuperuser:  true,
   username:  '',
   passwordHash:  '',
   salt:  '',
@@ -230,10 +212,10 @@ const formData = reactive<MqttUserCreateDTO & Partial<MqttUserUpdateDTO>>({
   salt: '',
 });
 const formRules = {
-  isSuperuser: [{ required: true, message: "请输入是否超级用户", trigger: "blur" }],
   username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
   passwordHash: [{ required: true, message: "请输入密码", trigger: "blur" }],
   salt: [{ required: true, message: "请输入盐", trigger: "blur" }],
+  isSuperuser: [{ required: true, message: "请输入是否超级用户", trigger: "blur" }],
 };
 
 // 查看详情数据
@@ -247,9 +229,8 @@ const fetchMqttUser = async () => {
       pagination.pageSize,
       searchForm
     );
-
     tableData.value = response.data.content;
-    pagination.total = response.data.totalElements;
+    pagination.total = response.data.pageable.totalElements;
   } catch (error) {
     console.error("获取MqttUser列表失败:", error);
   } finally {

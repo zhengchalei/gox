@@ -1,5 +1,6 @@
 package com.zhengchalei.gox.modules.iot.device.controller
 
+import com.zhengchalei.gox.R
 import com.zhengchalei.gox.framework.config.oneIndex
 import com.zhengchalei.gox.modules.iot.device.entity.dto.*
 import com.zhengchalei.gox.modules.iot.device.service.MqttAclService
@@ -9,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -29,9 +29,9 @@ class MqttAclController(private val service: MqttAclService) {
     fun findById(
         @Parameter(description = "MqttAclID", required = true)
         @PathVariable id: Long
-    ): ResponseEntity<MqttAclDetailDTO> {
+    ): R<MqttAclDetailDTO> {
         val result = service.findById(id)
-        return ResponseEntity.ok(result)
+        return R.success(result)
     }
 
     @Operation(summary = "删除MQTT访问控制", description = "根据MQTT访问控制ID删除MQTT访问控制")
@@ -39,9 +39,9 @@ class MqttAclController(private val service: MqttAclService) {
     fun deleteById(
         @Parameter(description = "MqttAclID", required = true)
         @PathVariable id: Long
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         service.deleteById(id)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "创建MQTT访问控制", description = "创建新MQTT访问控制")
@@ -49,9 +49,9 @@ class MqttAclController(private val service: MqttAclService) {
     fun create(
         @Parameter(description = "MqttAcl信息", required = true)
         @Valid @RequestBody dto: MqttAclCreateDTO
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         service.create(dto)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "更新MQTT访问控制", description = "更新MQTT访问控制信息")
@@ -59,9 +59,9 @@ class MqttAclController(private val service: MqttAclService) {
     fun update(
         @Parameter(description = "MqttAcl信息", required = true)
         @Valid @RequestBody dto: MqttAclUpdateDTO
-    ): ResponseEntity<Void> {
+    ): R<Void> {
         service.update(dto)
-        return ResponseEntity.ok().build()
+        return R.success()
     }
 
     @Operation(summary = "分页查询MQTT访问控制", description = "分页查询MQTT访问控制列表")
@@ -70,9 +70,9 @@ class MqttAclController(private val service: MqttAclService) {
         @Parameter(description = "页码", required = false) @RequestParam(defaultValue = "1") currentPage: Int,
         @Parameter(description = "每页数量", required = false) @RequestParam(defaultValue = "10") pageSize: Int,
         specification: MqttAclSpecification
-    ): ResponseEntity<Page<MqttAclListDTO>> {
+    ): R<Page<MqttAclListDTO>> {
         val pageRequest = PageRequest.of(currentPage, pageSize).oneIndex()
         val pageResult = service.findPage(pageRequest, specification)
-        return ResponseEntity.ok(pageResult)
+        return R.success(pageResult)
     }
 }

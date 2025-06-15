@@ -9,12 +9,10 @@ export interface ApiResponse<T = any> {
 
 // 分页对象类型
 export interface PageableObject {
-  offset: number;
-  sort: SortObject;
-  paged: boolean;
-  pageSize: number;
-  pageNumber: number;
-  unpaged: boolean;
+  number: number;
+  size: number;
+  totalPages: number;
+  totalElements: number;
 }
 
 export interface SortObject {
@@ -24,15 +22,6 @@ export interface SortObject {
 }
 
 export interface PageResponse<T> {
-  totalElements: number;
-  totalPages: number;
-  first: boolean;
-  last: boolean;
-  size: number;
   content: T[];
-  number: number;
-  sort: SortObject;
-  numberOfElements: number;
   pageable: PageableObject;
-  empty: boolean;
 }
