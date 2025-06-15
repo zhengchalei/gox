@@ -552,7 +552,7 @@ onMounted(() => {
 .pagination-wrapper {
   margin-top: 20px;
   display: flex;
-  justify-content: center;
+  justify-content: right;
 }
 
 .detail-content {
