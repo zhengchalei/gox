@@ -1,4 +1,3 @@
-
 package com.zhengchalei.gox.modules.iot.device.controller
 
 import com.zhengchalei.gox.framework.config.oneIndex
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "MQTT用户管理", description = "MQTT用户相关操作")
 @Validated
 @RestController
-@RequestMapping("/api/iot/userprofile")
+@RequestMapping("/api/iot/mqtt-user")
 class MqttUserController(private val service: MqttUserService) {
 
     @Operation(summary = "根据ID查询MQTT用户", description = "通过MQTT用户ID获取MQTT用户详细信息")

@@ -148,14 +148,15 @@
 import { computed, onMounted, reactive, ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import type { FormInstance } from "element-plus";
+import { formatDateTime } from "../../utils/dateUtil";
 import {
-  ${entityName?lower_case}Api,
+  ${entityName?uncap_first}Api,
   type ${entityName}CreateDTO,
   type ${entityName}DetailDTO,
   type ${entityName}ListDTO,
   type ${entityName}Specification,
   type ${entityName}UpdateDTO,
-} from "../../api/${moduleName}/${entityName?lower_case}";
+} from "../../api/${moduleName}/${entityName?uncap_first}";
 
 // 响应式数据
 const loading = ref(false);
@@ -205,7 +206,7 @@ const viewData = ref<${entityName}DetailDTO | null>(null);
 const fetch${entityName} = async () => {
   try {
     loading.value = true;
-    const response = await ${entityName?lower_case}Api.findPage(
+    const response = await ${entityName?uncap_first}Api.findPage(
       pagination.currentPage,
       pagination.pageSize,
       searchForm
@@ -267,7 +268,7 @@ const handleEdit = (row: ${entityName}ListDTO) => {
 
 const handleView = async (row: ${entityName}ListDTO) => {
   try {
-    const response = await ${entityName?lower_case}Api.findById(row.id);
+    const response = await ${entityName?uncap_first}Api.findById(row.id);
     viewData.value = response.data;
     viewDialogVisible.value = true;
   } catch (error) {
@@ -287,7 +288,7 @@ const handleDelete = async (row: ${entityName}ListDTO) => {
       }
     );
 
-    await ${entityName?lower_case}Api.deleteById(row.id);
+    await ${entityName?uncap_first}Api.deleteById(row.id);
     ElMessage.success("删除成功");
     fetch${entityName}();
   } catch (error) {
@@ -310,10 +311,10 @@ const handleSubmit = async () => {
     submitLoading.value = true;
 
     if (isEdit.value) {
-      await ${entityName?lower_case}Api.update(formData as ${entityName}UpdateDTO);
+      await ${entityName?uncap_first}Api.update(formData as ${entityName}UpdateDTO);
       ElMessage.success("更新成功");
     } else {
-      await ${entityName?lower_case}Api.create(formData);
+      await ${entityName?uncap_first}Api.create(formData);
       ElMessage.success("创建成功");
     }
 

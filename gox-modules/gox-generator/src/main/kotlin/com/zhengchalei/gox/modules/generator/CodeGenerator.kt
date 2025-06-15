@@ -188,7 +188,7 @@ class ApiFileGenerator(
 ) : AbstractFileGenerator(cfg, entityName, tableName, fields, packageName, entityComment, moduleName) {
     override fun generate(outputDir: String, packagePath: String) {
         val template = getTemplate("view/api.ts.ftl")
-        val outputFile = File("$projectRoot/gox-web/src/api/${moduleName}/${entityName.lowercase()}.ts")
+        val outputFile = File("$projectRoot/gox-web/src/api/${moduleName}/${entityName.replaceFirstChar { it.lowercase() }}.ts")
         processTemplate(template, outputFile)
     }
 }

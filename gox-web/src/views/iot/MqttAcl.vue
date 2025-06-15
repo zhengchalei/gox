@@ -200,14 +200,15 @@
 import { computed, onMounted, reactive, ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import type { FormInstance } from "element-plus";
+import { formatDateTime } from "../../utils/dateUtil";
 import {
-  mqttaclApi,
+  mqttAclApi,
   type MqttAclCreateDTO,
   type MqttAclDetailDTO,
   type MqttAclListDTO,
   type MqttAclSpecification,
   type MqttAclUpdateDTO,
-} from "../../api/iot/mqttacl";
+} from "../../api/iot/mqttAcl";
 
 // 响应式数据
 const loading = ref(false);
@@ -259,7 +260,7 @@ const viewData = ref<MqttAclDetailDTO | null>(null);
 const fetchMqttAcl = async () => {
   try {
     loading.value = true;
-    const response = await mqttaclApi.findPage(
+    const response = await mqttAclApi.findPage(
       pagination.currentPage,
       pagination.pageSize,
       searchForm
@@ -327,7 +328,7 @@ const handleEdit = (row: MqttAclListDTO) => {
 
 const handleView = async (row: MqttAclListDTO) => {
   try {
-    const response = await mqttaclApi.findById(row.id);
+    const response = await mqttAclApi.findById(row.id);
     viewData.value = response.data;
     viewDialogVisible.value = true;
   } catch (error) {
@@ -347,7 +348,7 @@ const handleDelete = async (row: MqttAclListDTO) => {
       }
     );
 
-    await mqttaclApi.deleteById(row.id);
+    await mqttAclApi.deleteById(row.id);
     ElMessage.success("删除成功");
     fetchMqttAcl();
   } catch (error) {
@@ -370,10 +371,10 @@ const handleSubmit = async () => {
     submitLoading.value = true;
 
     if (isEdit.value) {
-      await mqttaclApi.update(formData as MqttAclUpdateDTO);
+      await mqttAclApi.update(formData as MqttAclUpdateDTO);
       ElMessage.success("更新成功");
     } else {
-      await mqttaclApi.create(formData);
+      await mqttAclApi.create(formData);
       ElMessage.success("创建成功");
     }
 

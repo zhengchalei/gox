@@ -185,14 +185,15 @@
 import { computed, onMounted, reactive, ref } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import type { FormInstance } from "element-plus";
+import { formatDateTime } from "../../utils/dateUtil";
 import {
-  mqttuserApi,
+  mqttUserApi,
   type MqttUserCreateDTO,
   type MqttUserDetailDTO,
   type MqttUserListDTO,
   type MqttUserSpecification,
   type MqttUserUpdateDTO,
-} from "../../api/iot/mqttuser";
+} from "../../api/iot/mqttUser";
 
 // 响应式数据
 const loading = ref(false);
@@ -241,7 +242,7 @@ const viewData = ref<MqttUserDetailDTO | null>(null);
 const fetchMqttUser = async () => {
   try {
     loading.value = true;
-    const response = await mqttuserApi.findPage(
+    const response = await mqttUserApi.findPage(
       pagination.currentPage,
       pagination.pageSize,
       searchForm
@@ -306,7 +307,7 @@ const handleEdit = (row: MqttUserListDTO) => {
 
 const handleView = async (row: MqttUserListDTO) => {
   try {
-    const response = await mqttuserApi.findById(row.id);
+    const response = await mqttUserApi.findById(row.id);
     viewData.value = response.data;
     viewDialogVisible.value = true;
   } catch (error) {
@@ -326,7 +327,7 @@ const handleDelete = async (row: MqttUserListDTO) => {
       }
     );
 
-    await mqttuserApi.deleteById(row.id);
+    await mqttUserApi.deleteById(row.id);
     ElMessage.success("删除成功");
     fetchMqttUser();
   } catch (error) {
@@ -349,10 +350,10 @@ const handleSubmit = async () => {
     submitLoading.value = true;
 
     if (isEdit.value) {
-      await mqttuserApi.update(formData as MqttUserUpdateDTO);
+      await mqttUserApi.update(formData as MqttUserUpdateDTO);
       ElMessage.success("更新成功");
     } else {
-      await mqttuserApi.create(formData);
+      await mqttUserApi.create(formData);
       ElMessage.success("创建成功");
     }
 

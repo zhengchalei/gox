@@ -49,20 +49,20 @@ export interface MqttUserSpecification {
   salt?: String
 }
 
-export const mqttuserApi = {
+export const mqttUserApi = {
   // 创建权限
   create: (data: MqttUserCreateDTO): Promise<ApiResponse<void>> => {
-    return request.post("/api/iot/mqttuser", data);
+    return request.post("/api/iot/mqtt-user", data);
   },
 
   // 更新权限
   update: (data: MqttUserUpdateDTO): Promise<ApiResponse<void>> => {
-    return request.put("/api/iot/mqttuser", data);
+    return request.put("/api/iot/mqtt-user", data);
   },
 
   // 根据ID查询权限
   findById: (id: number): Promise<ApiResponse<MqttUserDetailDTO>> => {
-    return request.get(`/api/iot/mqttuser/${id}`);
+    return request.get(`/api/iot/mqtt-user/${id}`);
   },
 
   // 分页查询权限
@@ -83,11 +83,11 @@ export const mqttuserApi = {
           ])
       ),
     });
-    return request.get(`/api/iot/mqttuser/page?${params}`);
+    return request.get(`/api/iot/mqtt-user/page?${params}`);
   },
 
   // 删除权限
   deleteById: (id: number): Promise<ApiResponse<void>> => {
-    return request.delete(`/api/iot/mqttuser/${id}`);
+    return request.delete(`/api/iot/mqtt-user/${id}`);
   },
 };

@@ -1,5 +1,3 @@
-<#assign entityNameKebab = "entityNameKebab"?lower_case?replace("([a-z])([A-Z]+)", "$1-$2", "r")?replace("_", "-")>
-
 package ${packageName}.controller
 
 import com.zhengchalei.gox.framework.config.oneIndex
@@ -23,7 +21,7 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "${entityComment}管理", description = "${entityComment}相关操作")
 @Validated
 @RestController
-@RequestMapping("/api/${moduleName}/${entityNameKebab}")
+@RequestMapping("/api/${moduleName}/${entityName?uncap_first?replace('([a-z])([A-Z])', '$1-$2', 'r')?lower_case}")
 class ${entityName}Controller(private val service: ${entityName}Service) {
 
     @Operation(summary = "根据ID查询${entityComment}", description = "通过${entityComment}ID获取${entityComment}详细信息")

@@ -54,20 +54,20 @@ export interface MqttAclSpecification {
   permission?: String
 }
 
-export const mqttaclApi = {
+export const mqttAclApi = {
   // 创建权限
   create: (data: MqttAclCreateDTO): Promise<ApiResponse<void>> => {
-    return request.post("/api/iot/mqttacl", data);
+    return request.post("/api/iot/mqtt-acl", data);
   },
 
   // 更新权限
   update: (data: MqttAclUpdateDTO): Promise<ApiResponse<void>> => {
-    return request.put("/api/iot/mqttacl", data);
+    return request.put("/api/iot/mqtt-acl", data);
   },
 
   // 根据ID查询权限
   findById: (id: number): Promise<ApiResponse<MqttAclDetailDTO>> => {
-    return request.get(`/api/iot/mqttacl/${id}`);
+    return request.get(`/api/iot/mqtt-acl/${id}`);
   },
 
   // 分页查询权限
@@ -88,11 +88,11 @@ export const mqttaclApi = {
           ])
       ),
     });
-    return request.get(`/api/iot/mqttacl/page?${params}`);
+    return request.get(`/api/iot/mqtt-acl/page?${params}`);
   },
 
   // 删除权限
   deleteById: (id: number): Promise<ApiResponse<void>> => {
-    return request.delete(`/api/iot/mqttacl/${id}`);
+    return request.delete(`/api/iot/mqtt-acl/${id}`);
   },
 };
