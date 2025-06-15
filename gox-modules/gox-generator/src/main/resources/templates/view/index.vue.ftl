@@ -163,11 +163,7 @@ const loading = ref(false);
 const tableData = ref<${entityName}ListDTO[]>([]);
 
 // 搜索表单
-const searchForm = reactive<${entityName}Specification>({
-  <#list fields as field>
-  ${field.name}: <#if field.type=="String"> ''</#if><#if field.type=="Boolean"> true</#if>,
-  </#list>
-});
+const searchForm = reactive<${entityName}Specification>({});
 
 // 分页
 const pagination = reactive({

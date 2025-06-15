@@ -273,11 +273,7 @@ const tableData = ref<RoleListDTO[]>([]);
 const selectedRoles = ref<RoleListDTO[]>([]);
 
 // 搜索表单
-const searchForm = reactive<RoleSpecification>({
-  name: "",
-  code: "",
-  enabled: undefined,
-});
+const searchForm = reactive<RoleSpecification>({});
 
 // 分页
 const pagination = reactive({

@@ -215,13 +215,7 @@ const loading = ref(false);
 const tableData = ref<MqttAclListDTO[]>([]);
 
 // 搜索表单
-const searchForm = reactive<MqttAclSpecification>({
-  ipaddress:  '',
-  username:  '',
-  clientId:  '',
-  action:  '',
-  permission:  '',
-});
+const searchForm = reactive<MqttAclSpecification>({});
 
 // 分页
 const pagination = reactive({

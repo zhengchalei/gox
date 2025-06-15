@@ -183,12 +183,7 @@ const loading = ref(false);
 const tableData = ref<ProductListDTO[]>([]);
 
 // 搜索表单
-const searchForm = reactive<ProductSpecification>({
-  code:  '',
-  name:  '',
-  description:  '',
-  status:  true,
-});
+const searchForm = reactive<ProductSpecification>({});
 
 // 分页
 const pagination = reactive({

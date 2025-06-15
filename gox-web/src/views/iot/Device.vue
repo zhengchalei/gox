@@ -10,7 +10,6 @@
           </el-button>
         </div>
       </template>
-
       <!-- 搜索栏 -->
       <el-form :model="searchForm" :inline="true">
         <el-form-item label="设备编号">
@@ -222,12 +221,7 @@ const loading = ref(false);
 const tableData = ref<DeviceListDTO[]>([]);
 
 // 搜索表单
-const searchForm = reactive<DeviceSpecification>({
-  code: "",
-  name: "",
-  description: "",
-  online: true,
-});
+const searchForm = reactive<DeviceSpecification>({});
 
 // 分页
 const pagination = reactive({

@@ -458,11 +458,7 @@ const uploadRef = ref();
 const uploadFileList = ref<UploadFile[]>([]);
 
 // 搜索表单
-const searchForm = reactive<FileInfoSpecification>({
-  originalName: "",
-  mimeType: "",
-  storageType: undefined,
-});
+const searchForm = reactive<FileInfoSpecification>({});
 
 // 分页
 const pagination = reactive({

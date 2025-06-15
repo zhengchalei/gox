@@ -183,11 +183,7 @@ const loading = ref(false);
 const tableData = ref<MqttUserListDTO[]>([]);
 
 // 搜索表单
-const searchForm = reactive<MqttUserSpecification>({
-  username:  '',
-  passwordHash:  '',
-  salt:  '',
-});
+const searchForm = reactive<MqttUserSpecification>({});
 
 // 分页
 const pagination = reactive({

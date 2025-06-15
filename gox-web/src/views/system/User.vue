@@ -313,13 +313,7 @@ const tableData = ref<UserListDTO[]>([]);
 const selectedUsers = ref<UserListDTO[]>([]);
 
 // 搜索表单
-const searchForm = reactive<UserSpecification>({
-  username: "",
-  nickname: "",
-  email: "",
-  phone: "",
-  enabled: undefined,
-});
+const searchForm = reactive<UserSpecification>({});
 
 // 分页
 const pagination = reactive({

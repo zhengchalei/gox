@@ -222,8 +222,6 @@ const selectedPermissions = ref<PermissionListDTO[]>([]);
 
 // 搜索表单
 const searchForm = reactive<PermissionSpecification>({
-  name: "",
-  code: "",
 });
 
 // 分页
