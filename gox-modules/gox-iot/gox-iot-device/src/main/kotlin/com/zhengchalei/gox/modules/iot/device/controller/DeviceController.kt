@@ -45,7 +45,7 @@ class DeviceController(private val service: DeviceService) {
     }
 
     @Operation(summary = "创建设备", description = "创建新设备")
-    @PostMapping(value = ["/"])
+    @PostMapping(value = [""])
     fun create(
         @Parameter(description = "Device信息", required = true)
         @Valid @RequestBody dto: DeviceCreateDTO
@@ -55,7 +55,7 @@ class DeviceController(private val service: DeviceService) {
     }
 
     @Operation(summary = "更新设备", description = "更新设备信息")
-    @PutMapping(value = ["/"])
+    @PutMapping(value = [""])
     fun update(
         @Parameter(description = "Device信息", required = true)
         @Valid @RequestBody dto: DeviceUpdateDTO

@@ -45,7 +45,7 @@ class ProductController(private val service: ProductService) {
     }
 
     @Operation(summary = "创建产品", description = "创建新产品")
-    @PostMapping(value = ["/"])
+    @PostMapping(value = [""])
     fun create(
         @Parameter(description = "Product信息", required = true)
         @Valid @RequestBody dto: ProductCreateDTO
@@ -55,7 +55,7 @@ class ProductController(private val service: ProductService) {
     }
 
     @Operation(summary = "更新产品", description = "更新产品信息")
-    @PutMapping(value = ["/"])
+    @PutMapping(value = [""])
     fun update(
         @Parameter(description = "Product信息", required = true)
         @Valid @RequestBody dto: ProductUpdateDTO

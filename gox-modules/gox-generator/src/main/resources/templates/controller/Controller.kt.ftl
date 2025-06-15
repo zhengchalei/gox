@@ -45,7 +45,7 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
     }
 
     @Operation(summary = "创建${entityComment}", description = "创建新${entityComment}")
-    @PostMapping(value = ["/"])
+    @PostMapping(value = [""])
     fun create(
         @Parameter(description = "${entityName}信息", required = true)
         @Valid @RequestBody dto: ${entityName}CreateDTO
@@ -55,7 +55,7 @@ class ${entityName}Controller(private val service: ${entityName}Service) {
     }
 
     @Operation(summary = "更新${entityComment}", description = "更新${entityComment}信息")
-    @PutMapping(value = ["/"])
+    @PutMapping(value = [""])
     fun update(
         @Parameter(description = "${entityName}信息", required = true)
         @Valid @RequestBody dto: ${entityName}UpdateDTO
