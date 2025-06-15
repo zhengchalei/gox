@@ -7,7 +7,7 @@ const router = createRouter({
 });
 
 // 路由守卫 - 检查token
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _, next) => {
   const token = localStorage.getItem("token");
 
   if (to.meta.requiresAuth && !token) {
