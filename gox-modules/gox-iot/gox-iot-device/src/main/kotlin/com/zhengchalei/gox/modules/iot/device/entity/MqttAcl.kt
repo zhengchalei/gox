@@ -8,7 +8,7 @@ import org.babyfish.jimmer.sql.*
  * @author zhengchalei
  */
 @Entity
-@Table(name = "iot_mqtt_acl")
+@Table(name = "mqtt_acl")
 interface MqttAcl {
 
     @Id
