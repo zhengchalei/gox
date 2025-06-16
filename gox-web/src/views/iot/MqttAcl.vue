@@ -13,7 +13,6 @@
 
       <!-- 搜索栏 -->
       <el-form :model="searchForm" :inline="true">
-
         <el-form-item label="IP地址">
           <el-input
             v-model="searchForm.ipaddress"
@@ -67,19 +66,40 @@
       </el-form>
 
       <!-- 数据表格 -->
-      <el-table
-        v-loading="loading"
-        :data="tableData"
-        style="width: 100%"
-      >
+      <el-table v-loading="loading" :data="tableData" style="width: 100%">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" width="80" />
 
-        <el-table-column prop="ipaddress" label="IP地址" min-width="120" show-overflow-tooltip />
-        <el-table-column prop="username" label="用户名" min-width="120" show-overflow-tooltip />
-        <el-table-column prop="clientId" label="客户端ID" min-width="120" show-overflow-tooltip />
-        <el-table-column prop="action" label="操作" min-width="120" show-overflow-tooltip />
-        <el-table-column prop="permission" label="权限" min-width="120" show-overflow-tooltip />
+        <el-table-column
+          prop="ipaddress"
+          label="IP地址"
+          min-width="120"
+          show-overflow-tooltip
+        />
+        <el-table-column
+          prop="username"
+          label="用户名"
+          min-width="120"
+          show-overflow-tooltip
+        />
+        <el-table-column
+          prop="clientId"
+          label="客户端ID"
+          min-width="120"
+          show-overflow-tooltip
+        />
+        <el-table-column
+          prop="action"
+          label="操作"
+          min-width="120"
+          show-overflow-tooltip
+        />
+        <el-table-column
+          prop="permission"
+          label="权限"
+          min-width="120"
+          show-overflow-tooltip
+        />
 
         <el-table-column prop="createdTime" label="创建时间" width="180">
           <template #default="{ row }">
@@ -229,16 +249,18 @@ const dialogVisible = ref(false);
 const viewDialogVisible = ref(false);
 const isEdit = ref(false);
 const submitLoading = ref(false);
-const dialogTitle = computed(() => (isEdit.value ? "编辑MQTT访问控制" : "新增MQTT访问控制"));
+const dialogTitle = computed(() =>
+  isEdit.value ? "编辑MQTT访问控制" : "新增MQTT访问控制"
+);
 
 // 表单
 const formRef = ref<FormInstance>();
 const formData = reactive<MqttAclCreateDTO & Partial<MqttAclUpdateDTO>>({
-  ipaddress: '',
-  username: '',
-  clientId: '',
-  action: '',
-  permission: '',
+  ipaddress: "",
+  username: "",
+  clientId: "",
+  action: "",
+  permission: "",
 });
 const formRules = {
   ipaddress: [{ required: true, message: "请输入IP地址", trigger: "blur" }],
@@ -261,7 +283,7 @@ const fetchMqttAcl = async () => {
     );
 
     tableData.value = response.data.content;
-    pagination.total = response.data.pageable.totalElements;
+    pagination.total = response.data.page.totalElements;
   } catch (error) {
     console.error("获取MqttAcl列表失败:", error);
   } finally {
@@ -403,4 +425,4 @@ onMounted(() => {
 .detail-content {
   padding: 20px 0;
 }
-</style> 
+</style>

@@ -13,7 +13,6 @@
 
       <!-- 搜索栏 -->
       <el-form :model="searchForm" :inline="true">
-
         <el-form-item label="是否超级用户">
           <el-input
             v-model="searchForm.isSuperuser"
@@ -59,18 +58,34 @@
       </el-form>
 
       <!-- 数据表格 -->
-      <el-table
-        v-loading="loading"
-        :data="tableData"
-        style="width: 100%"
-      >
+      <el-table v-loading="loading" :data="tableData" style="width: 100%">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" width="80" />
 
-        <el-table-column prop="isSuperuser" label="是否超级用户" min-width="120" show-overflow-tooltip />
-        <el-table-column prop="username" label="用户名" min-width="120" show-overflow-tooltip />
-        <el-table-column prop="passwordHash" label="密码" min-width="120" show-overflow-tooltip />
-        <el-table-column prop="salt" label="盐" min-width="120" show-overflow-tooltip />
+        <el-table-column
+          prop="isSuperuser"
+          label="是否超级用户"
+          min-width="120"
+          show-overflow-tooltip
+        />
+        <el-table-column
+          prop="username"
+          label="用户名"
+          min-width="120"
+          show-overflow-tooltip
+        />
+        <el-table-column
+          prop="passwordHash"
+          label="密码"
+          min-width="120"
+          show-overflow-tooltip
+        />
+        <el-table-column
+          prop="salt"
+          label="盐"
+          min-width="120"
+          show-overflow-tooltip
+        />
 
         <el-table-column label="操作" width="300" fixed="right">
           <template #default="{ row }">
@@ -125,7 +140,10 @@
           <el-input v-model="formData.salt" placeholder="请输入盐" />
         </el-form-item>
         <el-form-item label="是否超级用户" prop="isSuperuser">
-          <el-input v-model="formData.isSuperuser" placeholder="请输入是否超级用户" />
+          <el-input
+            v-model="formData.isSuperuser"
+            placeholder="请输入是否超级用户"
+          />
         </el-form-item>
       </el-form>
 
@@ -197,21 +215,25 @@ const dialogVisible = ref(false);
 const viewDialogVisible = ref(false);
 const isEdit = ref(false);
 const submitLoading = ref(false);
-const dialogTitle = computed(() => (isEdit.value ? "编辑MQTT用户" : "新增MQTT用户"));
+const dialogTitle = computed(() =>
+  isEdit.value ? "编辑MQTT用户" : "新增MQTT用户"
+);
 
 // 表单
 const formRef = ref<FormInstance>();
 const formData = reactive<MqttUserCreateDTO & Partial<MqttUserUpdateDTO>>({
   isSuperuser: true,
-  username: '',
-  passwordHash: '',
-  salt: '',
+  username: "",
+  passwordHash: "",
+  salt: "",
 });
 const formRules = {
   username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
   passwordHash: [{ required: true, message: "请输入密码", trigger: "blur" }],
   salt: [{ required: true, message: "请输入盐", trigger: "blur" }],
-  isSuperuser: [{ required: true, message: "请输入是否超级用户", trigger: "blur" }],
+  isSuperuser: [
+    { required: true, message: "请输入是否超级用户", trigger: "blur" },
+  ],
 };
 
 // 查看详情数据
@@ -226,7 +248,7 @@ const fetchMqttUser = async () => {
       searchForm
     );
     tableData.value = response.data.content;
-    pagination.total = response.data.pageable.totalElements;
+    pagination.total = response.data.page.totalElements;
   } catch (error) {
     console.error("获取MqttUser列表失败:", error);
   } finally {
@@ -365,4 +387,4 @@ onMounted(() => {
 .detail-content {
   padding: 20px 0;
 }
-</style> 
+</style>

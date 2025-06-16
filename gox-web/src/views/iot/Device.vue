@@ -57,11 +57,7 @@
       </el-form>
 
       <!-- 数据表格 -->
-      <el-table
-        v-loading="loading"
-        :data="tableData"
-        style="width: 100%"
-      >
+      <el-table v-loading="loading" :data="tableData" style="width: 100%">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" width="80" />
 
@@ -265,7 +261,7 @@ const fetchDevice = async () => {
     );
 
     tableData.value = response.data.content;
-    pagination.total = response.data.pageable.totalElements;
+    pagination.total = response.data.page.totalElements;
   } catch (error) {
     console.error("获取Device列表失败:", error);
   } finally {
