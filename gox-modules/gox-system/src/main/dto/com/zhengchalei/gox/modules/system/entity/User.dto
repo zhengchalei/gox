@@ -26,11 +26,13 @@ UserDetailDTO {
 
 input UserCreateDTO {
     #allScalars(this)
+    -password
 }
 
 input UserUpdateDTO {
     #allScalars(this)
     id!
+    -password
 }
 
 input UserRoleUpdateDTO {

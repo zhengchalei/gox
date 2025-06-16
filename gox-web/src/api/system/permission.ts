@@ -49,15 +49,6 @@ export interface PermissionSpecification {
   roleIds?: number[];
 }
 
-export interface PermissionInfo {
-  id: number;
-  name: string;
-  code: string;
-  description?: string;
-  createdTime: string;
-  updatedTime: string;
-}
-
 export const permissionApi = {
   // 创建权限
   create: (data: PermissionCreateDTO): Promise<ApiResponse<void>> => {
@@ -72,6 +63,11 @@ export const permissionApi = {
   // 根据ID查询权限
   findById: (id: number): Promise<ApiResponse<PermissionDetailDTO>> => {
     return request.get(`/api/sys/permission/${id}`);
+  },
+
+  // 查询权限树
+  findTree: (): Promise<ApiResponse<PageResponse<PermissionListDTO>>> => {
+    return request.get(`/api/sys/permission/page`);
   },
 
   // 分页查询权限

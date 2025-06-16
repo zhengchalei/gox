@@ -48,6 +48,7 @@ const tableOption = ref({
   align: "center",
   labelWidth: 100,
   addBtnText: "新增",
+  title: "产品管理",
   column: [
     {
       label: "产品名称",
