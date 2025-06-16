@@ -209,7 +209,7 @@ const fetch${entityName} = async () => {
     );
 
     tableData.value = response.data.content;
-    pagination.total = response.data.pageable.totalElements;
+    pagination.total = response.data.page.totalElements;
   } catch (error) {
     console.error("获取${entityName}列表失败:", error);
   } finally {

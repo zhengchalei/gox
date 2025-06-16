@@ -23,5 +23,5 @@ export interface SortObject {
 
 export interface PageResponse<T> {
   content: T[];
-  pageable: PageableObject;
+  page: PageableObject;
 }

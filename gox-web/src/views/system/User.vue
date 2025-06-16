@@ -377,7 +377,7 @@ const fetchUsers = async () => {
     );
 
     tableData.value = response.data.content;
-    pagination.total = response.data.pageable.totalElements;
+    pagination.total = response.data.page.totalElements;
   } catch (error) {
     console.error("获取用户列表失败:", error);
   } finally {
