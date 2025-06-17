@@ -156,6 +156,10 @@
             :disabled="isEdit && formData.id"
           />
         </el-form-item>
+        <el-form-item label="昵称" prop="nickname">
+          <el-input v-model="formData.nickname" placeholder="请输入昵称" />
+        </el-form-item>
+        <el-form-item> </el-form-item>
         <el-form-item v-if="isEdit" label="邮箱" prop="email">
           <el-input
             v-model="formData.email"
@@ -335,6 +339,7 @@ const dialogTitle = computed(() => (isEdit.value ? "编辑用户" : "新增用�
 const formRef = ref<FormInstance>();
 const formData = reactive<UserCreateDTO & Partial<UserUpdateDTO>>({
   username: "",
+  nickname: "",
   enabled: true,
   email: "",
   phone: "",

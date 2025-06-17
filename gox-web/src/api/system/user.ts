@@ -35,6 +35,7 @@ export interface UserCreateDTO {
 export interface UserUpdateDTO {
   id: number;
   username: string;
+  nickname: string;
   enabled: boolean;
   email?: string;
   phone?: string;
